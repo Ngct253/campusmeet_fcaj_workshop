@@ -1,125 +1,98 @@
 ---
-title: "Event 2"
-date: 2024-01-01
-weight: 1
+title: "FCAJ x Agentic AI Build Week"
+date: 2026-07-25
+weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-# Bài thu hoạch “GenAI-powered App-DB Modernization workshop”
+# Bài thu hoạch “FCAJ x Agentic AI Build Week: Show Up. Build. Pitch. WIN!”
 
 ### Mục Đích Của Sự Kiện
 
-- Chia sẻ best practices trong thiết kế ứng dụng hiện đại
-- Giới thiệu phương pháp DDD và event-driven architecture
-- Hướng dẫn lựa chọn compute services phù hợp
-- Giới thiệu công cụ AI hỗ trợ development lifecycle
-
-### Danh Sách Diễn Giả
-
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+- Giới thiệu các dự án được xây dựng trong Agentic AI Build Week.
+- Chia sẻ quy trình lựa chọn bài toán, xây dựng MVP, kiểm thử và chuẩn bị demo.
+- Giúp thành viên FCAJ hiểu thêm về Agentic AI và môi trường làm việc trong hackathon.
+- Chia sẻ kinh nghiệm làm việc nhóm, quản lý thời gian và trình bày sản phẩm.
 
 ### Nội Dung Nổi Bật
 
-#### Đưa ra các ảnh hưởng tiêu cực của kiến trúc ứng dụng cũ
+#### Hành trình xây dựng sản phẩm Agentic AI
 
-- Thời gian release sản phẩm lâu → Mất doanh thu/bỏ lỡ cơ hội
-- Hoạt động kém hiệu quả → Mất năng suất, tốn kém chi phí
-- Không tuân thủ các quy định về bảo mật → Mất an ninh, uy tín
+Các đội chia sẻ quá trình từ xác định vấn đề, lựa chọn người dùng mục tiêu đến thiết kế giải pháp và xây dựng bản thử nghiệm. Một dự án hiệu quả không nhất thiết phải sử dụng quá nhiều công nghệ; điều quan trọng là giải quyết đúng vấn đề và chứng minh được giá trị qua một luồng hoạt động rõ ràng.
 
-#### Chuyển đổi sang kiến trúc ứng dụng mới - Microservice Architecture
+#### Xác định phạm vi MVP
 
-Chuyển đổi thành hệ thống modular – từng chức năng là một **dịch vụ độc lập** giao tiếp với nhau qua **sự kiện** với 3 trụ cột cốt lõi:
+- Ưu tiên chức năng cốt lõi có thể hoàn thành trong thời gian giới hạn.
+- Hoàn thiện một luồng sử dụng chính trước khi bổ sung tính năng phụ.
+- Tích hợp và kiểm thử sớm để tránh dồn lỗi vào cuối quá trình.
+- Chuẩn bị dữ liệu và phương án dự phòng cho phần demo.
 
-- **Queue Management**: Xử lý tác vụ bất đồng bộ
-- **Caching Strategy:** Tối ưu performance
-- **Message Handling:** Giao tiếp linh hoạt giữa services
+#### Thiết kế kiến trúc và tích hợp hệ thống
 
-#### Domain-Driven Design (DDD)
+Các nhóm trình bày kiến trúc tổng quan, vai trò của AI Agent, luồng dữ liệu và các dịch vụ cloud được sử dụng. Phần chia sẻ giúp em hiểu cách kết nối frontend, backend, cơ sở dữ liệu, dịch vụ AI và hạ tầng triển khai thành một sản phẩm hoàn chỉnh.
 
-- **Phương pháp 4 bước**: Xác định domain events → sắp xếp timeline → identify actors → xác định bounded contexts
-- **Case study bookstore**: Minh họa cách áp dụng DDD thực tế
-- **Context mapping**: 7 patterns tích hợp bounded contexts
+Các dự án minh họa nhiều hướng ứng dụng AI khác nhau. Có giải pháp hỗ trợ người dùng không chuyên về kỹ thuật, giải pháp giúp Solutions Architect tạo kiến trúc cloud và ước tính chi phí, hệ thống giám sát mật độ người bằng **YOLO** và **ByteTrack**, cùng hệ thống phát hiện gian lận tài chính.
 
-#### Event-Driven Architecture
+Qua các phần trình bày, em hiểu rằng công cụ AI như Kiro có thể hỗ trợ phân tích, lập trình và giải quyết vấn đề nhanh hơn. Tuy nhiên, nhóm vẫn phải xác định đúng **pain point**, lựa chọn giải pháp phù hợp và kiểm tra kết quả do AI tạo ra.
 
-- **3 patterns tích hợp**: Publish/Subscribe, Point-to-point, Streaming
-- **Lợi ích**: Loose coupling, scalability, resilience
-- **So sánh sync vs async**: Hiểu rõ trade-offs (sự đánh đổi)
+Đối với ứng dụng AI trong doanh nghiệp, giải pháp không chỉ cần hoạt động đúng mà còn phải tạo được sự tin cậy. Ba yếu tố quan trọng được nhấn mạnh là:
 
-#### Compute Evolution
+- **Security:** Bảo vệ dữ liệu và kiểm soát quyền truy cập.
+- **Monitoring:** Theo dõi hệ thống và phát hiện các dấu hiệu bất thường.
+- **Human-in-the-loop:** Giữ con người trong quy trình xác minh và ra quyết định quan trọng.
 
-- **Shared Responsibility Model**: Từ EC2 → ECS → Fargate → Lambda
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value
-- **Functions vs Containers**: Criteria lựa chọn phù hợp
+Phần hệ thống camera thông minh cũng cho thấy những khó khăn thực tế khi xử lý dữ liệu thời gian thực, đặc biệt là chất lượng đường truyền mạng. Vì vậy, kiến trúc cần tính đến khả năng gián đoạn, độ trễ và phương án xử lý khi kết nối không ổn định.
 
-#### Amazon Q Developer
+#### Làm việc nhóm trong hackathon
 
-- **SDLC automation**: Từ planning đến maintenance
-- **Code transformation**: Java upgrade, .NET modernization
-- **AWS Transform agents**: VMware, Mainframe, .NET migration
+- Phân chia nhiệm vụ theo thế mạnh của từng thành viên.
+- Cập nhật tiến độ thường xuyên và tích hợp sản phẩm từ sớm.
+- Chủ động hỗ trợ nhau khi gặp lỗi hoặc thay đổi yêu cầu.
+- Giữ mục tiêu chung và tập trung vào phần sản phẩm có giá trị nhất.
+- Sử dụng Git đúng cách để hạn chế xung đột và mất thay đổi khi nhiều người cùng phát triển.
+- Chốt phạm vi công việc rõ ràng và chuẩn bị kế hoạch demo từ sớm.
+
+#### Chuẩn bị demo và bài pitch
+
+Một bản demo tốt cần ngắn gọn, dễ hiểu và ổn định. Bài pitch cần tập trung vào vấn đề, người dùng, giải pháp, giá trị và kết quả thực tế thay vì chỉ liệt kê công nghệ.
+
+Sản phẩm nên được deploy và có một luồng hoạt động thực tế để chứng minh giá trị với người xem. Nhóm cần chuẩn bị dữ liệu đầu vào, kiểm tra API và các dịch vụ liên quan, đồng thời có phương án dự phòng khi hệ thống hoặc mạng gặp lỗi.
 
 ### Những Gì Học Được
 
-#### Tư Duy Thiết Kế
+- AI Agent có thể phân tích mục tiêu, lựa chọn công cụ và thực hiện nhiều bước để hoàn thành nhiệm vụ.
+- Dự án nên bắt đầu từ vấn đề thực tế của người dùng, không nên bắt đầu chỉ vì muốn sử dụng công nghệ mới.
+- Phạm vi MVP cần phù hợp với thời gian, kỹ năng và nguồn lực của đội.
+- Một sản phẩm ít chức năng nhưng ổn định thuyết phục hơn một sản phẩm lớn nhưng chưa hoàn thiện.
+- Giao tiếp, phân chia công việc và kiểm thử sớm có ảnh hưởng lớn đến kết quả của đội.
+- Demo và pitch giúp người xem hiểu rõ giá trị của sản phẩm.
+- Scope dự án cần vừa đủ để hoàn thành MVP trong thời gian ngắn; mở rộng quá sớm dễ làm chậm tiến độ và tăng lỗi.
+- Sản phẩm cần được deploy để chứng minh giải pháp có thể hoạt động trong thực tế.
+- Security, Monitoring và Human-in-the-loop giúp tăng độ tin cậy cho ứng dụng AI trong doanh nghiệp.
+- Nên tham gia hackathon với tâm thế trải nghiệm, học hỏi và kết nối thay vì tạo áp lực quá lớn về giải thưởng.
 
-- **Business-first approach**: Luôn bắt đầu từ business domain, không phải technology
-- **Ubiquitous language**: Importance của common vocabulary giữa business và tech teams
-- **Bounded contexts**: Cách identify và manage complexity trong large systems
+### Trải Nghiệm Trong Event
 
-#### Kiến Trúc Kỹ Thuật
+Sự kiện giúp em có góc nhìn thực tế hơn về quá trình tham gia hackathon. Phía sau một phần demo ngắn là nhiều công việc như lựa chọn vấn đề, thiết kế kiến trúc, phân chia nhiệm vụ, tích hợp, kiểm thử và sửa lỗi.
 
-- **Event storming technique**: Phương pháp thực tế để mô hình hóa quy trình kinh doanh
-- Sử dụng **Event-driven communication** thay vì synchronous calls
-- **Integration patterns**: Hiểu khi nào dùng sync, async, pub/sub, streaming
-- **Compute spectrum**: Criteria chọn từ VM → containers → serverless
+Điều em ấn tượng nhất là thông điệp **Show Up – Build – Pitch – Win**: chủ động tham gia, biến ý tưởng thành sản phẩm, trình bày rõ giá trị và trưởng thành từ quá trình thực hiện. Sự kiện cũng tạo thêm động lực để em tiếp tục học AWS, tìm hiểu Agentic AI và tham gia các dự án thực tế.
 
-#### Chiến Lược Hiện Đại Hóa
+### Minh Chứng Tham Gia
 
-- **Phased approach**: Không rush, phải có roadmap rõ ràng
-- **7Rs framework**: Nhiều con đường khác nhau tùy thuộc vào đặc điểm của mỗi ứng dụng
-- **ROI measurement**: Cost reduction + business agility
+![Phần khai mạc FCAJ x Agentic AI Build Week](/images/4-EventParticipated/4.2-Event2/event-opening.png)
 
-### Ứng Dụng Vào Công Việc
+*Phần giới thiệu chương trình FCAJ x Agentic AI Build Week.*
 
-- **Áp dụng DDD** cho project hiện tại: Event storming sessions với business team
-- **Refactor microservices**: Sử dụng bounded contexts để identify service boundaries
-- **Implement event-driven patterns**: Thay thế một số sync calls bằng async messaging
-- **Serverless adoption**: Pilot AWS Lambda cho một số use cases phù hợp
-- **Try Amazon Q Developer**: Integrate vào development workflow để boost productivity
+![Phần chia sẻ bài học từ các đội](/images/4-EventParticipated/4.2-Event2/lessons-learned.jpg)
 
-### Trải nghiệm trong event
+*Các bài học về định hướng, thực thi và làm việc nhóm.*
 
-Tham gia workshop **“GenAI-powered App-DB Modernization”** là một trải nghiệm rất bổ ích, giúp tôi có cái nhìn toàn diện về cách hiện đại hóa ứng dụng và cơ sở dữ liệu bằng các phương pháp và công cụ hiện đại. Một số trải nghiệm nổi bật:
+![Phần trình bày kiến trúc dự án](/images/4-EventParticipated/4.2-Event2/architecture-sharing.png)
 
-#### Học hỏi từ các diễn giả có chuyên môn cao
-- Các diễn giả đến từ AWS và các tổ chức công nghệ lớn đã chia sẻ **best practices** trong thiết kế ứng dụng hiện đại.
-- Qua các case study thực tế, tôi hiểu rõ hơn cách áp dụng **Domain-Driven Design (DDD)** và **Event-Driven Architecture** vào các project lớn.
+*Chia sẻ kiến trúc và cách triển khai dự án của các đội.*
 
-#### Trải nghiệm kỹ thuật thực tế
-- Tham gia các phiên trình bày về **event storming** giúp tôi hình dung cách **mô hình hóa quy trình kinh doanh** thành các domain events.
-- Học cách **phân tách microservices** và xác định **bounded contexts** để quản lý sự phức tạp của hệ thống lớn.
-- Hiểu rõ trade-offs giữa **synchronous và asynchronous communication** cũng như các pattern tích hợp như **pub/sub, point-to-point, streaming**.
+### Tài Liệu Tham Khảo
 
-#### Ứng dụng công cụ hiện đại
-- Trực tiếp tìm hiểu về **Amazon Q Developer**, công cụ AI hỗ trợ SDLC từ lập kế hoạch đến maintenance.
-- Học cách **tự động hóa code transformation** và pilot serverless với **AWS Lambda**, từ đó nâng cao năng suất phát triển.
-
-#### Kết nối và trao đổi
-- Workshop tạo cơ hội trao đổi trực tiếp với các chuyên gia, đồng nghiệp và team business, giúp **nâng cao ngôn ngữ chung (ubiquitous language)** giữa business và tech.
-- Qua các ví dụ thực tế, tôi nhận ra tầm quan trọng của **business-first approach**, luôn bắt đầu từ nhu cầu kinh doanh thay vì chỉ tập trung vào công nghệ.
-
-#### Bài học rút ra
-- Việc áp dụng DDD và event-driven patterns giúp giảm **coupling**, tăng **scalability** và **resilience** cho hệ thống.
-- Chiến lược hiện đại hóa cần **phased approach** và đo lường **ROI**, không nên vội vàng chuyển đổi toàn bộ hệ thống.
-- Các công cụ AI như Amazon Q Developer có thể **boost productivity** nếu được tích hợp vào workflow phát triển hiện tại.
-
-#### Một số hình ảnh khi tham gia sự kiện
-* Thêm các hình ảnh của các bạn tại đây
-> Tổng thể, sự kiện không chỉ cung cấp kiến thức kỹ thuật mà còn giúp tôi thay đổi cách tư duy về thiết kế ứng dụng, hiện đại hóa hệ thống và phối hợp hiệu quả hơn giữa các team.
+- [Video FCAJ x Agentic AI Build Week](https://www.youtube.com/watch?v=hz32VBrvW7M)
+- [Agentic AI Build Week](https://aabw.genaifund.ai/)

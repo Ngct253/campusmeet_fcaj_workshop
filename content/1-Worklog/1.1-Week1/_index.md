@@ -1,57 +1,32 @@
 ---
 title: "Week 1 Worklog"
-date: 2024-01-01
+date: 2026-06-15
 weight: 1
 chapter: false
 pre: " <b> 1.1. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+### Week 1 Objectives
 
-### Week 1 Objectives:
+- Become familiar with the AWS Management Console and core AWS services.
+- Create, configure, and safely manage an AWS Free Tier account.
+- Learn to control costs with AWS Budgets and resource cleanup.
+- Practice foundational concepts using IAM, VPC, EC2, Lambda, RDS, Amazon Bedrock, and Amazon CloudWatch.
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+### Completed Tasks
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| Day | Task Details | Start Date | Completion Date | Reference Material |
+| --- | --- | --- | --- | --- |
+| Monday | Created an AWS Free Tier account.<br>Explored the AWS Management Console.<br>**Practice:**<br>+ Create an AWS account.<br>+ Launch and manage an EC2 instance.<br>+ Explore the Amazon Bedrock Playground.<br>+ Configure AWS Budgets.<br>+ Create an AWS Lambda function.<br>+ Create an Amazon RDS database.<br>+ Delete resources after completing the exercises to avoid unnecessary charges. | 15/06/2026 | 15/06/2026 | <https://000001.awsstudygroup.com/vi/> |
+| Tuesday | Learned about AWS Budgets, AWS Support, IAM, and VPC.<br>**Practice:**<br>+ Create Cost and Usage Budgets.<br>+ Clean up AWS resources.<br>+ Create a Support Case.<br>+ Create an IAM group and user and assign permissions.<br>+ Create and switch IAM roles.<br>+ Create a VPC, subnet, Internet Gateway, route table, and security group.<br>+ Enable VPC Flow Logs.<br>+ Launch an EC2 instance in the VPC and test connectivity.<br>+ Create a NAT Gateway.<br>+ Use Reachability Analyzer.<br>+ Create an EC2 Instance Connect Endpoint (optional).<br>+ Use AWS Systems Manager Session Manager.<br>+ Monitor resources and configure alerts with Amazon CloudWatch. | 16/06/2026 | 16/06/2026 | <https://000007.awsstudygroup.com/vi/><br><https://000009.awsstudygroup.com/vi/><br><https://000002.awsstudygroup.com/vi/><br><https://000003.awsstudygroup.com/vi/> |
 
+### Week 1 Achievements
 
-### Week 1 Achievements:
-
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+- Successfully created an AWS Free Tier account and learned to find and access services through the AWS Management Console.
+- Learned how to launch, start, stop, and delete EC2 instances after completing exercises.
+- Explored the Amazon Bedrock Playground and created a basic Lambda function and Amazon RDS database.
+- Created Cost and Usage Budgets to monitor AWS usage and receive cost alerts.
+- Understood how to create IAM groups, users, and roles and assign suitable permissions.
+- Created a VPC with basic components including subnets, an Internet Gateway, route tables, and security groups.
+- Used CloudWatch, VPC Flow Logs, and Reachability Analyzer to inspect and monitor resources.
+- Developed the habit of cleaning up resources after each exercise to avoid unnecessary charges.
