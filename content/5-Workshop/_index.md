@@ -56,7 +56,7 @@ CampusMeet uses the following core AWS services:
 ## Workshop Contents
 
 1. [CampusMeet Overview](5.1-Workshop-overview/)
-2. Prerequisites
+2. [Prerequisites](5.2-Prerequiste/)
 3. System Architecture
 4. IAM and Environment Configuration
 5. Authentication with Amazon Cognito
