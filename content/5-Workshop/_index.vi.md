@@ -56,7 +56,7 @@ CampusMeet sử dụng các dịch vụ AWS chính:
 ## Nội dung Workshop
 
 1. [Tổng quan CampusMeet](5.1-Workshop-overview/)
-2. Điều kiện chuẩn bị
+2. [Điều kiện chuẩn bị](5.2-Prerequiste/)
 3. Kiến trúc hệ thống
 4. IAM và cấu hình môi trường
 5. Xác thực với Amazon Cognito
