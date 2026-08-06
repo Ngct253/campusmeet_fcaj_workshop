@@ -8,24 +8,23 @@ pre: " <b> 1.2. </b> "
 
 ### Week 2 Objectives
 
-- Understand how to design and configure private networks with Amazon VPC.
-- Practice establishing a Site-to-Site VPN using a Virtual Private Gateway and Customer Gateway.
-- Launch, configure, and manage Windows and Linux EC2 instances.
-- Deploy Node.js applications on Amazon EC2 and control access with IAM.
+- Learn the fundamentals of Amazon VPC and VPN connectivity.
+- Practice launching, configuring, and managing Windows and Linux EC2 instances.
+- Deploy a basic Node.js application on Amazon EC2.
+- Learn how to restrict EC2 permissions with IAM and clean up resources after each exercise.
 
 ### Completed Tasks
 
 | Day | Task Details | Start Date | Completion Date | Reference Material |
 | --- | --- | --- | --- | --- |
-| Monday | Learned networking fundamentals with Amazon Virtual Private Cloud (VPC).<br>**Practice:**<br>+ Create a VPC for a VPN.<br>+ Launch an EC2 instance.<br>+ Create a Virtual Private Gateway.<br>+ Create a Customer Gateway.<br>+ Create a VPN connection.<br>+ Configure the Customer Gateway.<br>+ Customize the AWS VPN tunnel.<br>+ Configure advanced VPN settings.<br>+ Clean up resources. | 22/06/2026 | 22/06/2026 | <https://000003.awsstudygroup.com/vi/> |
-| Wednesday | Learned virtual-server fundamentals with Amazon Elastic Compute Cloud (EC2).<br>**Practice:**<br>+ Launch a Windows instance.<br>+ Launch a Linux instance.<br>+ Perform basic Amazon EC2 operations.<br>+ Deploy a Node.js application on Amazon Linux.<br>+ Deploy a Node.js application on Amazon EC2 Windows.<br>+ Restrict EC2 resource permissions with IAM.<br>+ Clean up resources. | 24/06/2026 | 24/06/2026 | <https://000004.awsstudygroup.com/vi/> |
+| Monday | Studied networking fundamentals with Amazon VPC.<br>**Hands-on practice:**<br>+ Created a VPC for the VPN exercise.<br>+ Launched an EC2 instance.<br>+ Created a Virtual Private Gateway and a Customer Gateway.<br>+ Established a VPN connection.<br>+ Reviewed Customer Gateway and AWS VPN Tunnel configuration.<br>+ Explored selected advanced VPN settings.<br>+ Verified the setup and removed the resources. | 22/06/2026 | 22/06/2026 | <https://000003.awsstudygroup.com/vi/> |
+| Wednesday | Studied the fundamentals of Amazon EC2.<br>**Hands-on practice:**<br>+ Launched Windows and Linux EC2 instances.<br>+ Performed basic EC2 management tasks.<br>+ Deployed a Node.js application on Amazon Linux.<br>+ Deployed a Node.js application on Amazon EC2 Windows.<br>+ Reviewed how IAM can restrict access to EC2 resources.<br>+ Verified the deployments and removed the resources. | 24/06/2026 | 24/06/2026 | <https://000004.awsstudygroup.com/vi/> |
 
 ### Week 2 Achievements
 
-- Understood how Amazon VPC is used to create and manage a private network on AWS.
-- Created a VPC for VPN connectivity with an EC2 instance, Virtual Private Gateway, and Customer Gateway.
-- Learned the steps for creating a VPN connection, configuring its tunnels, and checking connectivity between both networks.
-- Launched and performed basic operations on both Windows and Linux EC2 instances.
-- Successfully deployed a basic Node.js application on Amazon Linux and Amazon EC2 Windows.
-- Used IAM to limit access to EC2 resources.
-- Learned to validate configurations and remove VPN, VPC, and EC2 resources after completing the exercises.
+- Understood the role and main components of Amazon VPC.
+- Became familiar with the workflow for setting up a VPN connection.
+- Launched and performed basic management tasks on Windows and Linux EC2 instances.
+- Practiced deploying a basic Node.js application in both EC2 environments.
+- Learned how IAM can be used to restrict access to EC2 resources.
+- Learned to verify and clean up VPC, VPN, and EC2 resources after completing the exercises.
