@@ -12,7 +12,7 @@ pre: " <b> 5. </b> "
 
 CampusMeet là nền tảng hỗ trợ quản lý toàn bộ quy trình trước, trong và sau cuộc họp cho các nhóm học tập, đồ án và dự án quy mô nhỏ.
 
-Hệ thống tập trung các chức năng quản lý người dùng, nhóm, thành viên, lời mời, cuộc họp, thông báo, biên bản và công việc trên một nền tảng thống nhất. CampusMeet sử dụng kiến trúc Serverless trên AWS để giảm khối lượng quản trị máy chủ, hỗ trợ mở rộng theo nhu cầu và kiểm soát chi phí theo mức sử dụng.
+Hệ thống tập trung các chức năng quản lý người dùng, nhóm, thành viên, lời mời, cuộc họp, thông báo, biên bản và công việc trên một nền tảng thống nhất. CampusMeet sử dụng các dịch vụ được AWS quản lý để giảm khối lượng quản trị máy chủ, hỗ trợ mở rộng theo nhu cầu và kiểm soát chi phí theo mức sử dụng.
 
 Trong workshop này, chúng ta sẽ xây dựng và triển khai các thành phần chính của CampusMeet, bao gồm:
 
@@ -57,12 +57,12 @@ CampusMeet sử dụng các dịch vụ AWS chính:
 
 1. [Tổng quan CampusMeet](5.1-Workshop-overview/)
 2. [Điều kiện chuẩn bị](5.2-Prerequiste/)
-3. Kiến trúc hệ thống
-4. IAM và cấu hình môi trường
-5. Xác thực với Amazon Cognito
-6. Nền tảng dữ liệu DynamoDB
-7. API Gateway và AWS Lambda
-8. Nhóm, thành viên và lời mời
+3. [Kiến trúc hệ thống](5.3-Architecture/)
+4. [IAM và cấu hình môi trường](5.4-IAM/)
+5. [Xác thực với Amazon Cognito](5.5-Authentication/)
+6. [Nền tảng dữ liệu DynamoDB](5.6-Data-foundation/)
+7. [API Gateway và AWS Lambda](5.7-Api-lambda/)
+8. [Nhóm, thành viên và lời mời](5.8-Collaboration/)
 9. Quản lý cuộc họp
 10. Biên bản và công việc
 11. Tích hợp giao diện người dùng
