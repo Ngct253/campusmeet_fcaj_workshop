@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 5. </b> "
 ---
 
-# Building and Deploying CampusMeet: A Serverless Meeting Management Platform on AWS
+# Building and Deploying the CampusMeet Meeting Management Platform on AWS
 
 ## Overview
 
