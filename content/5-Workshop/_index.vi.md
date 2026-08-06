@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 5. </b> "
 ---
 
-# Xây dựng và triển khai nền tảng quản lý cuộc họp Serverless CampusMeet trên AWS
+# Xây dựng và triển khai nền tảng quản lý cuộc họp CampusMeet trên AWS
 
 ## Tổng quan
 
