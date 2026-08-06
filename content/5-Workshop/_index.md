@@ -12,7 +12,7 @@ pre: " <b> 5. </b> "
 
 CampusMeet is a platform for managing the activities that take place before, during, and after meetings for study groups, student projects, and small collaborative teams.
 
-The system brings user management, groups, memberships, invitations, meetings, notifications, minutes, and follow-up work into one application. CampusMeet uses a serverless AWS architecture to reduce server administration, scale with demand, and align operating costs with actual usage.
+The system brings user management, groups, memberships, invitations, meetings, notifications, minutes, and follow-up work into one application. CampusMeet uses managed AWS services to reduce server administration, scale with demand, and align operating costs with actual usage.
 
 This workshop covers the design and deployment of the main CampusMeet components, including:
 
@@ -57,12 +57,12 @@ CampusMeet uses the following core AWS services:
 
 1. [CampusMeet Overview](5.1-Workshop-overview/)
 2. [Prerequisites](5.2-Prerequiste/)
-3. System Architecture
-4. IAM and Environment Configuration
-5. Authentication with Amazon Cognito
-6. DynamoDB Data Foundation
-7. API Gateway and AWS Lambda
-8. Groups, Memberships, and Invitations
+3. [System Architecture](5.3-Architecture/)
+4. [IAM and Environment Configuration](5.4-IAM/)
+5. [Authentication with Amazon Cognito](5.5-Authentication/)
+6. [DynamoDB Data Foundation](5.6-Data-foundation/)
+7. [API Gateway and AWS Lambda](5.7-Api-lambda/)
+8. [Groups, Memberships, and Invitations](5.8-Collaboration/)
 9. Meeting Management
 10. Minutes and Follow-up Work
 11. Frontend Integration
