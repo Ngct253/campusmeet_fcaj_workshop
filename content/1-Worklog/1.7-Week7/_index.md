@@ -1,57 +1,31 @@
 ---
 title: "Week 7 Worklog"
-date: 2024-01-01
+date: 2026-07-27
 weight: 7
 chapter: false
 pre: " <b> 1.7. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+### Week 7 Objectives
 
-### Week 7 Objectives:
+- Standardize the authentication configuration used by the team.
+- Finalize the shared DynamoDB data foundation.
+- Align the infrastructure definitions, access permissions, and project documentation.
+- Continue building the core CampusMeet features.
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+### Completed Tasks
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| Day | Task Details | Start Date | Completion Date | Reference Material |
+| --- | --- | --- | --- | --- |
+| Monday | Updated the instructions for retrieving the Cognito User Pool ID, Client ID, and API URL.<br>Standardized the frontend configuration and clarified feature ownership across the team.<br>Replaced the 17-table DynamoDB plan with a five-table physical model designed around application access patterns.<br>Updated CloudFormation, IAM permissions, PK/SK conventions, GSIs, TTL settings, validation scripts, and deployment documentation.<br>Ran infrastructure validation, linting, type checking, tests, and the production build. | 27/07/2026 | 27/07/2026 | <https://github.com/Ngct253/CampusMeet> |
+| Friday | Aligned the architecture documentation, team plan, and frontend environment setup.<br>Completed the foundational group, membership, invitation, authorization, notification, and dashboard features.<br>Implemented meeting creation, viewing, updating, and cancellation.<br>Added group-level authorization checks and persisted meeting data in the `meeting-data` table.<br>Refined the scheduling and meeting detail interfaces.<br>Ran the test suite, linting, type checking, and production build. | 31/07/2026 | 02/08/2026 | <https://github.com/Ngct253/CampusMeet> |
 
+### Week 7 Achievements
 
-### Week 7 Achievements:
-
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+- Completed the shared Amazon Cognito configuration guide for the team.
+- Defined and locally validated the five-table DynamoDB model.
+- Aligned the CloudFormation templates, IAM permissions, and deployment documentation.
+- Completed the core CampusMeet foundation features.
+- Implemented the meeting management flow for creating, viewing, updating, and cancelling meetings.
+- Refined the scheduling and meeting detail user interfaces.
+- Completed linting, type checking, automated tests, and build verification.
