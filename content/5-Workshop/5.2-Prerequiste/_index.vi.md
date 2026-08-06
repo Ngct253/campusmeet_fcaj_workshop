@@ -1,242 +1,187 @@
 ---
-title : "Các bước chuẩn bị"
-date : 2024-01-01 
-weight : 2
-chapter : false
-pre : " <b> 5.2. </b> "
+title: "Điều kiện chuẩn bị"
+date: 2026-07-27
+weight: 2
+chapter: false
+pre: " <b> 5.2. </b> "
 ---
 
-#### IAM permissions
-Gắn IAM permission policy sau vào tài khoản aws user của bạn để triển khai và dọn dẹp tài nguyên trong workshop này.
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "VisualEditor0",
-            "Effect": "Allow",
-            "Action": [
-                "cloudformation:*",
-                "cloudwatch:*",
-                "ec2:AcceptTransitGatewayPeeringAttachment",
-                "ec2:AcceptTransitGatewayVpcAttachment",
-                "ec2:AllocateAddress",
-                "ec2:AssociateAddress",
-                "ec2:AssociateIamInstanceProfile",
-                "ec2:AssociateRouteTable",
-                "ec2:AssociateSubnetCidrBlock",
-                "ec2:AssociateTransitGatewayRouteTable",
-                "ec2:AssociateVpcCidrBlock",
-                "ec2:AttachInternetGateway",
-                "ec2:AttachNetworkInterface",
-                "ec2:AttachVolume",
-                "ec2:AttachVpnGateway",
-                "ec2:AuthorizeSecurityGroupEgress",
-                "ec2:AuthorizeSecurityGroupIngress",
-                "ec2:CreateClientVpnEndpoint",
-                "ec2:CreateClientVpnRoute",
-                "ec2:CreateCustomerGateway",
-                "ec2:CreateDhcpOptions",
-                "ec2:CreateFlowLogs",
-                "ec2:CreateInternetGateway",
-                "ec2:CreateLaunchTemplate",
-                "ec2:CreateNetworkAcl",
-                "ec2:CreateNetworkInterface",
-                "ec2:CreateNetworkInterfacePermission",
-                "ec2:CreateRoute",
-                "ec2:CreateRouteTable",
-                "ec2:CreateSecurityGroup",
-                "ec2:CreateSubnet",
-                "ec2:CreateSubnetCidrReservation",
-                "ec2:CreateTags",
-                "ec2:CreateTransitGateway",
-                "ec2:CreateTransitGatewayPeeringAttachment",
-                "ec2:CreateTransitGatewayPrefixListReference",
-                "ec2:CreateTransitGatewayRoute",
-                "ec2:CreateTransitGatewayRouteTable",
-                "ec2:CreateTransitGatewayVpcAttachment",
-                "ec2:CreateVpc",
-                "ec2:CreateVpcEndpoint",
-                "ec2:CreateVpcEndpointConnectionNotification",
-                "ec2:CreateVpcEndpointServiceConfiguration",
-                "ec2:CreateVpnConnection",
-                "ec2:CreateVpnConnectionRoute",
-                "ec2:CreateVpnGateway",
-                "ec2:DeleteCustomerGateway",
-                "ec2:DeleteFlowLogs",
-                "ec2:DeleteInternetGateway",
-                "ec2:DeleteNetworkInterface",
-                "ec2:DeleteNetworkInterfacePermission",
-                "ec2:DeleteRoute",
-                "ec2:DeleteRouteTable",
-                "ec2:DeleteSecurityGroup",
-                "ec2:DeleteSubnet",
-                "ec2:DeleteSubnetCidrReservation",
-                "ec2:DeleteTags",
-                "ec2:DeleteTransitGateway",
-                "ec2:DeleteTransitGatewayPeeringAttachment",
-                "ec2:DeleteTransitGatewayPrefixListReference",
-                "ec2:DeleteTransitGatewayRoute",
-                "ec2:DeleteTransitGatewayRouteTable",
-                "ec2:DeleteTransitGatewayVpcAttachment",
-                "ec2:DeleteVpc",
-                "ec2:DeleteVpcEndpoints",
-                "ec2:DeleteVpcEndpointServiceConfigurations",
-                "ec2:DeleteVpnConnection",
-                "ec2:DeleteVpnConnectionRoute",
-                "ec2:Describe*",
-                "ec2:DetachInternetGateway",
-                "ec2:DisassociateAddress",
-                "ec2:DisassociateRouteTable",
-                "ec2:GetLaunchTemplateData",
-                "ec2:GetTransitGatewayAttachmentPropagations",
-                "ec2:ModifyInstanceAttribute",
-                "ec2:ModifySecurityGroupRules",
-                "ec2:ModifyTransitGatewayVpcAttachment",
-                "ec2:ModifyVpcAttribute",
-                "ec2:ModifyVpcEndpoint",
-                "ec2:ReleaseAddress",
-                "ec2:ReplaceRoute",
-                "ec2:RevokeSecurityGroupEgress",
-                "ec2:RevokeSecurityGroupIngress",
-                "ec2:RunInstances",
-                "ec2:StartInstances",
-                "ec2:StopInstances",
-                "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
-                "ec2:UpdateSecurityGroupRuleDescriptionsIngress",
-                "iam:AddRoleToInstanceProfile",
-                "iam:AttachRolePolicy",
-                "iam:CreateInstanceProfile",
-                "iam:CreatePolicy",
-                "iam:CreateRole",
-                "iam:DeleteInstanceProfile",
-                "iam:DeletePolicy",
-                "iam:DeleteRole",
-                "iam:DeleteRolePolicy",
-                "iam:DetachRolePolicy",
-                "iam:GetInstanceProfile",
-                "iam:GetPolicy",
-                "iam:GetRole",
-                "iam:GetRolePolicy",
-                "iam:ListPolicyVersions",
-                "iam:ListRoles",
-                "iam:PassRole",
-                "iam:PutRolePolicy",
-                "iam:RemoveRoleFromInstanceProfile",
-                "lambda:CreateFunction",
-                "lambda:DeleteFunction",
-                "lambda:DeleteLayerVersion",
-                "lambda:GetFunction",
-                "lambda:GetLayerVersion",
-                "lambda:InvokeFunction",
-                "lambda:PublishLayerVersion",
-                "logs:CreateLogGroup",
-                "logs:DeleteLogGroup",
-                "logs:DescribeLogGroups",
-                "logs:PutRetentionPolicy",
-                "route53:ChangeTagsForResource",
-                "route53:CreateHealthCheck",
-                "route53:CreateHostedZone",
-                "route53:CreateTrafficPolicy",
-                "route53:DeleteHostedZone",
-                "route53:DisassociateVPCFromHostedZone",
-                "route53:GetHostedZone",
-                "route53:ListHostedZones",
-                "route53domains:ListDomains",
-                "route53domains:ListOperations",
-                "route53domains:ListTagsForDomain",
-                "route53resolver:AssociateResolverEndpointIpAddress",
-                "route53resolver:AssociateResolverRule",
-                "route53resolver:CreateResolverEndpoint",
-                "route53resolver:CreateResolverRule",
-                "route53resolver:DeleteResolverEndpoint",
-                "route53resolver:DeleteResolverRule",
-                "route53resolver:DisassociateResolverEndpointIpAddress",
-                "route53resolver:DisassociateResolverRule",
-                "route53resolver:GetResolverEndpoint",
-                "route53resolver:GetResolverRule",
-                "route53resolver:ListResolverEndpointIpAddresses",
-                "route53resolver:ListResolverEndpoints",
-                "route53resolver:ListResolverRuleAssociations",
-                "route53resolver:ListResolverRules",
-                "route53resolver:ListTagsForResource",
-                "route53resolver:UpdateResolverEndpoint",
-                "route53resolver:UpdateResolverRule",
-                "s3:AbortMultipartUpload",
-                "s3:CreateBucket",
-                "s3:DeleteBucket",
-                "s3:DeleteObject",
-                "s3:GetAccountPublicAccessBlock",
-                "s3:GetBucketAcl",
-                "s3:GetBucketOwnershipControls",
-                "s3:GetBucketPolicy",
-                "s3:GetBucketPolicyStatus",
-                "s3:GetBucketPublicAccessBlock",
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:GetBucketVersioning",
-                "s3:ListAccessPoints",
-                "s3:ListAccessPointsForObjectLambda",
-                "s3:ListAllMyBuckets",
-                "s3:ListBucket",
-                "s3:ListBucketMultipartUploads",
-                "s3:ListBucketVersions",
-                "s3:ListJobs",
-                "s3:ListMultipartUploadParts",
-                "s3:ListMultiRegionAccessPoints",
-                "s3:ListStorageLensConfigurations",
-                "s3:PutAccountPublicAccessBlock",
-                "s3:PutBucketAcl",
-                "s3:PutBucketPolicy",
-                "s3:PutBucketPublicAccessBlock",
-                "s3:PutObject",
-                "secretsmanager:CreateSecret",
-                "secretsmanager:DeleteSecret",
-                "secretsmanager:DescribeSecret",
-                "secretsmanager:GetSecretValue",
-                "secretsmanager:ListSecrets",
-                "secretsmanager:ListSecretVersionIds",
-                "secretsmanager:PutResourcePolicy",
-                "secretsmanager:TagResource",
-                "secretsmanager:UpdateSecret",
-                "sns:ListTopics",
-                "ssm:DescribeInstanceProperties",
-                "ssm:DescribeSessions",
-                "ssm:GetConnectionStatus",
-                "ssm:GetParameters",
-                "ssm:ListAssociations",
-                "ssm:ResumeSession",
-                "ssm:StartSession",
-                "ssm:TerminateSession"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
+# Điều kiện chuẩn bị
 
+Trước khi bắt đầu triển khai CampusMeet, cần chuẩn bị môi trường phát triển cục bộ, tài khoản AWS và quyền truy cập phù hợp. Các bước trong phần này bám theo cấu hình và quy trình đang được sử dụng trong mã nguồn CampusMeet.
+
+## 1. Tài khoản và môi trường AWS
+
+Cần chuẩn bị:
+
+- Một tài khoản AWS dùng cho môi trường phát triển của CampusMeet.
+- Mã tài khoản AWS đã được nhóm xác nhận.
+- Khu vực AWS `ap-southeast-1`.
+- Một người phụ trách triển khai các thành phần cần quyền tạo vai trò IAM.
+- Mỗi thành viên sử dụng một IAM user riêng.
+- Cảnh báo ngân sách đã được cấu hình trước khi triển khai tài nguyên.
+
+Không sử dụng tài khoản root cho công việc hằng ngày. Không dùng chung IAM user và không tạo hoặc chia sẻ khóa truy cập dài hạn cho người dùng.
+
+Môi trường AWS dùng chung nên được sử dụng cho kiểm thử tích hợp và xác minh triển khai. Việc phát triển chức năng hằng ngày được thực hiện trên máy cá nhân bằng kho dữ liệu trong bộ nhớ hoặc DynamoDB Local khi phù hợp.
+
+## 2. Công cụ cần cài đặt
+
+| Công cụ | Yêu cầu | Mục đích |
+| --- | --- | --- |
+| Node.js | Phiên bản 22 LTS | Chạy frontend, backend và các công cụ JavaScript/TypeScript |
+| npm | Phiên bản 10 trở lên | Cài đặt thư viện và chạy các lệnh của dự án |
+| Git | Phiên bản đang được hỗ trợ | Tải và quản lý mã nguồn |
+| AWS CLI | Phiên bản 2.32.0 trở lên | Đăng nhập, kiểm tra tài khoản và thao tác với AWS |
+| AWS SAM CLI | Đã cài đặt | Kiểm tra, xây dựng và triển khai các mẫu SAM |
+| PowerShell | Đã cài đặt | Chạy các lệnh và tập lệnh kiểm tra AWS hiện có |
+
+Kiểm tra các công cụ sau khi cài đặt:
+
+```powershell
+node --version
+npm --version
+git --version
+aws --version
+sam --version
 ```
 
-#### Khởi tạo tài nguyên bằng CloudFormation
+Không tiếp tục nếu Node.js, npm, AWS CLI hoặc AWS SAM CLI chưa được nhận diện đúng trên dòng lệnh.
 
-Trong lab này, chúng ta sẽ dùng N.Virginia region (us-east-1).
+## 3. Tải mã nguồn CampusMeet
 
-Để chuẩn bị cho môi trường làm workshop, chúng ta deploy CloudFormation template sau (click link): [PrivateLinkWorkshop ](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateURL=https://s3.us-east-1.amazonaws.com/reinvent-endpoints-builders-session/Nested.yaml&stackName=PLCloudSetup). Để nguyên các lựa chọn mặc định.
+Tải mã nguồn và chuyển vào thư mục dự án:
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack1.png)
+```powershell
+git clone <repository-url>
+cd CampusMeet
+```
 
-+ Lựa chọn 2 mục acknowledgement 
-+ Chọn Create stack
+Cài đặt các thư viện của toàn bộ workspace:
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack2.png)
+```powershell
+npm install
+```
 
-Quá trình triển khai CloudFormation cần khoảng 15 phút để hoàn thành.
+CampusMeet được tổ chức dưới dạng monorepo với các thư mục chính:
 
-![complete](/images/5-Workshop/5.2-Prerequisite/complete.png)
+```text
+apps/web/          Giao diện React và Vite
+services/api/      Lambda API và các lớp nghiệp vụ
+packages/shared/   Kiểu dữ liệu, enum và DTO dùng chung
+infra/             Các mẫu AWS SAM và CloudFormation
+scripts/           Tập lệnh kiểm tra tài nguyên AWS
+docs/              Tài liệu yêu cầu, kiến trúc và triển khai
+```
 
-+ 2 VPCs đã được tạo
+## 4. Kiểm tra mã nguồn trước khi triển khai
 
-![vpcs](/images/5-Workshop/5.2-Prerequisite/vpcs.png)
+Chạy các lệnh kiểm tra cơ bản từ thư mục gốc của CampusMeet:
 
-+ 3 EC2s đã được tạo
+```powershell
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+npm run format:check
+```
 
-![EC2](/images/5-Workshop/5.2-Prerequisite/ec2.png)
+Các lệnh tương ứng kiểm tra quy tắc mã nguồn, kiểu dữ liệu TypeScript, kiểm thử tự động, khả năng xây dựng dự án và định dạng tệp.
+
+Kiểm tra mẫu nền tảng dữ liệu:
+
+```powershell
+npm run sam:validate:data -- --region ap-southeast-1
+```
+
+Việc mẫu hạ tầng được kiểm tra thành công chỉ xác nhận cấu trúc mẫu hợp lệ; chưa chứng minh tài nguyên đã được triển khai trên AWS.
+
+## 5. Khởi động giao diện trên máy cá nhân
+
+Khởi động ứng dụng web:
+
+```powershell
+npm run dev
+```
+
+Theo cấu hình hiện tại, Vite phục vụ ứng dụng tại:
+
+```text
+http://localhost:5173
+```
+
+Ở bước chuẩn bị, giao diện có thể khởi động nhưng các chức năng cần Cognito và API sẽ chỉ hoạt động sau khi các stack AWS được triển khai và tệp `apps/web/.env` được điền bằng đúng output của CloudFormation.
+
+Không tự đặt giá trị giả cho User Pool, User Pool Client hoặc địa chỉ API. Không đưa tệp `.env`, token, mật khẩu hoặc thông tin xác thực AWS vào Git.
+
+## 6. Đăng nhập AWS bằng AWS CLI
+
+Mỗi thành viên đăng nhập bằng thông tin của IAM user được cấp riêng:
+
+```powershell
+aws login
+aws sts get-caller-identity
+```
+
+Lệnh `get-caller-identity` phải trả về đúng tài khoản và danh tính đang sử dụng. Ghi lại mã tài khoản để dùng trong các bước xác minh sau:
+
+```powershell
+$AccountId = aws sts get-caller-identity --query Account --output text
+$AccountId
+```
+
+Kiểm tra khu vực được cấu hình:
+
+```powershell
+aws configure get region
+```
+
+Các bước triển khai của workshop sử dụng:
+
+```text
+ap-southeast-1
+```
+
+Nếu máy đang đăng nhập nhiều tài khoản AWS, phải sử dụng đúng hồ sơ cấu hình trong toàn bộ các lệnh liên quan. Không triển khai khi chưa xác nhận chính xác mã tài khoản và khu vực AWS.
+
+## 7. Quy ước tài nguyên của CampusMeet
+
+Các phần tiếp theo của workshop sử dụng các giá trị thống nhất:
+
+| Thành phần | Giá trị |
+| --- | --- |
+| Môi trường | `dev` |
+| Khu vực AWS | `ap-southeast-1` |
+| Tiền tố bảng | `campusmeet-dev` |
+| Data stack | `campusmeet-dev-data` |
+| Auth stack | `campusmeet-dev-auth` |
+| Địa chỉ frontend cục bộ | `http://localhost:5173` |
+
+Năm bảng DynamoDB dự kiến được quản lý bởi data stack:
+
+```text
+campusmeet-dev-identity
+campusmeet-dev-collaboration
+campusmeet-dev-meeting-data
+campusmeet-dev-task-data
+campusmeet-dev-ai-work
+```
+
+Không tự tạo bảng, chỉ mục hoặc thay đổi quyền trực tiếp trên AWS Console khi các tài nguyên đó đã được quản lý bằng CloudFormation.
+
+## 8. Danh sách kiểm tra trước khi tiếp tục
+
+Chỉ chuyển sang phần kiến trúc và triển khai khi đã xác nhận:
+
+- Đã có quyền truy cập mã nguồn CampusMeet.
+- Node.js 22 LTS và npm 10 trở lên hoạt động.
+- Git, AWS CLI, AWS SAM CLI và PowerShell hoạt động.
+- Các thư viện của dự án đã được cài đặt.
+- Các lệnh kiểm tra mã nguồn cơ bản chạy thành công.
+- Đã đăng nhập đúng IAM user bằng AWS CLI.
+- Mã tài khoản AWS đúng với môi trường của nhóm.
+- Khu vực triển khai là `ap-southeast-1`.
+- Không sử dụng root hoặc khóa truy cập dùng chung.
+- Cảnh báo ngân sách đã được thiết lập.
+
+Sau khi hoàn tất các điều kiện trên, có thể tiếp tục tìm hiểu kiến trúc hệ thống và ranh giới giữa các stack của CampusMeet.
