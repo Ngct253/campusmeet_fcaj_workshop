@@ -1,59 +1,27 @@
 ---
 title: "Worklog Tuần 3"
-date: 2024-01-01
+date: 2026-06-29
 weight: 3
 chapter: false
 pre: " <b> 1.3. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
 
+### Mục tiêu tuần 3
 
-### Mục tiêu tuần 3:
+- Tìm hiểu kiến trúc ứng dụng Serverless trên AWS.
+- Hiểu luồng kết nối giữa frontend, API và cơ sở dữ liệu.
+- Xác định bài toán, phạm vi và kiến trúc dự kiến của CampusMeet.
+- Chuẩn bị kế hoạch tổ chức repository.
 
-* Kết nối, làm quen với các thành viên trong First Cloud AI Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+### Công việc đã thực hiện
 
-### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCAJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| Thứ | Công việc chi tiết | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
+| --- | --- | --- | --- | --- |
+| Thứ 6 | Tìm hiểu kiến trúc ứng dụng Serverless trên AWS.<br>Tìm hiểu cách frontend gọi API Gateway.<br>Tìm hiểu cách AWS Lambda xử lý request và tương tác với Amazon DynamoDB.<br>Tìm hiểu triển khai ứng dụng bằng AWS SAM.<br>Tìm hiểu xác thực người dùng bằng Amazon Cognito.<br>Xác định bài toán, phạm vi chức năng, kiến trúc dự kiến và kế hoạch tổ chức repository CampusMeet. | 03/07/2026 | 05/07/2026 | <https://cloudjourney.awsstudygroup.com/vi/> |
 
+### Kết quả đạt được tuần 3
 
-### Kết quả đạt được tuần 3:
-
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+- Hiểu luồng cơ bản từ frontend qua API Gateway đến Lambda.
+- Hiểu vai trò của Amazon Cognito, DynamoDB và AWS SAM trong kiến trúc Serverless.
+- Xác định được bài toán và phạm vi ban đầu của CampusMeet.
+- Có định hướng ban đầu về kiến trúc và cấu trúc repository của dự án.
