@@ -53,7 +53,7 @@ Do not continue until Node.js, npm, AWS CLI, and AWS SAM CLI are available from 
 Clone the repository and enter the project directory:
 
 ```powershell
-git clone <repository-url>
+git clone https://github.com/Ngct253/CampusMeet.git
 cd CampusMeet
 ```
 

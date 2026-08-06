@@ -53,7 +53,7 @@ Không tiếp tục nếu Node.js, npm, AWS CLI hoặc AWS SAM CLI chưa đượ
 Tải mã nguồn và chuyển vào thư mục dự án:
 
 ```powershell
-git clone <repository-url>
+git clone https://github.com/Ngct253/CampusMeet.git
 cd CampusMeet
 ```
 
