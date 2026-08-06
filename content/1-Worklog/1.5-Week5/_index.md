@@ -1,57 +1,28 @@
 ---
 title: "Week 5 Worklog"
-date: 2024-01-01
+date: 2026-07-13
 weight: 5
 chapter: false
 pre: " <b> 1.5. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+### Week 5 Objectives
 
-### Week 5 Objectives:
+- Integrate the authentication flow with AWS resources.
+- Protect the API with an API Gateway JWT authorizer.
+- Deploy the authentication stack with AWS SAM.
+- Validate the end-to-end authentication flow and clean up the test resources.
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+### Completed Tasks
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| Day | Task Details | Start Date | Completion Date | Reference Material |
+| --- | --- | --- | --- | --- |
+| Monday | Completed the frontend integration with Amazon Cognito.<br>Configured an API Gateway JWT authorizer and a protected `GET /me` endpoint.<br>Built an AWS SAM stack containing Cognito, API Gateway, Lambda, IAM, and a CloudWatch log group.<br>Deployed and verified sign-up, email confirmation, sign-in, and authenticated API requests using an access token.<br>Ran the test suite, type checking, production build, and SAM validation, then removed the test stack. | 13/07/2026 | 13/07/2026 | <https://github.com/Ngct253/CampusMeet> |
 
+### Week 5 Achievements
 
-### Week 5 Achievements:
-
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+- Completed the Amazon Cognito authentication flow.
+- Protected the API with an API Gateway JWT authorizer.
+- Built and deployed the authentication integration stack with AWS SAM.
+- Understood the request flow across the frontend, Cognito, API Gateway, and Lambda.
+- Practiced the full deploy, verification, and cleanup workflow for the authentication stack.
