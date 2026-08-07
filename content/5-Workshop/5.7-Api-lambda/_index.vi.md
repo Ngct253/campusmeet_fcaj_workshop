@@ -10,235 +10,280 @@ pre: " <b> 5.7. </b> "
 
 ## Mục tiêu
 
-Phần này giải thích cách CampusMeet tiếp nhận yêu cầu HTTP, xác thực JWT, chuyển yêu cầu đến Lambda và truy cập dữ liệu thông qua lớp nghiệp vụ cùng lớp truy cập dữ liệu. Nội dung bám theo `infra/auth-integration.yaml`, `services/api/src/auth-integration.ts` và `docs/api-contract.md`.
+Phần này giải thích cách CampusMeet nhận request HTTP, xác thực JWT và chuyển request đến các bộ xử lý nghiệp vụ. Workshop sử dụng `infra/auth-integration.yaml` để học core API ban đầu, nhưng cũng đối chiếu với `services/api/src/index.ts` để phản ánh các route của full application hiện tại.
 
-## Cấu trúc API hiện tại
-
-Ngăn xếp `campusmeet-dev-auth` tạo một HTTP API và một Lambda cốt lõi:
+## 1. Luồng xử lý request
 
 ```text
-Amazon API Gateway HTTP API
-        |
-        +--- GET /health          Không yêu cầu JWT
-        |
-        +--- OPTIONS /{proxy+}    Không yêu cầu JWT
-        |
-        +--- ANY /{proxy+}        Yêu cầu JWT Cognito
-                                  |
-                                  v
-                     AuthIntegrationFunction
+Frontend
+  ↓
+Authorization: Bearer <JWT>
+  ↓
+API Gateway HTTP API
+  ↓
+JWT Authorizer
+  ↓
+Lambda router/handler
+  ↓
+Business service
+  ↓
+Repository / integration adapter
 ```
 
-HTTP API dùng stage `$default`. Địa chỉ cơ sở có dạng:
+Frontend không quyết định role. Lambda lấy identity từ JWT rồi kiểm tra membership và quyền bằng dữ liệu phía server.
+
+## 2. Public và protected route
+
+`GET /health` là public endpoint để kiểm tra service.
+
+Các route nghiệp vụ yêu cầu JWT hợp lệ. Nếu không gửi token:
 
 ```text
-https://<api-id>.execute-api.ap-southeast-1.amazonaws.com
+GET /me
+→ 401
 ```
 
-Không thêm `/dev` vào địa chỉ này.
+CORS chỉ quyết định browser origin nào được phép gọi API; CORS không thay thế authentication hoặc authorization.
 
-## 1. Luồng xử lý yêu cầu
+## 3. Core API trong auth stack
 
-Một yêu cầu được bảo vệ đi qua các bước:
+`infra/auth-integration.yaml` triển khai Lambda core với các nhóm route:
 
-1. Giao diện lấy phiên đăng nhập từ Amazon Cognito.
-2. JWT được gửi trong tiêu đề `Authorization`.
-3. API Gateway kiểm tra JWT theo User Pool và User Pool Client đã triển khai.
-4. Lambda đọc phương thức, đường dẫn, tham số và nội dung yêu cầu.
-5. Lambda lấy danh tính người dùng từ thông tin JWT.
-6. Lớp nghiệp vụ kiểm tra thành viên và vai trò trước khi gọi lớp truy cập dữ liệu.
-7. Lớp truy cập dữ liệu thực hiện truy vấn hoặc ghi vào đúng bảng DynamoDB.
-8. Lambda trả phản hồi theo hợp đồng dùng chung trong `@campusmeet/shared`.
+```text
+/health
+/me
+/groups
+/groups/:groupId
+/groups/:groupId/invitations
+/groups/:groupId/members/:userId
+/groups/:groupId/meetings
+/meetings
+/meetings/:meetingId
+/invitations
+/notifications
+```
 
-Giao diện không được truyền một vai trò rồi yêu cầu backend tin vào giá trị đó. Quyền luôn được xác minh bằng dữ liệu membership đang lưu.
+Đây là stack phù hợp để học Cognito, Group, Invitation, Notification và Meeting CRUD trước khi chuyển sang full application.
 
-## 2. Cấu hình HTTP API
+## 4. Full application API
 
-`infra/auth-integration.yaml` cấu hình:
+Handler đầy đủ trong `services/api/src/index.ts` mở rộng thêm các domain sau.
 
-| Thuộc tính | Giá trị |
-| --- | --- |
-| Stage | `$default` |
-| Nguồn CORS mặc định | `http://localhost:5173` |
-| Phương thức CORS | `GET`, `POST`, `PATCH`, `DELETE`, `OPTIONS` |
-| Tiêu đề được phép | `authorization`, `content-type`, `x-request-id`, `idempotency-key` |
-| Nguồn JWT | `$request.header.Authorization` |
-| Bộ kiểm tra mặc định | `CognitoAuthorizer` |
+### Meeting và Google synchronization
 
-`GET /health` được khai báo riêng và không dùng bộ kiểm tra JWT. Tất cả đường dẫn nghiệp vụ còn lại đi qua `/{proxy+}`.
+```text
+/groups/:groupId/meetings
+/meetings
+/meetings/:meetingId
+/meetings/:meetingId/cancel
+/meetings/:meetingId/google-sync/retry
+```
 
-## 3. Các nhóm đường dẫn cốt lõi
+### Attachment
 
-| Nhóm chức năng | Đường dẫn chính | Trạng thái trong mã nguồn |
-| --- | --- | --- |
-| Kiểm tra dịch vụ | `GET /health` | Có bộ xử lý thật |
-| Hồ sơ | `GET /me`, `PATCH /me` | Đã triển khai |
-| Nhóm | `GET /groups`, `POST /groups`, `GET/PATCH /groups/:groupId` | Đã triển khai |
-| Thành viên | `DELETE /groups/:groupId/members/:userId` | Đã triển khai; không cho xóa Group Admin |
-| Lời mời | Các đường dẫn dưới `/groups/:groupId/invitations` và `/invitations` | Đã triển khai |
-| Cuộc họp | `GET /meetings`, các đường dẫn dưới `/groups/:groupId/meetings` và `/meetings/:meetingId` | Lõi tạo, xem, sửa và hủy đã có trong mã nguồn |
-| Thông báo | `GET /notifications`, `POST /notifications/:notificationId/read` | Đã triển khai |
+```text
+/meetings/:meetingId/attachments/*
+/attachments/:attachmentId/download-url
+```
 
-Các mô-đun chưa có bộ xử lý đầy đủ có thể trả `501 Not Implemented` theo hợp đồng API. Không xem việc đường dẫn xuất hiện trong tài liệu là bằng chứng chức năng đã được triển khai hoàn chỉnh.
+### Minutes và Task
 
-## 4. Kiểu dữ liệu dùng chung
+```text
+/meetings/:meetingId/minutes
+/meetings/:meetingId/minutes/action-items/:actionItemId/task
+/tasks
+/tasks/:taskId/status
+/dashboard
+```
 
-Frontend và backend dùng các kiểu dữ liệu từ:
+### Google integration
+
+```text
+/integrations/google/connect
+/integrations/google/callback
+/integrations/google/meet-context
+```
+
+### AI
+
+```text
+/meetings/:meetingId/ai/chat
+/groups/:groupId/ai/search
+/meetings/:meetingId/ai/minutes-draft
+/meetings/:meetingId/ai/task-proposals
+/groups/:groupId/ai/progress-analysis
+/ai/jobs/:aiJobId
+```
+
+Một route xuất hiện trong full application source không có nghĩa route đó đã được deploy trong `campusmeet-dev-auth`. Khi kiểm thử phải xác định chính xác stack và Lambda handler đang chạy.
+
+## 5. Router và handler
+
+Router chịu trách nhiệm:
+
+- Ghép method + path.
+- Parse path parameter.
+- Chuyển request sang handler đúng domain.
+- Trả `404` nếu không có route.
+
+Handler không nên chứa toàn bộ nghiệp vụ và truy vấn DynamoDB trực tiếp nếu service/repository tương ứng đã tồn tại.
+
+Cấu trúc mong muốn:
+
+```text
+API event
+  ↓
+Handler
+  ↓
+Application/Domain Service
+  ↓
+Repository / Port
+  ↓
+AWS adapter
+```
+
+## 6. Shared contracts
+
+Frontend và backend dùng các type/DTO từ:
 
 ```text
 @campusmeet/shared
 ```
 
-Không sao chép lại giao diện TypeScript cho cùng một request hoặc response ở nhiều nơi. Khi thay đổi hợp đồng:
+Khi thay đổi API contract:
 
-1. Cập nhật kiểu dữ liệu dùng chung.
+1. Cập nhật shared type.
 2. Cập nhật backend.
-3. Cập nhật giao diện.
-4. Cập nhật `docs/api-contract.md`.
-5. Chạy kiểm tra kiểu, kiểm thử và build.
+3. Cập nhật frontend.
+4. Cập nhật tài liệu.
+5. Chạy typecheck/test/build.
 
-Các lệnh kiểm tra:
+Không tạo hai interface khác nhau cho cùng một payload nếu có thể dùng type chung.
+
+## 7. Authorization ở Lambda
+
+API Gateway chỉ biết JWT có hợp lệ hay không. Lambda tiếp tục kiểm tra quyền.
+
+Ví dụ trước khi đọc Meeting:
+
+```text
+JWT userId
+  ↓
+load Meeting
+  ↓
+meeting.groupId
+  ↓
+load membership
+  ↓
+allow / deny
+```
+
+Các action quản trị có thể yêu cầu `GROUP_ADMIN`, organizer hoặc assignee tùy nghiệp vụ.
+
+## 8. DynamoDB repository
+
+Repository chịu trách nhiệm:
+
+- Xây dựng `PK/SK`.
+- Chọn GSI phù hợp.
+- `GetItem`/`Query`.
+- Conditional write.
+- Transaction khi một thay đổi cần tính nguyên tử.
+
+Business service không nên phải biết chi tiết mọi key expression của DynamoDB.
+
+## 9. Idempotency và conflict
+
+Các request tạo dữ liệu quan trọng có thể dùng `Idempotency-Key` để chống double-submit.
+
+Các resource có version dùng conditional write và trả `409` khi client gửi expected version cũ.
+
+Hai cơ chế giải quyết hai vấn đề khác nhau:
+
+- Idempotency: cùng một ý định bị gửi lặp.
+- Version conflict: hai người cùng sửa một resource.
+
+## 10. Xử lý lỗi
+
+Các mã phổ biến:
+
+| Mã | Ý nghĩa |
+| --- | --- |
+| `400` | Request không hợp lệ |
+| `401` | Chưa xác thực/JWT không hợp lệ |
+| `403` | Đã xác thực nhưng không đủ quyền |
+| `404` | Không tìm thấy resource/route |
+| `409` | Xung đột trạng thái hoặc version |
+| `500` | Lỗi nội bộ/dependency chưa được ánh xạ khác |
+
+Không trả stack trace hoặc secret về frontend.
+
+## 11. Log an toàn
+
+Log nên có:
+
+- `requestId`.
+- method/path.
+- status/error code.
+- resource ID cần thiết.
+- latency.
+
+Không log:
+
+- JWT.
+- password.
+- invitation token gốc.
+- Google OAuth code/token.
+- presigned URL.
+- toàn bộ transcript/document.
+
+## 12. Kiểm tra trước deploy
+
+Từ root repository:
 
 ```powershell
+npm run infra:validate
 npm run lint
 npm run typecheck
 npm run test
 npm run build
-npm run format:check
 ```
 
-## 5. Ranh giới mã nguồn Lambda
-
-Các lớp chính:
-
-```text
-API Gateway event
-      ↓
-Bộ xử lý yêu cầu
-      ↓
-Lớp nghiệp vụ
-      ↓
-Giao diện repository
-      ↓
-DynamoDB repository hoặc kho dữ liệu trong bộ nhớ
-```
-
-Nguyên tắc:
-
-- Bộ xử lý không truy vấn DynamoDB trực tiếp khi đã có lớp repository.
-- Lớp nghiệp vụ chịu trách nhiệm kiểm tra quyền và quy tắc nghiệp vụ.
-- Repository chịu trách nhiệm ánh xạ khóa, chỉ mục và thao tác DynamoDB.
-- Kiểm thử đơn vị có thể dùng repository trong bộ nhớ.
-- Môi trường AWS dùng chung dành cho kiểm thử tích hợp và kiểm thử nhanh sau triển khai.
-
-## 6. Quyền truy cập dữ liệu của Lambda
-
-Vai trò Lambda trong ngăn xếp hiện tại truy cập:
-
-- Bảng `campusmeet-dev-identity` và chỉ mục.
-- Bảng `campusmeet-dev-collaboration` và chỉ mục.
-- Bảng `campusmeet-dev-meeting-data` và chỉ mục.
-
-Các hành động được giới hạn vào `GetItem`, `BatchGetItem`, `Query`, `PutItem`, `UpdateItem`, `DeleteItem` và `ConditionCheckItem`.
-
-Lambda cũng có `cognito-idp:AdminGetUser` trên đúng User Pool để lấy email đã xác minh khi nghiệp vụ cần đối chiếu lời mời.
-
-## 7. Triển khai cập nhật API
-
-Khi mã Lambda hoặc mẫu hạ tầng thay đổi:
+Với auth/core stack:
 
 ```powershell
-sam validate `
-  --template-file infra/auth-integration.yaml `
-  --lint `
-  --region ap-southeast-1
-
+sam validate --template-file infra/auth-integration.yaml --lint --region ap-southeast-1
 npm run sam:build:auth
 ```
 
-Tạo change set trước khi thực thi:
+Với full application:
 
 ```powershell
-sam deploy `
-  --template-file infra/auth-integration.yaml `
-  --stack-name campusmeet-dev-auth `
-  --resolve-s3 `
-  --capabilities CAPABILITY_IAM `
-  --parameter-overrides `
-    AllowedOrigin=http://localhost:5173 `
-    DataTablePrefix=campusmeet-dev `
-  --no-execute-changeset `
-  --region ap-southeast-1
+npm run sam:validate:app -- --region ap-southeast-1
+npm run sam:build:app
 ```
 
-Kiểm tra thay đổi chỉ cập nhật tài nguyên thuộc ngăn xếp. Không sửa vai trò IAM hoặc đường dẫn API thủ công trên Console rồi bỏ qua mã nguồn.
+## 13. Smoke test
 
-## 8. Kiểm thử API
-
-### Đường dẫn công khai
-
-```powershell
-curl.exe -i "<ApiUrl>/health"
-```
-
-Kỳ vọng trả `200` và thông tin trạng thái dịch vụ.
-
-### Đường dẫn được bảo vệ
-
-```powershell
-curl.exe -i "<ApiUrl>/me"
-```
-
-Không có JWT phải trả `401`.
-
-Đối với luồng có đăng nhập, kiểm thử qua giao diện CampusMeet để ứng dụng tự lấy và gửi JWT. Không đưa token thật vào tài liệu hoặc lịch sử lệnh dùng chung.
-
-### Các trường hợp quyền cần kiểm tra
-
-- Người đã đăng nhập nhưng không thuộc nhóm không được xem chi tiết nhóm.
-- Thành viên thường không được sửa nhóm hoặc gửi lời mời.
-- Group Admin được thực hiện thao tác quản trị trong nhóm của mình.
-- Người dùng không được truy cập cuộc họp thuộc nhóm khác.
-- Yêu cầu tạo có khả năng gửi lặp phải dùng `Idempotency-Key` khi hợp đồng yêu cầu.
-
-## 9. Nhật ký và xử lý lỗi
-
-Nhóm nhật ký của Lambda:
+Sau deploy:
 
 ```text
-/aws/lambda/campusmeet-dev-auth-api
+GET /health
+→ 200
+
+GET /me không JWT
+→ 401
 ```
 
-Mẫu hiện tại giữ nhật ký trong 7 ngày.
+Sau đó test qua frontend để tránh copy JWT thật vào shell history dùng chung.
 
-Nhật ký nên chứa:
-
-- Mã yêu cầu.
-- Đường dẫn và phương thức.
-- Mã trạng thái.
-- Mã lỗi và ID tài nguyên cần cho chẩn đoán.
-
-Không ghi:
-
-- JWT hoặc mã OAuth.
-- Mật khẩu hoặc mã xác nhận.
-- Token lời mời gốc.
-- Toàn bộ nội dung tệp, bản phiên âm hoặc hội thoại.
-
-Ý nghĩa các phản hồi thường gặp:
-
-| Mã | Ý nghĩa |
-| --- | --- |
-| `401` | Thiếu hoặc JWT không hợp lệ |
-| `403` | Đã xác thực nhưng không đủ quyền hoặc không thuộc nhóm |
-| `404` | Không tìm thấy tài nguyên hoặc đường dẫn |
-| `409` | Xung đột trạng thái hoặc dữ liệu đã tồn tại |
-| `501` | Mô-đun có hợp đồng nhưng chưa có bộ xử lý hoàn chỉnh |
+Đối với full application, tiếp tục kiểm tra Group → Meeting → Minutes → Task → Dashboard và các integration được bật.
 
 ## Kết quả cần đạt
 
-- Hiểu rõ đường đi của một yêu cầu từ trình duyệt đến DynamoDB.
-- `/health` hoạt động công khai và API nghiệp vụ yêu cầu JWT.
-- Frontend và backend dùng cùng kiểu dữ liệu từ `@campusmeet/shared`.
-- Mọi thao tác theo nhóm đều kiểm tra membership và vai trò ở backend.
-- Nhật ký hỗ trợ chẩn đoán mà không làm lộ dữ liệu nhạy cảm.
+- Hiểu luồng request từ browser đến repository.
+- Phân biệt core auth stack và full application handler.
+- Route được bảo vệ bằng JWT và quyền nghiệp vụ ở backend.
+- Frontend/backend dùng shared contract.
+- Idempotency và version conflict được xử lý đúng mục đích.
+- Log đủ để debug nhưng không làm lộ secret.
