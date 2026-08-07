@@ -96,7 +96,7 @@ The most valuable lesson was the move from alerting toward assisted or autonomou
 
 ### Participation Evidence
 
-![Photo taken during the AWS AI Agents and Autonomous Operations event](/images/4-EventParticipated/4.1-Event1/event-participation.jpg)
+![Photo taken during the AWS AI Agents and Autonomous Operations event](images/4-EventParticipated/4.1-Event1/event-participation.jpg)
 
 *Photo taken during the event at the 26th Floor, Bitexco Tower.*
 

@@ -80,15 +80,15 @@ Sự kiện giúp em có góc nhìn thực tế hơn về quá trình tham gia h
 
 ### Minh Chứng Tham Gia
 
-![Phần khai mạc FCAJ x Agentic AI Build Week](/images/4-EventParticipated/4.2-Event2/event-opening.png)
+![Phần khai mạc FCAJ x Agentic AI Build Week](images/4-EventParticipated/4.2-Event2/event-opening.png)
 
 *Phần giới thiệu chương trình FCAJ x Agentic AI Build Week.*
 
-![Phần chia sẻ bài học từ các đội](/images/4-EventParticipated/4.2-Event2/lessons-learned.jpg)
+![Phần chia sẻ bài học từ các đội](images/4-EventParticipated/4.2-Event2/lessons-learned.jpg)
 
 *Các bài học về định hướng, thực thi và làm việc nhóm.*
 
-![Phần trình bày kiến trúc dự án](/images/4-EventParticipated/4.2-Event2/architecture-sharing.png)
+![Phần trình bày kiến trúc dự án](images/4-EventParticipated/4.2-Event2/architecture-sharing.png)
 
 *Chia sẻ kiến trúc và cách triển khai dự án của các đội.*
 

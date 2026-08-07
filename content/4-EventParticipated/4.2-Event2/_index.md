@@ -80,15 +80,15 @@ The message **Show Up – Build – Pitch – Win** was especially meaningful: p
 
 ### Participation Evidence
 
-![Opening session of FCAJ x Agentic AI Build Week](/images/4-EventParticipated/4.2-Event2/event-opening.png)
+![Opening session of FCAJ x Agentic AI Build Week](images/4-EventParticipated/4.2-Event2/event-opening.png)
 
 *Opening session of FCAJ x Agentic AI Build Week.*
 
-![Lessons shared by participating teams](/images/4-EventParticipated/4.2-Event2/lessons-learned.jpg)
+![Lessons shared by participating teams](images/4-EventParticipated/4.2-Event2/lessons-learned.jpg)
 
 *Lessons about direction, execution, and teamwork.*
 
-![Project architecture presentation](/images/4-EventParticipated/4.2-Event2/architecture-sharing.png)
+![Project architecture presentation](images/4-EventParticipated/4.2-Event2/architecture-sharing.png)
 
 *Teams presenting their project architectures and implementation approaches.*
 

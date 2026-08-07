@@ -96,7 +96,7 @@ Sự kiện giúp em có góc nhìn tổng thể về cách AI agent được á
 
 ### Một Số Hình Ảnh Khi Tham Gia Sự Kiện
 
-![Hình ảnh tham gia sự kiện AWS AI Agents and Autonomous Operations](/images/4-EventParticipated/4.1-Event1/event-participation.jpg)
+![Hình ảnh tham gia sự kiện AWS AI Agents and Autonomous Operations](images/4-EventParticipated/4.1-Event1/event-participation.jpg)
 
 *Hình ảnh được chụp trong thời gian tham gia sự kiện tại tầng 26, tòa nhà Bitexco.*
 
