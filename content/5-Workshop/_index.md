@@ -37,7 +37,7 @@ CampusMeet addresses this problem through a centralized system in which users ar
 
 ## High-Level Architecture
 
-![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png)
+![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
 
 CampusMeet uses the following core AWS services:
 

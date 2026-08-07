@@ -75,7 +75,7 @@ This workshop is suitable for:
 
 ## High-Level Architecture
 
-![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png)
+![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
 
 CampusMeet is organized into the following layers:
 

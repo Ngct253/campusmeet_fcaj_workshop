@@ -31,4 +31,4 @@ Từ đó, dữ liệu của một cuộc họp không bị “đóng lại” s
 🔗 **Link bài viết**: [https://www.facebook.com/groups/awsstudygroupfcj/permalink/2237833836981576](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2237833836981576)
 
 ### Minh chứng bài đăng
-![Minh chứng đăng bài trên AWS Study Group](images/3-BlogsPosted/3.1-Blog1/blog-evidence.png)
+![Minh chứng đăng bài trên AWS Study Group](images/3-BlogsPosted/3.1-Blog1/blog-evidence.png?v=2)

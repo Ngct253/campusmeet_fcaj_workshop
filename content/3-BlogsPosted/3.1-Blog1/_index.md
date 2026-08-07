@@ -25,4 +25,4 @@ Key AWS Serverless highlights:
 🔗 **Post Link**: [https://www.facebook.com/groups/awsstudygroupfcj/permalink/2237833836981576](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2237833836981576)
 
 ### Publication Evidence
-![Publication Evidence on AWS Study Group](images/3-BlogsPosted/3.1-Blog1/blog-evidence.png)
+![Publication Evidence on AWS Study Group](images/3-BlogsPosted/3.1-Blog1/blog-evidence.png?v=2)
