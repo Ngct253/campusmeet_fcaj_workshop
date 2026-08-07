@@ -8,178 +8,157 @@ pre: " <b> 5.3. </b> "
 
 # CampusMeet System Architecture
 
-## Objectives
+## Goal
 
-This section explains how the CampusMeet components work together and where responsibilities are separated across the web application, APIs, data stores, and external integrations. Understanding these boundaries is necessary before deploying resources, assigning IAM permissions, or implementing additional features.
+This section explains how CampusMeet separates long-lived data, core API functionality, asynchronous processing, and the full application environment. Keeping these boundaries explicit makes later deployments easier to reason about and prevents a small application change from being mistaken for a full-system deployment.
 
-## Design Principles
+## 1. Design principles
 
-CampusMeet follows these principles:
+CampusMeet follows a few consistent rules:
 
-- CampusMeet manages the workflow before, during, and after a meeting. It does not implement video calling or replicate Google Meet.
-- The web application never accesses Amazon DynamoDB directly.
-- Amazon Cognito authenticates users, while the backend still enforces membership and role authorization.
-- Application data is stored in five DynamoDB tables organized around access requirements.
-- Files, audio, and other large objects are stored in Amazon S3; DynamoDB stores metadata and application state.
-- Long-running operations such as file processing, transcription, and AI generation are handled asynchronously.
-- AI-generated results remain source-grounded drafts until an authorized user reviews and confirms them.
+- the frontend never reads DynamoDB directly;
+- Cognito authenticates identity, while Lambda services enforce domain authorization;
+- business data is stored in five shared DynamoDB tables;
+- files and larger content are stored in S3;
+- long-running and external-service work is asynchronous;
+- Google Calendar/Meet is not the source of truth for meetings;
+- AI retrieval is restricted to sources the caller is allowed to read;
+- infrastructure changes are managed through SAM/CloudFormation.
 
-## Main Request Flow
-
-![CampusMeet AWS Architecture Diagram](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
+## 2. Main request path
 
 ```text
 User
-  |
-  v
+ ↓
 CampusMeet Web
-React + TypeScript + Vite
-  |
-  | 1. Sign up and sign in
-  v
+ ↓
 Amazon Cognito
-  |
-  | 2. Issue JWT
-  v
+ ↓ JWT
 Amazon API Gateway
-  |
-  | 3. Validate JWT
-  v
-AWS Lambda
-  |
-  | 4. Enforce membership and role
-  v
-Application and repository layers
-  |
-  +----------------------+----------------------+
-  |                      |                      |
-  v                      v                      v
-DynamoDB               Amazon S3          External services
-Application data       Files and audio    Google, SES, and AI
+ ↓
+AWS Lambda API
+ ↓
+Business service
+ ↓
+Repository / integration adapter
+ ↓
+DynamoDB / S3 / Google / Bedrock
 ```
 
-A typical read or write request follows these steps:
+A protected request therefore has two independent checks: token validation at the API boundary and resource authorization inside the application service.
 
-1. The user signs in through Amazon Cognito.
-2. The web application sends the JWT in the `Authorization` header.
-3. Amazon API Gateway validates the token signature, issuer, audience, and expiration.
-4. AWS Lambda obtains the identity from the JWT instead of trusting a client-provided `userId` or role.
-5. The backend verifies active membership and the required role for the requested group or meeting.
-6. The repository performs `GetItem`, `Query`, conditional writes, or transactions against the appropriate table.
-7. The response uses shared contracts from `@campusmeet/shared`.
+## 3. Current infrastructure boundaries
 
-## Component Responsibilities
-
-| Component | Responsibility in CampusMeet |
-| --- | --- |
-| CampusMeet Web | User interface for profiles, groups, invitations, meetings, notifications, and later workflow features |
-| Amazon Cognito | User registration, account confirmation, sign-in, and JWT issuance |
-| Amazon API Gateway | HTTP API exposure, CORS handling, and JWT validation before Lambda invocation |
-| AWS Lambda | Use-case execution, authorization, and repository coordination |
-| Amazon DynamoDB | Application data stored in five physical tables |
-| Amazon S3 | Private storage for files, audio, recordings, and large content |
-| EventBridge Scheduler | One-time reminder schedules associated with meetings |
-| AWS Step Functions | Coordination of long-running or retryable processing |
-| Amazon Transcribe | Speech-to-text processing when transcription workflows run |
-| Amazon Bedrock | Source-grounded questions, summaries, and content proposals |
-| Amazon CloudWatch | Logs, metrics, and failure information |
-| AWS IAM | Access control for users and AWS resources |
-| AWS SAM and CloudFormation | Infrastructure definition, validation, and deployment |
-
-## CloudFormation Stack Boundaries
-
-CampusMeet separates data resources from application resources to reduce the risk of affecting persistent data during application updates.
+The repository currently contains four important infrastructure templates.
 
 | Template | Responsibility |
 | --- | --- |
-| `infra/data-foundation.yaml` | Owns the five shared DynamoDB tables |
-| `infra/auth-integration.yaml` | Owns the Cognito User Pool, app client, HTTP API, Lambda function, IAM role, and log group for authentication and the current core APIs |
-| `infra/template.yaml` | Describes the extended application architecture and references the five tables through a stable prefix; it does not recreate the data tables |
+| `infra/data-foundation.yaml` | Five DynamoDB tables and the `meeting-data` stream |
+| `infra/auth-integration.yaml` | Smaller dev/core stack for Cognito, HTTP API, and core M1/M2 functionality |
+| `infra/user-content-orchestration.yaml` | User-content S3, Step Functions, reminders, Scheduler, and M4 orchestration resources |
+| `infra/template.yaml` | Full application stack with frontend hosting, API, Cognito, Google sync, AI worker, Bedrock, and monitoring |
 
-The platform deployment order is:
+`auth-integration.yaml` and `template.yaml` are not interchangeable. The smaller auth/core stack is useful for early workshop exercises, while the full application stack is required when testing Minutes, Tasks, Upload, Google, and AI together.
+
+## 4. Data foundation
+
+The data stack owns:
 
 ```text
-Verify AWS account and IAM access
+campusmeet-<env>-identity
+campusmeet-<env>-collaboration
+campusmeet-<env>-meeting-data
+campusmeet-<env>-task-data
+campusmeet-<env>-ai-work
+```
+
+Separating these tables from application resources reduces the chance that updating a Lambda or frontend replaces long-lived data. The `meeting-data` table also exposes a DynamoDB Stream used by asynchronous processing such as Google synchronization.
+
+## 5. Auth/core stack
+
+`infra/auth-integration.yaml` contains the smaller learning/dev deployment for:
+
+- Cognito User Pool and client;
+- HTTP API and JWT authorizer;
+- core API Lambda;
+- its execution role and log group.
+
+It is suitable for Authentication, Groups, Invitations, Notifications, and core Meeting CRUD exercises.
+
+It should not be used as evidence that every full-application route is already deployed.
+
+## 6. User-content and orchestration stack
+
+`infra/user-content-orchestration.yaml` owns resources used outside short synchronous API calls, including private user-content storage, AI orchestration, reminders, Scheduler-related roles, and SES-related configuration.
+
+A document upload can therefore follow this path:
+
+```text
+API permission check
+  ↓
+presigned upload URL
+  ↓
+private S3
+  ↓
+Attachment completion
+  ↓
+AIJob / Step Functions
+```
+
+## 7. Full application stack
+
+`infra/template.yaml` brings together the wider deployed application, including frontend S3/CloudFront, application Cognito, the full HTTP API, GoogleSyncWorker, AI Worker, Bedrock/vector resources, and monitoring.
+
+This is the stack used for the later E2E chapters when a feature must be exercised as part of the complete product flow.
+
+## 8. External integrations
+
+Google synchronization is performed after the internal Meeting change is persisted. A Google failure produces synchronization state and retry behavior rather than deleting the CampusMeet meeting.
+
+AI follows an asynchronous job path:
+
+```text
+API
+ ↓
+AIJob
+ ↓
+Step Functions
+ ↓
+AI Worker
+ ↓
+Bedrock / Knowledge Base
+```
+
+The backend filters group, meeting, source state, and user permissions before retrieved content is passed to the model.
+
+## 9. Features outside the current core E2E
+
+The wider design includes recording and Amazon Transcribe, but the workshop does not present live transcription, full recording lifecycle, or batch audio transcription as production-complete unless the corresponding runtime path has actually been implemented and verified.
+
+## 10. Deployment order
+
+A full environment is normally assembled in this order:
+
+```text
+Confirm AWS account and region
         ↓
-Deploy the data stack
+Data foundation
         ↓
-Verify the five DynamoDB tables
+User-content/orchestration
         ↓
-Deploy the Cognito and API stack
+Full application stack
         ↓
 Read CloudFormation outputs
         ↓
-Configure and test the web application
+Configure frontend and Google
+        ↓
+Publish frontend
+        ↓
+Run E2E tests
 ```
 
-## Authentication and Authorization
+Some values such as the real CloudFront origin or API callback URL only exist after the first deployment, so the final environment may require a second stack update with the real URLs.
 
-Two independent checks are required:
+## Result
 
-| Layer | Performed by | Check |
-| --- | --- | --- |
-| Authentication | Amazon Cognito and API Gateway | Valid JWT, correct User Pool and app client, valid signature, and unexpired token |
-| Authorization | Lambda and application services | Active membership, sufficient role, and access to the requested group, meeting, or resource |
-
-A valid JWT does not grant access to every group. Before returning group details, the backend still reads the corresponding membership. Administrative operations such as updating a group, creating invitations, or cancelling a meeting require the `GROUP_ADMIN` role.
-
-## Data Boundaries
-
-CampusMeet uses five DynamoDB tables:
-
-```text
-campusmeet-dev-identity
-campusmeet-dev-collaboration
-campusmeet-dev-meeting-data
-campusmeet-dev-task-data
-campusmeet-dev-ai-work
-```
-
-The tables use `PK` and `SK` keys with secondary indexes for known access requirements. Normal application requests must not rely on `Scan`.
-
-Binary objects do not pass through Lambda for storage in DynamoDB. The large-file flow is:
-
-1. The client requests upload permission.
-2. The backend verifies membership, file type, size, and related metadata.
-3. The backend returns a short-lived upload URL.
-4. The browser uploads directly to a private S3 bucket.
-5. The backend verifies the object before persisting metadata and starting later processing.
-
-## External Integration Boundaries
-
-- Google Calendar is the primary integration for creating or updating calendar events and requesting Google Meet links.
-- The Google Meet REST API is used only when recordings or transcripts actually exist and the connected account has the required authorization.
-- In-application notifications are the primary record; an email failure must not remove a notification that was already created.
-- Calls to Google, Amazon Transcribe, Amazon Bedrock, and other services require explicit state, idempotency, and controlled retries.
-- AI retrieval must filter by group, meeting scope, approval status, and user authorization before sending content to a model.
-
-## Security and Operations
-
-- Lambda uses an IAM execution role and does not read long-lived AWS access keys from environment variables.
-- Logs must not contain JWTs, OAuth tokens, passwords, signed URLs, or complete sensitive content.
-- S3 buckets used for the web application and user content remain private.
-- Competing updates use conditional writes or optimistic versions.
-- Mutations that must update several items atomically use DynamoDB transactions.
-- CloudWatch is used to inspect API, Lambda, and asynchronous workflow failures.
-- AWS Budgets provides cost alerts for the shared environment.
-
-## Files to Review
-
-| File | Purpose |
-| --- | --- |
-| `docs/architecture.md` | Overall architecture and component boundaries |
-| `docs/CampusMeet-SRS.md` | Business requirements and product scope |
-| `docs/dynamodb-data-model.md` | Physical five-table DynamoDB model |
-| `docs/api-contract.md` | API paths, shared contracts, and implementation status |
-| `infra/data-foundation.yaml` | Data stack |
-| `infra/auth-integration.yaml` | Cognito, HTTP API, and core Lambda stack |
-
-## Expected Result
-
-After completing this section, you should be able to:
-
-- Explain the path from the web application to API Gateway, Lambda, and DynamoDB.
-- Separate JWT authentication from group-scoped authorization.
-- Identify resources owned by the data stack and application stacks.
-- Explain why large files belong in S3 rather than DynamoDB.
-- Identify external integrations that require explicit failure and retry handling.
+Learners should be able to explain the request path, the difference between authentication and authorization, the responsibility of each infrastructure template, and the difference between an implemented design and a cloud integration that has actually passed E2E verification.
