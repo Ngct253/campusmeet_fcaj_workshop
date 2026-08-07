@@ -5,10 +5,6 @@ weight: 1
 chapter: false
 pre: " <b> 3.1. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
-
 # CAMPUSMEET – MEETING MANAGEMENT AND KNOWLEDGE RETRIEVAL WITH AWS SERVERLESS & GENERATIVE AI
 
 Starting from a common problem: after every meeting, information is often scattered across multiple places — calendars in Calendar, meetings on Google Meet, documents in Drive, meeting minutes written separately, and follow-up tasks managed in another tool.

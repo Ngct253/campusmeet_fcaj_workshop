@@ -5,10 +5,6 @@ weight: 1
 chapter: false
 pre: " <b> 3.1. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
 # CAMPUSMEET – HỆ THỐNG QUẢN LÝ CUỘC HỌP VÀ KHAI THÁC TRI THỨC VỚI AWS SERVERLESS & GENERATIVE AI
 
 Bắt đầu từ một vấn đề khá quen thuộc: sau mỗi cuộc họp, thông tin thường bị phân tán ở rất nhiều nơi — lịch nằm trên Calendar, cuộc họp diễn ra trên Google Meet, tài liệu ở Drive, biên bản được ghi riêng và các công việc sau họp lại tiếp tục được quản lý ở một công cụ khác.

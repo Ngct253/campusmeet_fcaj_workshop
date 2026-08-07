@@ -6,11 +6,7 @@ chapter: false
 pre: " <b> 3. </b> "
 ---
 
-{{% notice warning %}}  
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-Tại đây sẽ là phần liệt kê, giới thiệu các blogs mà các bạn đã đăng trên [AWS Study Group](https://www.facebook.com/groups/awsstudygroupfcj). Ví dụ:
+Các bài blog được đăng trên nhóm [AWS Study Group](https://www.facebook.com/groups/awsstudygroupfcj):
 
 ###  [Blog 1 - CAMPUSMEET – HỆ THỐNG QUẢN LÝ CUỘC HỌP VÀ KHAI THÁC TRI THỨC VỚI AWS SERVERLESS & GENERATIVE AI](3.1-Blog1/)
 Bài viết giới thiệu hệ thống CampusMeet được thiết kế theo kiến trúc AWS Serverless và Generative AI (Amazon Bedrock, RAG) nhằm giải quyết bài toán quản lý thông tin xuyên suốt vòng đời cuộc họp và khai thác tri thức hiệu quả.
