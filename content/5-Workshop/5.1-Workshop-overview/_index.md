@@ -77,54 +77,7 @@ This workshop is suitable for:
 
 ![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
 
-CampusMeet is organized into the following layers:
 
-```text
-User
-  |
-  v
-CampusMeet Web
-React + TypeScript + Vite
-  |
-  +--------------------+
-  |                    |
-  v                    v
-Amazon Cognito    Amazon API Gateway
-                       |
-                       v
-                  AWS Lambda
-                       |
-            +----------+----------+
-            |                     |
-            v                     v
-      Amazon DynamoDB        Amazon S3
-            |                     |
-            |                     v
-            |              Files and audio
-            |
-            v
-     Application data
-
-Asynchronous processing
-  |
-  +--- EventBridge Scheduler
-  +--- AWS Step Functions
-  +--- Amazon Transcribe
-  +--- Amazon Bedrock
-  +--- Bedrock Knowledge Bases / S3 Vectors
-
-Operations
-  |
-  +--- Amazon CloudWatch
-  +--- Amazon SNS
-  +--- Amazon SES
-
-Infrastructure
-  |
-  +--- AWS IAM
-  +--- AWS SAM
-  +--- AWS CloudFormation
-```
 
 ## Core Components
 

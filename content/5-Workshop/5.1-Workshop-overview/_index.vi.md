@@ -77,54 +77,7 @@ Workshop phù hợp với:
 
 ![Kiến trúc CampusMeet AWS](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
 
-CampusMeet được tổ chức thành các lớp chính:
 
-```text
-Người dùng
-    |
-    v
-CampusMeet Web
-React + TypeScript + Vite
-    |
-    +--------------------+
-    |                    |
-    v                    v
-Amazon Cognito      Amazon API Gateway
-                         |
-                         v
-                    AWS Lambda
-                         |
-              +----------+----------+
-              |                     |
-              v                     v
-        Amazon DynamoDB        Amazon S3
-              |                     |
-              |                     v
-              |          Tệp và bản ghi âm
-              |
-              v
-        Dữ liệu nghiệp vụ
-
-Quy trình bất đồng bộ
-    |
-    +--- EventBridge Scheduler
-    +--- AWS Step Functions
-    +--- Amazon Transcribe
-    +--- Amazon Bedrock
-    +--- Bedrock Knowledge Bases / S3 Vectors
-
-Vận hành
-    |
-    +--- Amazon CloudWatch
-    +--- Amazon SNS
-    +--- Amazon SES
-
-Hạ tầng
-    |
-    +--- AWS IAM
-    +--- AWS SAM
-    +--- AWS CloudFormation
-```
 
 ## Vai trò của các thành phần chính
 
