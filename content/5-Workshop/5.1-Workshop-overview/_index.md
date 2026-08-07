@@ -10,96 +10,71 @@ pre: " <b> 5.1. </b> "
 
 ## Introduction
 
-CampusMeet is a meeting and teamwork management system for study groups, student projects, and small collaborative teams.
+CampusMeet is a meeting and follow-up management platform for study groups, student projects, and small teams. The project brings identity, groups, invitations, meetings, minutes, tasks, documents, and AI-assisted workflows into one place so meeting information is not scattered across unrelated tools.
 
-The system is designed to connect the activities that take place before, during, and after a meeting in one workspace:
+The current implementation focuses on:
 
-- Creating groups and managing members.
-- Sending and responding to group invitations.
-- Scheduling, updating, and cancelling meetings.
-- Managing agendas, attendees, and notifications.
-- Recording minutes, decisions, and follow-up actions.
-- Assigning work to responsible members and tracking progress.
-- Supporting meeting transcripts, source-grounded questions, and draft content with citations.
+- user authentication;
+- group and membership management;
+- invitations and notifications;
+- meeting creation, updates, and cancellation;
+- minutes, decisions, and action items;
+- converting action items into tasks and tracking task status;
+- attachment management;
+- asynchronous Google Calendar/Meet synchronization;
+- AI-assisted retrieval and drafting with source-aware citations.
 
-CampusMeet does not provide its own video conferencing system and is not intended to replicate Google Meet. Google Calendar and Google Meet are external integrations, while CampusMeet manages the workflow, application data, and authorization rules surrounding each meeting.
+CampusMeet does not build its own video-conferencing system. Google Calendar and Google Meet remain external services, while CampusMeet owns the application workflow and business data.
 
-## Problem Statement
+## Problem
 
-Meeting information is often spread across several disconnected tools:
+Small teams often keep meeting information in several different systems: calendars, chat applications, standalone documents, and separate task trackers. That makes it harder to enforce access boundaries, recover the context of an old decision, and make sure follow-up work is not forgotten.
 
-- Schedules are stored in calendar applications.
-- Reminders and discussions take place in messaging platforms.
-- Minutes are maintained in separate documents.
-- Follow-up work is tracked in another system.
-- Documents, transcripts, and decisions are difficult to associate with the correct meeting.
+CampusMeet addresses this by linking groups, meetings, minutes, tasks, and knowledge sources under the same authorization model.
 
-This fragmented workflow creates several problems:
+## Workshop goals
 
-- Team members cannot easily find a complete meeting record.
-- Follow-up actions may be forgotten.
-- Access control is inconsistent across tools.
-- Team administrators cannot clearly track upcoming meetings, overdue work, or overall progress.
-- Speech-processing and AI features may expose data when access boundaries are not enforced correctly.
+This workshop follows the current CampusMeet repository and covers the path from AWS foundations to a deployable E2E core workflow.
 
-CampusMeet addresses these issues through a centralized system in which groups, meetings, minutes, tasks, and supporting sources are connected. Every operation is governed by the user's active membership and role within the relevant group.
+The main goals are to:
 
-## Workshop Objectives
+- configure Amazon Cognito and JWT-protected APIs;
+- implement API logic with API Gateway and AWS Lambda;
+- use a five-table DynamoDB data model;
+- build the Group, Invitation, Meeting, Minutes, Task, and Dashboard flows;
+- connect the React frontend to the deployed API;
+- store user files in private Amazon S3;
+- use EventBridge Scheduler and Step Functions for asynchronous work;
+- integrate Google Calendar/Meet without making Google the source of truth;
+- use Amazon Bedrock with authorization-aware retrieval and citations;
+- monitor the system with CloudWatch and scoped IAM roles;
+- run a real browser/AWS E2E test;
+- understand the main cost drivers of the environment.
 
-This workshop presents the design and deployment of CampusMeet on a serverless AWS architecture, covering authentication, data storage, application logic, operations, and resource cleanup.
-
-The main objectives are to:
-
-- Implement user registration, account confirmation, and sign-in with Amazon Cognito.
-- Protect HTTP APIs with an Amazon API Gateway JWT authorizer.
-- Process application logic with AWS Lambda.
-- Enforce membership and role checks in the backend.
-- Design Amazon DynamoDB data around defined access patterns.
-- Implement group, membership, invitation, notification, and meeting workflows.
-- Connect the React frontend to AWS backend services.
-- Manage infrastructure with AWS SAM and AWS CloudFormation.
-- Process files, audio, and transcripts through asynchronous workflows.
-- Apply citations and user confirmation to AI-assisted output.
-- Collect logs, failures, and operational signals with Amazon CloudWatch.
-- Apply least-privilege IAM permissions.
-- Run end-to-end tests, control costs, and clean up resources.
-
-## Intended Audience
-
-This workshop is suitable for:
-
-- Students learning to build an end-to-end serverless AWS application.
-- Developers with basic knowledge of web interfaces, backend services, and databases.
-- Learners who want to use Amazon Cognito, API Gateway, Lambda, and DynamoDB in one practical project.
-- Teams studying authentication, authorization, Infrastructure as Code, and asynchronous processing.
-
-## High-Level Architecture
+## High-level architecture
 
 ![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
 
-
-
-## Core Components
-
-| Component | Responsibility in CampusMeet |
+| Component | Role |
 | --- | --- |
-| CampusMeet Web | Provides the user interface for groups, meetings, minutes, tasks, transcripts, and AI-assisted features |
-| Amazon Cognito | Authenticates users and issues JWTs |
-| Amazon API Gateway | Exposes HTTP APIs and validates JWTs before invoking Lambda |
-| AWS Lambda | Executes application use cases and enforces resource-level authorization |
-| Amazon DynamoDB | Stores application data in a five-table physical model |
-| Amazon S3 | Stores files, audio, recordings, and other large content |
-| EventBridge Scheduler | Runs one-time reminders at scheduled times |
-| AWS Step Functions | Coordinates long-running and asynchronous processing |
-| Amazon Transcribe | Converts speech into text |
-| Amazon Bedrock | Supports source-grounded questions, summaries, and draft generation |
-| Amazon CloudWatch | Collects logs, metrics, and operational information |
-| AWS IAM | Restricts access for users and AWS resources |
-| AWS SAM and CloudFormation | Define, validate, and deploy infrastructure |
+| CampusMeet Web | React/Vite user interface |
+| Amazon Cognito | Sign-up, account confirmation, and JWT issuance |
+| Amazon API Gateway | HTTP API and JWT authorizer |
+| AWS Lambda | Business logic and authorization checks |
+| Amazon DynamoDB | Business data stored across five physical tables |
+| Amazon S3 | User files and larger content |
+| EventBridge Scheduler | Reminders and delayed retries |
+| AWS Step Functions | AI jobs and longer-running orchestration |
+| Amazon Bedrock | Generation, retrieval, and Knowledge Base integration |
+| Amazon CloudWatch | Logs, metrics, and alarms |
+| AWS IAM | Permissions between components |
+| AWS SAM / CloudFormation | Infrastructure definition and deployment |
 
-## Data Model
+Amazon Transcribe remains a planned extension for speech processing. Live transcription and batch audio transcription are not treated as required parts of the current core production E2E flow.
 
-CampusMeet uses five physical DynamoDB tables designed around application access patterns:
+## Data model
+
+CampusMeet uses five DynamoDB tables:
 
 ```text
 campusmeet-dev-identity
@@ -109,90 +84,42 @@ campusmeet-dev-task-data
 campusmeet-dev-ai-work
 ```
 
-| Table | Main data domains |
-| --- | --- |
-| `identity` | Users, preferences, integration references, and notifications |
-| `collaboration` | Groups, memberships, invitations, and audit events |
-| `meeting-data` | Meetings, attendees, agendas, minutes, transcripts, and related records |
-| `task-data` | Tasks and task history |
-| `ai-work` | AI processing jobs, knowledge sources, conversations, citations, and proposals |
+Binary files are stored in S3; DynamoDB keeps metadata, relationships, and workflow state.
 
-Binary files and audio are not stored directly in DynamoDB. Large content is stored in Amazon S3, while DynamoDB stores metadata and application state.
+## Authentication and authorization
 
-## Authentication and Authorization
+CampusMeet separates identity from application permissions.
 
-CampusMeet separates authentication from application authorization.
+Cognito and API Gateway validate who the caller is. The backend still verifies group membership, role, and resource scope before reading or changing data. A valid JWT is therefore not permission to access every group.
 
-### Authentication
+## Main workflow
 
-Amazon Cognito authenticates the user and issues a JWT. Amazon API Gateway validates the token before forwarding the request to Lambda.
+Before a meeting, users create a group, invite members, schedule a meeting, prepare agenda/attendees, and optionally synchronize the event with Google.
 
-### Application Authorization
+During a meeting, the current workshop focuses on the meeting workspace and stored content. Full live recording/transcription is an extension rather than a requirement of the current core E2E release.
 
-A valid JWT does not grant access to all application data. The backend must also verify:
+After a meeting, users save minutes, record decisions, create action items, convert them into tasks, track progress, upload supporting documents, and optionally use those documents as AI knowledge sources after ingestion is ready.
 
-- That the user is an active member of the group.
-- That the user has the required role for the requested operation.
-- That the resource belongs to the correct group or meeting.
-- That the user is allowed to read, create, update, or cancel the resource.
+## AI principles
 
-This separation prevents authenticated users from accessing information outside their authorized scope.
+AI output is treated as assistance rather than unquestioned business data:
 
-## Meeting Lifecycle
+- important generated content remains a draft until reviewed;
+- retrieval is restricted to authorized groups and meetings;
+- knowledge sources must be in a valid state before use;
+- citations are checked against retrieved content;
+- an AI task proposal is not automatically an official task.
 
-CampusMeet is designed around a complete meeting lifecycle.
+## Implementation status vs. verification status
 
-### Before the Meeting
+The workshop distinguishes three different facts:
 
-- Create a group and manage its members.
-- Schedule a meeting.
-- Select attendees.
-- Prepare the agenda and supporting documents.
-- Create reminder notifications.
-- Synchronize a Google Calendar event and request a Google Meet link when the organizer has connected a Google account.
+1. **Implemented in source** — code exists in the repository.
+2. **Covered by automated/local checks** — logic has tests or a successful local build.
+3. **Verified in AWS/browser E2E** — the feature has actually been deployed and exercised against real services.
 
-### During the Meeting
+This distinction is intentional. A template or unit test is not presented as evidence that production integration has already succeeded.
 
-- Display meeting information and agenda items.
-- Obtain consent before recording or processing speech.
-- Produce a live meeting transcript.
-- Store final transcript segments.
-- Support authorized questions and catch-up summaries based on permitted sources.
+## Result
 
-### After the Meeting
-
-- Complete the meeting minutes.
-- Record decisions.
-- Create follow-up action proposals.
-- Require user review and confirmation before creating official tasks.
-- Track assignees, due dates, and status.
-- Support questions over authorized documents, transcripts, and minutes.
-
-## AI Principles
-
-CampusMeet applies the following controls to AI-assisted features:
-
-- AI-generated content remains a draft until a user confirms it.
-- Answers and summaries must include citations to supporting sources.
-- Retrieval is limited to groups and meetings the user is authorized to access.
-- AI-generated tasks or actions require preview and confirmation.
-- The system does not infer the real identity of a speaker.
-- AI cannot commit sensitive application changes without authorization and human approval.
-
-## Workshop Outcomes
-
-After completing the workshop, learners will be able to:
-
-- Explain the overall CampusMeet architecture.
-- Deploy serverless components with AWS SAM and CloudFormation.
-- Configure authentication with Amazon Cognito.
-- Protect APIs with JWT validation.
-- Structure Lambda code around application use cases and data-access boundaries.
-- Design DynamoDB data for known access patterns.
-- Implement group, meeting, and task workflows.
-- Connect a frontend application to AWS APIs and services.
-- Process files and transcripts through asynchronous workflows.
-- Apply citations and user confirmation to AI-assisted features.
-- Inspect logs, metrics, and failures with CloudWatch.
-- Apply IAM, data protection, and cost-control practices.
-- Run end-to-end tests and clean up AWS resources.
+After the workshop, learners should understand the CampusMeet architecture, deploy its serverless components, work with Cognito/API Gateway/Lambda/DynamoDB, connect the frontend, explain asynchronous and AI flows, inspect CloudWatch, run a real E2E test, and understand the environment's main cost controls.

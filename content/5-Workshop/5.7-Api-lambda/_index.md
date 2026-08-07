@@ -8,223 +8,186 @@ pre: " <b> 5.7. </b> "
 
 # API Gateway and AWS Lambda
 
-## Objectives
+## Goal
 
-This section explains how CampusMeet receives HTTP requests, validates Cognito JWTs, routes requests to Lambda, and accesses data through application and repository layers. The implementation is based on `infra/auth-integration.yaml`, `services/api/src/auth-integration.ts`, and `docs/api-contract.md`.
+This section explains how CampusMeet accepts HTTP requests, validates JWTs, routes requests to Lambda handlers, and applies business authorization. The early workshop exercises use `infra/auth-integration.yaml`, while the route overview also reflects the current full application handler in `services/api/src/index.ts`.
 
-## Current API Structure
-
-The `campusmeet-dev-auth` stack creates one HTTP API and one core Lambda function:
+## 1. Request flow
 
 ```text
-Amazon API Gateway HTTP API
-        |
-        +--- GET /health          No JWT required
-        |
-        +--- OPTIONS /{proxy+}    No JWT required
-        |
-        +--- ANY /{proxy+}        Cognito JWT required
-                                  |
-                                  v
-                     AuthIntegrationFunction
+Frontend
+  ↓ Authorization: Bearer <JWT>
+API Gateway HTTP API
+  ↓ JWT authorizer
+Lambda handler/router
+  ↓
+Application/domain service
+  ↓
+Repository or integration adapter
 ```
 
-The HTTP API uses the `$default` stage. Its base URL has this shape:
+The frontend does not decide the caller's role. The backend reads identity from the validated token and checks current membership and resource scope.
+
+## 2. Public and protected endpoints
+
+`GET /health` is public. Business endpoints require a valid JWT.
+
+For example:
 
 ```text
-https://<api-id>.execute-api.ap-southeast-1.amazonaws.com
+GET /me without JWT
+→ 401
 ```
 
-Do not append `/dev`.
+CORS controls which browser origins can call the API; it does not replace authentication or authorization.
 
-## 1. Request Processing Flow
+## 3. Core routes in the auth stack
 
-A protected request follows these steps:
+The smaller `auth-integration.yaml` deployment covers core areas such as:
 
-1. The web application reads the current Cognito session.
-2. The JWT is sent in the `Authorization` header.
-3. API Gateway validates the JWT against the deployed User Pool and app client.
-4. Lambda reads the HTTP method, route, parameters, and request body.
-5. Lambda obtains the user identity from JWT claims.
-6. The application layer validates membership and role before calling a repository.
-7. The repository performs the required DynamoDB read or write.
-8. Lambda returns a response defined by shared contracts in `@campusmeet/shared`.
+```text
+/health
+/me
+/groups
+/groups/:groupId
+/groups/:groupId/invitations
+/groups/:groupId/members/:userId
+/groups/:groupId/meetings
+/meetings
+/meetings/:meetingId
+/invitations
+/notifications
+```
 
-The backend never trusts a client-provided role. Authorization is checked against stored membership data.
+This stack is useful for the Authentication, Collaboration, and core Meeting sections.
 
-## 2. HTTP API Configuration
+## 4. Full application routes
 
-`infra/auth-integration.yaml` configures:
+The full application handler extends the API with additional groups of routes.
 
-| Property | Value |
+### Meeting and Google sync
+
+```text
+/groups/:groupId/meetings
+/meetings
+/meetings/:meetingId
+/meetings/:meetingId/cancel
+/meetings/:meetingId/google-sync/retry
+```
+
+### Attachments
+
+```text
+/meetings/:meetingId/attachments/*
+/attachments/:attachmentId/download-url
+```
+
+### Minutes, tasks, and dashboard
+
+```text
+/meetings/:meetingId/minutes
+/meetings/:meetingId/minutes/action-items/:actionItemId/task
+/tasks
+/tasks/:taskId/status
+/dashboard
+```
+
+### Google integration
+
+```text
+/integrations/google/connect
+/integrations/google/callback
+/integrations/google/meet-context
+```
+
+### AI
+
+```text
+/meetings/:meetingId/ai/chat
+/groups/:groupId/ai/search
+/meetings/:meetingId/ai/minutes-draft
+/meetings/:meetingId/ai/task-proposals
+/groups/:groupId/ai/progress-analysis
+/ai/jobs/:aiJobId
+```
+
+A route existing in source is not proof that it is available in a smaller deployed stack. Always verify which template and Lambda handler are running in the environment under test.
+
+## 5. Handler boundaries
+
+The router matches method and path and passes the request to the appropriate handler. Handlers should delegate business rules to services and data access to repositories/adapters instead of embedding every DynamoDB expression in HTTP code.
+
+```text
+API event
+  ↓
+Handler
+  ↓
+Business service
+  ↓
+Repository / port
+  ↓
+AWS adapter
+```
+
+## 6. Shared contracts
+
+Frontend and backend share DTOs and types from `@campusmeet/shared`. Contract changes should update the shared types, backend, frontend, documentation, and then pass typecheck/test/build together.
+
+## 7. Domain authorization
+
+API Gateway confirms token validity, but Lambda still verifies permissions. Reading a meeting, for example, requires resolving its group and checking active membership before returning data.
+
+## 8. Idempotency and conflicts
+
+Idempotency prevents duplicate processing of the same create/convert intent. Version-aware conditional writes prevent stale clients from overwriting newer data. These are separate controls and both matter in the CampusMeet workflow.
+
+## 9. Error handling
+
+Common response categories include:
+
+| Status | Meaning |
 | --- | --- |
-| Stage | `$default` |
-| Default CORS origin | `http://localhost:5173` |
-| CORS methods | `GET`, `POST`, `PATCH`, `DELETE`, `OPTIONS` |
-| Allowed headers | `authorization`, `content-type`, `x-request-id`, `idempotency-key` |
-| JWT identity source | `$request.header.Authorization` |
-| Default authorizer | `CognitoAuthorizer` |
+| `400` | Invalid input |
+| `401` | Missing/invalid authentication |
+| `403` | Authenticated but not authorized |
+| `404` | Resource or route not found |
+| `409` | State/version conflict |
+| `500` | Internal or unclassified dependency error |
 
-`GET /health` is declared separately without the JWT authorizer. All business routes are handled through `/{proxy+}`.
+Do not return stack traces or secrets to the browser.
 
-## 3. Core Route Groups
+## 10. Safe logging
 
-| Feature area | Main routes | Source status |
-| --- | --- | --- |
-| Service health | `GET /health` | Implemented handler |
-| Profile | `GET /me`, `PATCH /me` | Implemented |
-| Groups | `GET /groups`, `POST /groups`, `GET/PATCH /groups/:groupId` | Implemented |
-| Membership | `DELETE /groups/:groupId/members/:userId` | Implemented; Group Admin removal is blocked |
-| Invitations | Routes under `/groups/:groupId/invitations` and `/invitations` | Implemented |
-| Meetings | `GET /meetings`, routes under `/groups/:groupId/meetings`, and `/meetings/:meetingId` | Create, read, update, and cancel core exists in source |
-| Notifications | `GET /notifications`, `POST /notifications/:notificationId/read` | Implemented |
+Useful logs contain request IDs, method/path, status, resource identifiers, error codes, and latency. They should not contain JWTs, passwords, raw invitation tokens, Google OAuth tokens, presigned URLs, or full private transcripts/documents.
 
-Modules that do not yet have complete handlers may return `501 Not Implemented` according to the API contract. A documented route is not, by itself, evidence that the full feature is deployed.
-
-## 4. Shared Contracts
-
-The frontend and backend import request and response types from:
-
-```text
-@campusmeet/shared
-```
-
-Do not duplicate TypeScript interfaces for the same API contract. When changing a contract:
-
-1. Update the shared type.
-2. Update the backend.
-3. Update the web application.
-4. Update `docs/api-contract.md`.
-5. Run type checking, tests, and builds.
-
-Quality commands:
+## 11. Pre-deployment checks
 
 ```powershell
+npm run infra:validate
 npm run lint
 npm run typecheck
 npm run test
 npm run build
-npm run format:check
 ```
 
-## 5. Lambda Source Boundaries
-
-```text
-API Gateway event
-      ↓
-Request handler
-      ↓
-Application service
-      ↓
-Repository interface
-      ↓
-DynamoDB repository or in-memory repository
-```
-
-Rules:
-
-- A handler should not query DynamoDB directly when a repository boundary exists.
-- The application layer owns authorization and business rules.
-- The repository maps logical operations to keys, indexes, and DynamoDB commands.
-- Unit tests can use in-memory repositories.
-- The shared AWS environment is used for integration and post-deployment smoke tests.
-
-## 6. Lambda Data Permissions
-
-The current execution role grants access to:
-
-- `campusmeet-dev-identity` and its indexes.
-- `campusmeet-dev-collaboration` and its indexes.
-- `campusmeet-dev-meeting-data` and its indexes.
-
-DynamoDB permissions are limited to `GetItem`, `BatchGetItem`, `Query`, `PutItem`, `UpdateItem`, `DeleteItem`, and `ConditionCheckItem`.
-
-The function also has `cognito-idp:AdminGetUser` on the stack's User Pool so it can read a verified email when invitation workflows require it.
-
-## 7. Deploy API Updates
-
-When Lambda source or infrastructure changes:
+For the smaller auth/core stack:
 
 ```powershell
-sam validate `
-  --template-file infra/auth-integration.yaml `
-  --lint `
-  --region ap-southeast-1
-
+sam validate --template-file infra/auth-integration.yaml --lint --region ap-southeast-1
 npm run sam:build:auth
 ```
 
-Preview the change set:
+For the full application:
 
 ```powershell
-sam deploy `
-  --template-file infra/auth-integration.yaml `
-  --stack-name campusmeet-dev-auth `
-  --resolve-s3 `
-  --capabilities CAPABILITY_IAM `
-  --parameter-overrides `
-    AllowedOrigin=http://localhost:5173 `
-    DataTablePrefix=campusmeet-dev `
-  --no-execute-changeset `
-  --region ap-southeast-1
+npm run sam:validate:app -- --region ap-southeast-1
+npm run sam:build:app
 ```
 
-Review that changes remain within the stack. Do not manually patch routes or IAM permissions in the AWS Console and leave the template outdated.
+## 12. Smoke test
 
-## 8. Test the API
+After deployment, verify `/health` returns 200 and a protected endpoint without JWT returns 401. Then continue through the browser with Group → Meeting → Minutes → Task → Dashboard for the full application.
 
-Public route:
+## Result
 
-```powershell
-curl.exe -i "<ApiUrl>/health"
-```
-
-Expected result: `200` with service status information.
-
-Protected route without a JWT:
-
-```powershell
-curl.exe -i "<ApiUrl>/me"
-```
-
-Expected result: `401`.
-
-For authenticated flows, test through the CampusMeet web application so the application obtains and sends the JWT. Do not place real tokens in shared command history or documentation.
-
-Authorization cases to verify:
-
-- An authenticated non-member cannot read group details.
-- A normal member cannot update a group or create invitations.
-- A Group Admin can perform administrative actions in their own group.
-- A user cannot access a meeting from another group.
-- Create requests that may be retried use `Idempotency-Key` when required by the contract.
-
-## 9. Logs and Errors
-
-The Lambda log group is:
-
-```text
-/aws/lambda/campusmeet-dev-auth-api
-```
-
-The current template retains logs for seven days.
-
-Logs may contain request IDs, methods, paths, status codes, error codes, and resource IDs required for diagnosis. Logs must not contain JWTs, OAuth tokens, passwords, confirmation codes, raw invitation tokens, signed URLs, or complete transcript and file content.
-
-Common response meanings:
-
-| Status | Meaning |
-| --- | --- |
-| `401` | Missing or invalid JWT |
-| `403` | Authenticated but not authorized or not a group member |
-| `404` | Resource or route not found |
-| `409` | State conflict or existing data conflict |
-| `501` | Contract exists but the module does not yet have a complete handler |
-
-## Expected Result
-
-- You can explain the path from the browser to DynamoDB.
-- `/health` is public and business routes require a JWT.
-- Frontend and backend use shared contracts from `@campusmeet/shared`.
-- Every group-scoped operation validates membership and role in the backend.
-- Logs support diagnosis without exposing sensitive data.
+The API layer validates identity at the gateway, applies business authorization in Lambda services, uses shared contracts with the frontend, and clearly distinguishes the smaller core stack from the full application deployment.
