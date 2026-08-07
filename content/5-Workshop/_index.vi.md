@@ -37,6 +37,8 @@ CampusMeet giải quyết vấn đề này bằng một hệ thống tập trung
 
 ## Kiến trúc tổng quan
 
+![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png)
+
 CampusMeet sử dụng các dịch vụ AWS chính:
 
 | Dịch vụ | Vai trò |

@@ -9,23 +9,24 @@ pre: " <b> 3.1. </b> "
 ⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
 {{% /notice %}}
 
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
+# CAMPUSMEET – MEETING MANAGEMENT AND KNOWLEDGE RETRIEVAL WITH AWS SERVERLESS & GENERATIVE AI
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+Starting from a common problem: after every meeting, information is often scattered across multiple places — calendars in Calendar, meetings on Google Meet, documents in Drive, meeting minutes written separately, and follow-up tasks managed in another tool.
 
-Key points to know:
+From that problem, we built **CampusMeet** to manage the end-to-end meeting lifecycle (before, during, and after meetings), while turning meeting data into a searchable knowledge base powered by AI. CampusMeet targets study groups, project teams, and small project groups.
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+Instead of building a new video calling platform, CampusMeet focuses on post-meeting value: agenda, participants, reminders, transcripts, minutes, action items, tasks, and knowledge retrieval, while integrating Google Calendar/Google Meet for conferences.
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+Key AWS Serverless highlights:
+- **End-to-End Meeting Lifecycle**: Amazon Cognito for authentication, API Gateway + AWS Lambda for business logic, and DynamoDB storing groups, meetings, minutes, tasks, and AI jobs across 5 physical tables designed by access patterns.
+- **Google Calendar/Meet Integration with Fallbacks**: Internal meeting data is independent of external artifacts.
+- **Asynchronous Data Uploads & Processing**: Direct S3 Presigned URL uploads for large files/audio, processed asynchronously via Step Functions and AI jobs.
+- **Generative AI with Amazon Bedrock & Multi-Meeting RAG**: Citation-backed QA across meetings filtered by group access control.
+- **Human-in-the-Loop AI**: AI proposes minutes/action items, but humans must review and confirm before backend execution.
+- **Operations & Cost Optimization**: Managed serverless services without EC2/RDS/NAT Gateway overhead, monitored via CloudWatch and defined with AWS SAM / CloudFormation IaC.
 
-...Image...
+### Post Link on AWS Study Group
+🔗 **Post Link**: [https://www.facebook.com/groups/awsstudygroupfcj/permalink/2237833836981576](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2237833836981576)
 
-...Link...
-
-...Guide...
+### Publication Evidence
+![Publication Evidence on AWS Study Group](images/3-BlogsPosted/3.1-Blog1/blog-evidence.png)

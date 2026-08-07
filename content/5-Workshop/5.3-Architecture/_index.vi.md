@@ -26,6 +26,8 @@ CampusMeet tuân theo các nguyên tắc sau:
 
 ## Luồng yêu cầu chính
 
+![Sơ đồ kiến trúc CampusMeet AWS](images/5-Workshop/5.3-Architecture/architecture-diagram.png)
+
 ```text
 Người dùng
     |

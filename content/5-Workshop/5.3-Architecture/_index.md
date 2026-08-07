@@ -26,6 +26,8 @@ CampusMeet follows these principles:
 
 ## Main Request Flow
 
+![CampusMeet AWS Architecture Diagram](images/5-Workshop/5.3-Architecture/architecture-diagram.png)
+
 ```text
 User
   |

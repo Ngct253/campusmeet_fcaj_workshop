@@ -75,6 +75,8 @@ Workshop phù hợp với:
 
 ## Kiến trúc tổng quan
 
+![Kiến trúc CampusMeet AWS](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png)
+
 CampusMeet được tổ chức thành các lớp chính:
 
 ```text
