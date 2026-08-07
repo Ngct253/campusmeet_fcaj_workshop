@@ -11,13 +11,13 @@ pre: " <b> 1.5. </b> "
 - Integrate the authentication flow with AWS resources.
 - Protect the API with an API Gateway JWT authorizer.
 - Deploy the authentication stack with AWS SAM.
-- Validate the end-to-end authentication flow and clean up the test resources.
+- Validate the end-to-end authentication flow.
 
 ### Completed Tasks
 
 | Day | Task Details | Start Date | Completion Date | Reference Material |
 | --- | --- | --- | --- | --- |
-| Monday | Completed the frontend integration with Amazon Cognito.<br>Configured an API Gateway JWT authorizer and a protected `GET /me` endpoint.<br>Built an AWS SAM stack containing Cognito, API Gateway, Lambda, IAM, and a CloudWatch log group.<br>Deployed and verified sign-up, email confirmation, sign-in, and authenticated API requests using an access token.<br>Ran the test suite, type checking, production build, and SAM validation, then removed the test stack. | 13/07/2026 | 13/07/2026 | <https://github.com/Ngct253/CampusMeet> |
+| Monday | Completed the frontend integration with Amazon Cognito.<br>Configured an API Gateway JWT authorizer and a protected `GET /me` endpoint.<br>Built an AWS SAM stack containing Cognito, API Gateway, Lambda, IAM, and a CloudWatch log group.<br>Deployed and verified sign-up, email confirmation, sign-in, and authenticated API requests using an access token.<br>Ran the test suite, type checking, production build, and SAM validation. | 13/07/2026 | 13/07/2026 | <https://github.com/Ngct253/CampusMeet> |
 
 ### Week 5 Achievements
 
@@ -25,4 +25,4 @@ pre: " <b> 1.5. </b> "
 - Protected the API with an API Gateway JWT authorizer.
 - Built and deployed the authentication integration stack with AWS SAM.
 - Understood the request flow across the frontend, Cognito, API Gateway, and Lambda.
-- Practiced the full deploy, verification, and cleanup workflow for the authentication stack.
+- Practiced the full deploy and verification workflow for the authentication stack.
