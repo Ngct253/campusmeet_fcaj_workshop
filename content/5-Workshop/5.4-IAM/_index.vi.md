@@ -60,13 +60,60 @@ Không tạo thêm người quản trị nếu tài khoản đã có người gi
 
 Người phụ trách triển khai thực hiện trong AWS Console:
 
-1. Mở **IAM → User groups**.
-2. Tạo nhóm `CampusMeetDevelopers` nếu nhóm chưa tồn tại.
-3. Gắn chính sách `SignInLocalDevelopmentAccess` để thành viên có thể dùng `aws login` với thông tin đăng nhập tạm thời.
-4. Trong tài khoản phát triển chỉ dành cho CampusMeet, gắn `PowerUserAccess` khi thành viên cần thao tác các dịch vụ AWS.
-5. Tạo một IAM user riêng cho từng thành viên.
-6. Bật quyền đăng nhập Console, yêu cầu đổi mật khẩu ở lần đăng nhập đầu và thêm user vào `CampusMeetDevelopers`.
-7. Gửi đường dẫn đăng nhập, tên IAM user và mật khẩu tạm qua kênh riêng.
+1. Mở **IAM → Policies** và chọn **Create policy**.
+2. Chuyển sang tab **JSON** và dán cấu hình chính sách bên dưới:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListCampusMeetTables",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:ListTables",
+        "dynamodb:DescribeLimits"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadWriteCampusMeetDevTables",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeTable",
+        "dynamodb:DescribeTimeToLive",
+        "dynamodb:DescribeContinuousBackups",
+        "dynamodb:ListTagsOfResource",
+        "dynamodb:GetItem",
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/campusmeet-dev-*",
+        "arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/campusmeet-dev-*/index/*"
+      ]
+    }
+  ]
+}
+```
+
+3. Đặt thông tin cho chính sách:
+   - **Policy name**: `CampusMeetDevDatabaseAccess`
+   - **Description**: `Read and write item access to CampusMeet dev DynamoDB tables`
+4. Chọn **Create policy** để hoàn tất.
+5. Mở **IAM → User groups**.
+6. Tạo nhóm `CampusMeetDevelopers` nếu nhóm chưa tồn tại.
+7. Gắn chính sách `CampusMeetDevDatabaseAccess` vừa tạo và `SignInLocalDevelopmentAccess` cho nhóm để thành viên có thể truy cập DynamoDB và dùng `aws login`.
+8. Trong tài khoản phát triển chỉ dành cho CampusMeet, gắn `PowerUserAccess` nếu thành viên cần thao tác các dịch vụ AWS khác.
+9. Tạo một IAM user riêng cho từng thành viên.
+10. Bật quyền đăng nhập Console, yêu cầu đổi mật khẩu ở lần đăng nhập đầu và thêm user vào `CampusMeetDevelopers`.
+11. Gửi đường dẫn đăng nhập, tên IAM user và mật khẩu tạm qua kênh riêng.
 
 `PowerUserAccess` không cho phép quản lý IAM user, tạo mọi vai trò IAM hoặc tự do dùng `iam:PassRole`. Vì `infra/auth-integration.yaml` tạo vai trò thực thi cho Lambda, việc triển khai ngăn xếp này thuộc trách nhiệm của người phụ trách triển khai.
 
@@ -170,20 +217,6 @@ Khi kiểm tra chi phí, cần chú ý:
 - Bảng DynamoDB có chính sách `Retain` có thể còn tồn tại sau khi xóa ngăn xếp.
 - Các dịch vụ xử lý âm thanh hoặc AI có thể phát sinh chi phí theo mức sử dụng.
 - Tài nguyên được tạo ở khu vực khác không xuất hiện khi chỉ xem `ap-southeast-1`.
-
-## 9. Kiểm tra trước khi triển khai
-
-Hoàn thành danh sách sau:
-
-- [ ] Không sử dụng root cho công việc hằng ngày.
-- [ ] Mỗi thành viên có IAM user riêng.
-- [ ] Không có access key dài hạn được chia sẻ.
-- [ ] `aws sts get-caller-identity` trả đúng tài khoản.
-- [ ] Khu vực triển khai là `ap-southeast-1`.
-- [ ] Người phụ trách triển khai đã được xác định.
-- [ ] Tên ngăn xếp và tiền tố tài nguyên đã thống nhất.
-- [ ] Cảnh báo ngân sách đã được cấu hình.
-- [ ] Không có mật khẩu, token hoặc thông tin xác thực trong kho mã nguồn.
 
 ## Kết quả cần đạt
 

@@ -60,13 +60,60 @@ Do not create another administrator when an equivalent deployment owner already 
 
 The deployment owner performs the following steps in the AWS Console:
 
-1. Open **IAM → User groups**.
-2. Create `CampusMeetDevelopers` when it does not exist.
-3. Attach `SignInLocalDevelopmentAccess` so developers can use `aws login` with temporary credentials.
-4. In a development account dedicated to CampusMeet, attach `PowerUserAccess` when developers need access to AWS services.
-5. Create one IAM user for each developer.
-6. Enable Console access, require a password change on first sign-in, and add the user to `CampusMeetDevelopers`.
-7. Share the sign-in URL, IAM username, and temporary password through a private channel.
+1. Open **IAM → Policies** and click **Create policy**.
+2. Switch to the **JSON** tab and paste the policy configuration below:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListCampusMeetTables",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:ListTables",
+        "dynamodb:DescribeLimits"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadWriteCampusMeetDevTables",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeTable",
+        "dynamodb:DescribeTimeToLive",
+        "dynamodb:DescribeContinuousBackups",
+        "dynamodb:ListTagsOfResource",
+        "dynamodb:GetItem",
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/campusmeet-dev-*",
+        "arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/campusmeet-dev-*/index/*"
+      ]
+    }
+  ]
+}
+```
+
+3. Set the policy details:
+   - **Policy name**: `CampusMeetDevDatabaseAccess`
+   - **Description**: `Read and write item access to CampusMeet dev DynamoDB tables`
+4. Click **Create policy** to finish.
+5. Open **IAM → User groups**.
+6. Create `CampusMeetDevelopers` when it does not exist.
+7. Attach the newly created policy `CampusMeetDevDatabaseAccess` and `SignInLocalDevelopmentAccess` so developers can access DynamoDB and use `aws login`.
+8. In a development account dedicated to CampusMeet, attach `PowerUserAccess` when developers need access to other AWS services.
+9. Create one IAM user for each developer.
+10. Enable Console access, require a password change on first sign-in, and add the user to `CampusMeetDevelopers`.
+11. Share the sign-in URL, IAM username, and temporary password through a private channel.
 
 `PowerUserAccess` does not allow unrestricted IAM administration or `iam:PassRole`. Because `infra/auth-integration.yaml` creates a Lambda execution role, the deployment owner remains responsible for deploying that stack.
 
@@ -164,18 +211,6 @@ Review these common cost sources:
 - DynamoDB tables preserved by `Retain` policies.
 - Speech and AI services charged by usage.
 - Resources created in a Region other than `ap-southeast-1`.
-
-## 9. Pre-Deployment Checklist
-
-- [ ] Root is not used for daily work.
-- [ ] Every developer has an individual IAM user.
-- [ ] No long-lived access key is shared.
-- [ ] `aws sts get-caller-identity` returns the approved account.
-- [ ] The deployment Region is `ap-southeast-1`.
-- [ ] A deployment owner is assigned.
-- [ ] Stack names and the resource prefix are agreed.
-- [ ] A budget alert is configured.
-- [ ] The repository contains no password, token, or AWS credential.
 
 ## Expected Result
 
