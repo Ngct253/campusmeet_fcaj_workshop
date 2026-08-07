@@ -17,7 +17,7 @@ pre: " <b> 1.5. </b> "
 
 | Thứ | Công việc chi tiết | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
 | --- | --- | --- | --- | --- |
-| Thứ 2 | Hoàn thiện kết nối frontend với Amazon Cognito.<br>Cấu hình API Gateway JWT Authorizer và endpoint `GET /me` được bảo vệ.<br>Xây dựng AWS SAM stack gồm Cognito, API Gateway, Lambda, IAM và CloudWatch Log Group.<br>Triển khai và kiểm tra đăng ký, xác nhận email, đăng nhập và gọi API bằng access token.<br>Chạy test, typecheck, build, SAM validate. | 13/07/2026 | 13/07/2026 | <https://github.com/Ngct253/CampusMeet> |
+| 2 | Hoàn thiện kết nối frontend với Amazon Cognito.<br>Cấu hình API Gateway JWT Authorizer và endpoint `GET /me` được bảo vệ.<br>Xây dựng AWS SAM stack gồm Cognito, API Gateway, Lambda, IAM và CloudWatch Log Group.<br>Triển khai và kiểm tra đăng ký, xác nhận email, đăng nhập và gọi API bằng access token.<br>Chạy test, typecheck, build, SAM validate. | 13/07/2026 | 13/07/2026 | <https://github.com/Ngct253/CampusMeet> |
 
 ### Kết quả đạt được tuần 5
 

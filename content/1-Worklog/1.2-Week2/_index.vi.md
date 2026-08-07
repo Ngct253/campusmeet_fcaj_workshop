@@ -17,8 +17,8 @@ pre: " <b> 1.2. </b> "
 
 | Thứ | Công việc chi tiết | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
 | --- | --- | --- | --- | --- |
-| Thứ 2 | Tìm hiểu kiến thức cơ bản về mạng với Amazon VPC.<br>**Thực hành:**<br>+ Tạo VPC phục vụ bài thực hành VPN.<br>+ Tạo EC2 Instance.<br>+ Tạo Virtual Private Gateway và Customer Gateway.<br>+ Thiết lập kết nối VPN.<br>+ Tìm hiểu cách cấu hình Customer Gateway và AWS VPN Tunnel.<br>+ Tìm hiểu một số cấu hình VPN nâng cao.<br>+ Kiểm tra và dọn dẹp tài nguyên. | 22/06/2026 | 22/06/2026 | <https://000003.awsstudygroup.com/vi/> |
-| Thứ 4 | Tìm hiểu kiến thức cơ bản về Amazon EC2.<br>**Thực hành:**<br>+ Khởi tạo Windows EC2 Instance và Linux EC2 Instance.<br>+ Thực hiện các thao tác quản lý EC2 cơ bản.<br>+ Triển khai ứng dụng Node.js trên Amazon Linux.<br>+ Triển khai ứng dụng Node.js trên Amazon EC2 Windows.<br>+ Tìm hiểu cách giới hạn quyền sử dụng tài nguyên EC2 bằng IAM.<br>+ Kiểm tra và dọn dẹp tài nguyên. | 24/06/2026 | 24/06/2026 | <https://000004.awsstudygroup.com/vi/> |
+| 2 | Tìm hiểu kiến thức cơ bản về mạng với Amazon VPC.<br>**Thực hành:**<br>+ Tạo VPC phục vụ bài thực hành VPN.<br>+ Tạo EC2 Instance.<br>+ Tạo Virtual Private Gateway và Customer Gateway.<br>+ Thiết lập kết nối VPN.<br>+ Tìm hiểu cách cấu hình Customer Gateway và AWS VPN Tunnel.<br>+ Tìm hiểu một số cấu hình VPN nâng cao.<br>+ Kiểm tra và dọn dẹp tài nguyên. | 22/06/2026 | 22/06/2026 | <https://000003.awsstudygroup.com/vi/> |
+| 4 | Tìm hiểu kiến thức cơ bản về Amazon EC2.<br>**Thực hành:**<br>+ Khởi tạo Windows EC2 Instance và Linux EC2 Instance.<br>+ Thực hiện các thao tác quản lý EC2 cơ bản.<br>+ Triển khai ứng dụng Node.js trên Amazon Linux.<br>+ Triển khai ứng dụng Node.js trên Amazon EC2 Windows.<br>+ Tìm hiểu cách giới hạn quyền sử dụng tài nguyên EC2 bằng IAM.<br>+ Kiểm tra và dọn dẹp tài nguyên. | 24/06/2026 | 24/06/2026 | <https://000004.awsstudygroup.com/vi/> |
 
 ### Kết quả đạt được tuần 2
 

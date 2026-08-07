@@ -17,7 +17,7 @@ pre: " <b> 1.6. </b> "
 
 | Thứ | Công việc chi tiết | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
 | --- | --- | --- | --- | --- |
-| Thứ 6 | Tìm hiểu cách AWS Lambda đọc và ghi dữ liệu trên Amazon DynamoDB.<br>Tìm hiểu cách sử dụng partition key, sort key và Global Secondary Index.<br>Tìm hiểu TTL, conditional write và transaction trong DynamoDB.<br>Tìm hiểu quyền IAM cần thiết để Lambda truy cập bảng và chỉ mục.<br>Tìm hiểu cách tách data stack và application stack trong AWS SAM hoặc CloudFormation.<br>Xác định các nhóm dữ liệu chính của CampusMeet gồm identity, collaboration, meeting, task và AI. | 24/07/2026 | 27/07/2026 | <https://cloudjourney.awsstudygroup.com/vi/> |
+| 6 | Tìm hiểu cách AWS Lambda đọc và ghi dữ liệu trên Amazon DynamoDB.<br>Tìm hiểu cách sử dụng partition key, sort key và Global Secondary Index.<br>Tìm hiểu TTL, conditional write và transaction trong DynamoDB.<br>Tìm hiểu quyền IAM cần thiết để Lambda truy cập bảng và chỉ mục.<br>Tìm hiểu cách tách data stack và application stack trong AWS SAM hoặc CloudFormation.<br>Xác định các nhóm dữ liệu chính của CampusMeet gồm identity, collaboration, meeting, task và AI. | 24/07/2026 | 27/07/2026 | <https://cloudjourney.awsstudygroup.com/vi/> |
 
 ### Kết quả đạt được tuần 6
 

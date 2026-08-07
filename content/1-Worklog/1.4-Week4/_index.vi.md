@@ -17,7 +17,7 @@ pre: " <b> 1.4. </b> "
 
 | Thứ | Công việc chi tiết | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
 | --- | --- | --- | --- | --- |
-| Thứ 6 | Tìm hiểu yêu cầu và cấu trúc repository CampusMeet.<br>Chuẩn hóa tài liệu kế hoạch và phạm vi chức năng của dự án.<br>Xây dựng landing page responsive giới thiệu CampusMeet.<br>Xây dựng đăng ký, xác nhận email, đăng nhập, đăng xuất và quên mật khẩu bằng Amazon Cognito.<br>Thiết lập protected route và API client gắn access token.<br>Chạy test, typecheck và build. | 10/07/2026 | 12/07/2026 | <https://github.com/Ngct253/CampusMeet> |
+| 6 | Tìm hiểu yêu cầu và cấu trúc repository CampusMeet.<br>Chuẩn hóa tài liệu kế hoạch và phạm vi chức năng của dự án.<br>Xây dựng landing page responsive giới thiệu CampusMeet.<br>Xây dựng đăng ký, xác nhận email, đăng nhập, đăng xuất và quên mật khẩu bằng Amazon Cognito.<br>Thiết lập protected route và API client gắn access token.<br>Chạy test, typecheck và build. | 10/07/2026 | 12/07/2026 | <https://github.com/Ngct253/CampusMeet> |
 
 ### Kết quả đạt được tuần 4
 
