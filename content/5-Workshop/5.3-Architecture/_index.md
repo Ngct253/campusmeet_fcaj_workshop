@@ -8,157 +8,74 @@ pre: " <b> 5.3. </b> "
 
 # CampusMeet System Architecture
 
-## Goal
+CampusMeet uses a serverless AWS architecture to separate the frontend, API, data, and asynchronous integrations.
 
-This section explains how CampusMeet separates long-lived data, core API functionality, asynchronous processing, and the full application environment. Keeping these boundaries explicit makes later deployments easier to reason about and prevents a small application change from being mistaken for a full-system deployment.
-
-## 1. Design principles
-
-CampusMeet follows a few consistent rules:
-
-- the frontend never reads DynamoDB directly;
-- Cognito authenticates identity, while Lambda services enforce domain authorization;
-- business data is stored in five shared DynamoDB tables;
-- files and larger content are stored in S3;
-- long-running and external-service work is asynchronous;
-- Google Calendar/Meet is not the source of truth for meetings;
-- AI retrieval is restricted to sources the caller is allowed to read;
-- infrastructure changes are managed through SAM/CloudFormation.
-
-## 2. Main request path
+## Main request flow
 
 ```text
 User
- ↓
-CampusMeet Web
- ↓
+  ↓
+CloudFront + React
+  ↓
 Amazon Cognito
- ↓ JWT
-Amazon API Gateway
- ↓
-AWS Lambda API
- ↓
-Business service
- ↓
-Repository / integration adapter
- ↓
-DynamoDB / S3 / Google / Bedrock
+  ↓
+API Gateway
+  ↓
+AWS Lambda
+  ↓
+DynamoDB / S3
+  ↓
+Google / Bedrock when needed
 ```
 
-A protected request therefore has two independent checks: token validation at the API boundary and resource authorization inside the application service.
+Cognito authenticates the user, while the backend still checks group membership, role, and resource scope before returning application data.
 
-## 3. Current infrastructure boundaries
+## Main AWS services
 
-The repository currently contains four important infrastructure templates.
-
-| Template | Responsibility |
+| Service | Role |
 | --- | --- |
-| `infra/data-foundation.yaml` | Five DynamoDB tables and the `meeting-data` stream |
-| `infra/auth-integration.yaml` | Smaller dev/core stack for Cognito, HTTP API, and core M1/M2 functionality |
-| `infra/user-content-orchestration.yaml` | User-content S3, Step Functions, reminders, Scheduler, and M4 orchestration resources |
-| `infra/template.yaml` | Full application stack with frontend hosting, API, Cognito, Google sync, AI worker, Bedrock, and monitoring |
+| Amazon Cognito | Authentication |
+| API Gateway | HTTP API |
+| AWS Lambda | Business logic |
+| DynamoDB | Main application data |
+| Amazon S3 | Frontend assets and user files |
+| CloudFront | Production frontend over HTTPS |
+| EventBridge Scheduler | Reminders and delayed retries |
+| Step Functions | Long-running workflows |
+| Amazon Bedrock | AI and retrieval |
+| CloudWatch | Logs and monitoring |
 
-`auth-integration.yaml` and `template.yaml` are not interchangeable. The smaller auth/core stack is useful for early workshop exercises, while the full application stack is required when testing Minutes, Tasks, Upload, Google, and AI together.
+## Infrastructure templates
 
-## 4. Data foundation
+CampusMeet separates infrastructure into several templates:
 
-The data stack owns:
+- `data-foundation.yaml` for DynamoDB tables;
+- `auth-integration.yaml` for the smaller development auth/core stack;
+- `user-content-orchestration.yaml` for user content and asynchronous workflows;
+- `template.yaml` for the full application stack, including production frontend hosting, API, Google sync, AI, and monitoring.
 
-```text
-campusmeet-<env>-identity
-campusmeet-<env>-collaboration
-campusmeet-<env>-meeting-data
-campusmeet-<env>-task-data
-campusmeet-<env>-ai-work
-```
+The full production E2E uses the complete application stack rather than assuming the smaller auth stack contains every feature.
 
-Separating these tables from application resources reduces the chance that updating a Lambda or frontend replaces long-lived data. The `meeting-data` table also exposes a DynamoDB Stream used by asynchronous processing such as Google synchronization.
+## Data and external services
 
-## 5. Auth/core stack
+DynamoDB remains the source of truth for CampusMeet business data. Google Calendar/Meet is an external synchronization target, not the primary Meeting store.
 
-`infra/auth-integration.yaml` contains the smaller learning/dev deployment for:
+Large files are stored in S3. Google sync, reminders, and AI processing run asynchronously so a temporary external-service failure does not remove the main CampusMeet data.
 
-- Cognito User Pool and client;
-- HTTP API and JWT authorizer;
-- core API Lambda;
-- its execution role and log group.
-
-It is suitable for Authentication, Groups, Invitations, Notifications, and core Meeting CRUD exercises.
-
-It should not be used as evidence that every full-application route is already deployed.
-
-## 6. User-content and orchestration stack
-
-`infra/user-content-orchestration.yaml` owns resources used outside short synchronous API calls, including private user-content storage, AI orchestration, reminders, Scheduler-related roles, and SES-related configuration.
-
-A document upload can therefore follow this path:
+## Production deployment order
 
 ```text
-API permission check
+Data stack
   ↓
-presigned upload URL
+User-content / orchestration
   ↓
-private S3
-  ↓
-Attachment completion
-  ↓
-AIJob / Step Functions
-```
-
-## 7. Full application stack
-
-`infra/template.yaml` brings together the wider deployed application, including frontend S3/CloudFront, application Cognito, the full HTTP API, GoogleSyncWorker, AI Worker, Bedrock/vector resources, and monitoring.
-
-This is the stack used for the later E2E chapters when a feature must be exercised as part of the complete product flow.
-
-## 8. External integrations
-
-Google synchronization is performed after the internal Meeting change is persisted. A Google failure produces synchronization state and retry behavior rather than deleting the CampusMeet meeting.
-
-AI follows an asynchronous job path:
-
-```text
-API
- ↓
-AIJob
- ↓
-Step Functions
- ↓
-AI Worker
- ↓
-Bedrock / Knowledge Base
-```
-
-The backend filters group, meeting, source state, and user permissions before retrieved content is passed to the model.
-
-## 9. Features outside the current core E2E
-
-The wider design includes recording and Amazon Transcribe, but the workshop does not present live transcription, full recording lifecycle, or batch audio transcription as production-complete unless the corresponding runtime path has actually been implemented and verified.
-
-## 10. Deployment order
-
-A full environment is normally assembled in this order:
-
-```text
-Confirm AWS account and region
-        ↓
-Data foundation
-        ↓
-User-content/orchestration
-        ↓
 Full application stack
-        ↓
-Read CloudFormation outputs
-        ↓
-Configure frontend and Google
-        ↓
-Publish frontend
-        ↓
-Run E2E tests
+  ↓
+Read API URL + CloudFront domain
+  ↓
+Build and publish frontend
+  ↓
+Run E2E on production URL
 ```
 
-Some values such as the real CloudFront origin or API callback URL only exist after the first deployment, so the final environment may require a second stack update with the real URLs.
-
-## Result
-
-Learners should be able to explain the request path, the difference between authentication and authorization, the responsibility of each infrastructure template, and the difference between an implemented design and a cloud integration that has actually passed E2E verification.
+The final CloudFront URL is the production link used for the project demo and submission.
