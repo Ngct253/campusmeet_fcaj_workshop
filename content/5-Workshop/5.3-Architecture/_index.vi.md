@@ -10,176 +10,235 @@ pre: " <b> 5.3. </b> "
 
 ## Mục tiêu
 
-Phần này trình bày cách các thành phần của CampusMeet phối hợp với nhau, ranh giới trách nhiệm giữa giao diện, API, dữ liệu và các dịch vụ tích hợp. Việc hiểu đúng kiến trúc giúp triển khai tài nguyên theo thứ tự, tránh cấp quyền quá rộng và không nhầm lẫn giữa xác thực người dùng với quyền truy cập dữ liệu.
+Phần này mô tả cách các thành phần của CampusMeet phối hợp với nhau và quan trọng hơn là ranh giới giữa dữ liệu, API, xử lý bất đồng bộ và các tích hợp bên ngoài. Việc tách đúng ranh giới giúp giảm nguy cơ một thay đổi ở application stack làm ảnh hưởng trực tiếp đến dữ liệu lâu dài.
 
-## Nguyên tắc thiết kế
+## 1. Nguyên tắc thiết kế
 
-CampusMeet tuân theo các nguyên tắc sau:
+CampusMeet đi theo một số nguyên tắc xuyên suốt:
 
-- CampusMeet quản lý quy trình trước, trong và sau cuộc họp; hệ thống không tự xây dựng chức năng gọi video và không sao chép Google Meet.
-- Giao diện người dùng không truy cập trực tiếp Amazon DynamoDB.
-- Amazon Cognito xác thực danh tính, còn dịch vụ phía máy chủ tiếp tục kiểm tra tư cách thành viên và vai trò.
-- Dữ liệu nghiệp vụ được lưu trong năm bảng DynamoDB theo nhu cầu truy xuất.
-- Tệp, âm thanh và nội dung có kích thước lớn được lưu trong Amazon S3; DynamoDB chỉ giữ thông tin mô tả và trạng thái.
-- Các quy trình dài như xử lý tệp, chuyển giọng nói thành văn bản và tạo nội dung bằng AI được thực hiện bất đồng bộ.
-- Mọi kết quả do AI tạo ra là bản nháp có nguồn dẫn và cần người dùng xác nhận trước khi trở thành dữ liệu chính thức.
+- Frontend không truy cập DynamoDB trực tiếp.
+- Cognito xác thực danh tính, còn Lambda kiểm tra quyền nghiệp vụ.
+- Dữ liệu nghiệp vụ nằm trong năm bảng DynamoDB dùng chung.
+- File và nội dung lớn nằm trong S3.
+- Các công việc dài hoặc phụ thuộc dịch vụ ngoài được xử lý bất đồng bộ.
+- Google Calendar/Meet không phải nguồn dữ liệu chính của Meeting.
+- AI chỉ được truy xuất nguồn mà người dùng có quyền đọc.
+- Hạ tầng được quản lý bằng AWS SAM/CloudFormation thay vì sửa thủ công rồi bỏ qua source.
 
-## Luồng yêu cầu chính
-
-![Sơ đồ kiến trúc CampusMeet AWS](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
+## 2. Luồng request chính
 
 ```text
 Người dùng
-    |
-    v
+   ↓
 CampusMeet Web
-React + TypeScript + Vite
-    |
-    | 1. Đăng ký và đăng nhập
-    v
+   ↓
 Amazon Cognito
-    |
-    | 2. Phát JWT
-    v
+   ↓ JWT
 Amazon API Gateway
-    |
-    | 3. Kiểm tra JWT
-    v
-AWS Lambda
-    |
-    | 4. Kiểm tra thành viên và vai trò
-    v
-Lớp nghiệp vụ và lớp truy cập dữ liệu
-    |
-    +----------------------+----------------------+
-    |                      |                      |
-    v                      v                      v
-DynamoDB               Amazon S3          Dịch vụ tích hợp
-Dữ liệu nghiệp vụ      Tệp và âm thanh    Google, SES và AI
+   ↓
+AWS Lambda API
+   ↓
+Business service
+   ↓
+Repository / integration adapter
+   ↓
+DynamoDB / S3 / Google / Bedrock
 ```
 
-Một yêu cầu đọc hoặc thay đổi dữ liệu đi qua các bước:
+Một request nghiệp vụ thường đi qua các bước:
 
-1. Người dùng đăng nhập bằng Amazon Cognito.
-2. Giao diện gửi JWT trong tiêu đề `Authorization` khi gọi API.
-3. Amazon API Gateway kiểm tra chữ ký, nơi phát hành, đối tượng nhận và thời hạn của JWT.
-4. AWS Lambda lấy danh tính từ JWT, không tin `userId` hoặc vai trò do giao diện tự gửi.
-5. Dịch vụ phía máy chủ kiểm tra người dùng có phải thành viên đang hoạt động của nhóm và có vai trò phù hợp hay không.
-6. Lớp truy cập dữ liệu thực hiện `GetItem`, `Query`, ghi có điều kiện hoặc giao dịch trên đúng bảng.
-7. Kết quả được trả về theo kiểu dữ liệu dùng chung trong `@campusmeet/shared`.
+1. Người dùng đăng nhập bằng Cognito.
+2. Frontend gửi JWT qua `Authorization` header.
+3. API Gateway kiểm tra token.
+4. Lambda đọc danh tính từ JWT.
+5. Business layer kiểm tra membership, role và resource boundary.
+6. Repository truy cập DynamoDB hoặc adapter gọi dịch vụ ngoài.
+7. Kết quả được trả về frontend theo contract dùng chung.
 
-## Trách nhiệm của các thành phần
+## 3. Bốn ranh giới hạ tầng hiện tại
 
-| Thành phần | Trách nhiệm trong CampusMeet |
+CampusMeet hiện có bốn template chính, mỗi template có mục đích khác nhau.
+
+| Template | Trách nhiệm |
 | --- | --- |
-| CampusMeet Web | Hiển thị và gửi yêu cầu quản lý hồ sơ, nhóm, lời mời, cuộc họp, thông báo và các chức năng tiếp theo |
-| Amazon Cognito | Đăng ký, xác nhận tài khoản, đăng nhập và phát JWT |
-| Amazon API Gateway | Cung cấp HTTP API, xử lý CORS và kiểm tra JWT trước khi gọi Lambda |
-| AWS Lambda | Thực thi nghiệp vụ, kiểm tra quyền và điều phối lớp truy cập dữ liệu |
-| Amazon DynamoDB | Lưu dữ liệu nghiệp vụ trong năm bảng vật lý |
-| Amazon S3 | Lưu tệp, âm thanh, bản ghi và nội dung lớn bằng quyền truy cập riêng tư |
-| EventBridge Scheduler | Chạy lịch nhắc một lần theo thời điểm của cuộc họp |
-| AWS Step Functions | Điều phối các bước xử lý dài hoặc cần thử lại có kiểm soát |
-| Amazon Transcribe | Chuyển âm thanh thành văn bản khi quy trình phiên âm được thực hiện |
-| Amazon Bedrock | Hỗ trợ hỏi đáp, tóm tắt và đề xuất nội dung dựa trên nguồn được phép |
-| Amazon CloudWatch | Thu thập nhật ký, số liệu và thông tin lỗi |
-| AWS IAM | Giới hạn quyền của người dùng và tài nguyên AWS |
-| AWS SAM và CloudFormation | Định nghĩa, kiểm tra và triển khai hạ tầng bằng mã nguồn |
+| `infra/data-foundation.yaml` | Sở hữu năm bảng DynamoDB và stream của `meeting-data` |
+| `infra/auth-integration.yaml` | Stack dev/core dùng để triển khai Cognito, HTTP API và các chức năng M1/M2 cốt lõi |
+| `infra/user-content-orchestration.yaml` | S3 user content, Step Functions, reminder, Scheduler và các tài nguyên orchestration M4 |
+| `infra/template.yaml` | Full application stack: frontend hosting, API, Cognito, Google sync, AI Worker, Bedrock, monitoring và các integration còn lại |
 
-## Ranh giới các ngăn xếp CloudFormation
+Hai template `auth-integration.yaml` và `template.yaml` không nên được hiểu là cùng một stack.
 
-CampusMeet tách dữ liệu khỏi tài nguyên ứng dụng để giảm nguy cơ ảnh hưởng đến dữ liệu khi cập nhật mã nguồn.
+`auth-integration.yaml` hữu ích cho workshop các phần đầu vì nhỏ, dễ quan sát và đã được dùng cho môi trường dev core. Khi chuyển sang E2E đầy đủ với Minutes, Tasks, Upload, Google và AI, cần dùng application stack phù hợp thay vì giả định auth stack đã chứa toàn bộ chức năng.
 
-| Tệp mẫu | Trách nhiệm |
-| --- | --- |
-| `infra/data-foundation.yaml` | Sở hữu năm bảng DynamoDB dùng chung |
-| `infra/auth-integration.yaml` | Sở hữu Cognito User Pool, ứng dụng khách Cognito, HTTP API, Lambda, vai trò IAM và nhóm nhật ký của phần xác thực cùng chức năng cốt lõi |
-| `infra/template.yaml` | Mô tả kiến trúc ứng dụng mở rộng và tham chiếu năm bảng qua tiền tố tên bảng; không tạo lại các bảng dữ liệu |
+## 4. Data foundation
 
-Thứ tự triển khai nền tảng:
+`infra/data-foundation.yaml` tạo năm bảng:
 
 ```text
-Kiểm tra tài khoản và quyền IAM
-        ↓
-Triển khai ngăn xếp dữ liệu
-        ↓
-Xác minh năm bảng DynamoDB
-        ↓
-Triển khai ngăn xếp Cognito và API
-        ↓
-Lấy các giá trị đầu ra CloudFormation
-        ↓
-Cấu hình giao diện và kiểm thử
+campusmeet-<env>-identity
+campusmeet-<env>-collaboration
+campusmeet-<env>-meeting-data
+campusmeet-<env>-task-data
+campusmeet-<env>-ai-work
 ```
 
-## Xác thực và phân quyền
+Data stack được tách khỏi application stack để tránh việc cập nhật Lambda hoặc frontend vô tình thay thế bảng dữ liệu.
 
-Hai lớp kiểm tra được thực hiện độc lập:
+Bảng `meeting-data` có DynamoDB Stream để phát hiện thay đổi cần xử lý bất đồng bộ, điển hình là Google synchronization.
 
-| Lớp | Nơi thực hiện | Nội dung |
+## 5. Auth/Core stack
+
+`infra/auth-integration.yaml` cung cấp một stack nhỏ gồm:
+
+- Cognito User Pool.
+- User Pool Client.
+- HTTP API.
+- JWT authorizer.
+- Lambda xử lý core route.
+- IAM execution role.
+- CloudWatch Log Group.
+
+Stack này phù hợp để học và kiểm thử các phần Auth, Group, Invitation và Meeting CRUD ban đầu.
+
+Nó không phải bằng chứng rằng Minutes, Tasks, Upload và AI đã được deploy nếu các route đó chỉ tồn tại trong full application handler.
+
+## 6. User-content và orchestration stack
+
+`infra/user-content-orchestration.yaml` xử lý những thành phần không nên nằm trực tiếp trong request API:
+
+```text
+S3 user-content
+Step Functions AI orchestration
+Reminder Lambda
+EventBridge Scheduler role
+SES configuration
+```
+
+Stack này nhận các ARN/tên tài nguyên liên quan từ stack khác qua parameter thay vì tự sở hữu mọi thứ.
+
+Ví dụ upload document:
+
+```text
+API
+ ↓
+presigned URL
+ ↓
+S3 private bucket
+ ↓
+Attachment complete
+ ↓
+AIJob
+ ↓
+Step Functions
+```
+
+## 7. Full application stack
+
+`infra/template.yaml` là stack tích hợp rộng hơn, chứa các thành phần như:
+
+- Frontend S3 bucket.
+- CloudFront distribution.
+- Cognito cho application environment.
+- HTTP API và API Lambda đầy đủ.
+- Google Sync Worker.
+- AI Worker.
+- Bedrock Knowledge Base / vector integration.
+- CloudWatch/SNS monitoring.
+
+Các phần sau của workshop dùng stack này khi cần một E2E đầy đủ hơn.
+
+## 8. Ranh giới xác thực và phân quyền
+
+Hai lớp được tách riêng:
+
+| Lớp | Nơi thực hiện | Ví dụ |
 | --- | --- | --- |
-| Xác thực | Amazon Cognito và API Gateway | JWT hợp lệ, đúng User Pool và ứng dụng khách, chưa hết hạn |
-| Phân quyền | Lambda và lớp nghiệp vụ | Người dùng là thành viên đang hoạt động, có vai trò phù hợp và được truy cập đúng nhóm hoặc cuộc họp |
+| Authentication | Cognito + API Gateway | JWT hợp lệ, đúng issuer/audience |
+| Authorization | Lambda/business service | member của group, role, resource scope |
 
-JWT hợp lệ không cho phép người dùng đọc mọi nhóm. Ví dụ, trước khi trả chi tiết một nhóm, dịch vụ phía máy chủ vẫn phải đọc membership tương ứng. Các thao tác quản trị như sửa nhóm, gửi lời mời hoặc hủy cuộc họp yêu cầu vai trò `GROUP_ADMIN`.
+Một người dùng có JWT hợp lệ nhưng không thuộc Group A vẫn phải bị từ chối khi truy cập dữ liệu Group A.
 
-## Ranh giới dữ liệu
+## 9. Ranh giới dữ liệu
 
-CampusMeet sử dụng năm bảng:
+Frontend không gửi `role` hoặc `userId` rồi yêu cầu backend tin giá trị đó.
+
+Backend suy ra danh tính từ JWT và kiểm tra dữ liệu thật trong DynamoDB.
+
+Các thao tác truy xuất ưu tiên `GetItem` và `Query` theo khóa đã thiết kế. `Scan` không phải lựa chọn mặc định cho request nghiệp vụ.
+
+## 10. Tích hợp Google
+
+Google synchronization chạy ngoài giao dịch chính của Meeting.
 
 ```text
-campusmeet-dev-identity
-campusmeet-dev-collaboration
-campusmeet-dev-meeting-data
-campusmeet-dev-task-data
-campusmeet-dev-ai-work
+Meeting mutation
+      ↓
+DynamoDB
+      ↓
+Stream
+      ↓
+GoogleSyncWorker
+      ↓
+Google Calendar API
 ```
 
-Các bảng sử dụng khóa `PK` và `SK`, kết hợp các chỉ mục phụ để đáp ứng nhu cầu truy xuất. Không sử dụng `Scan` cho yêu cầu nghiệp vụ thông thường.
+Nếu Google lỗi, Meeting vẫn còn trong CampusMeet. Worker cập nhật trạng thái để retry hoặc yêu cầu người dùng kết nối lại khi cần.
 
-Tệp nhị phân không được gửi xuyên qua Lambda để lưu vào DynamoDB. Quy trình dành cho tệp lớn là:
+## 11. Tích hợp AI
 
-1. Giao diện yêu cầu quyền tải lên.
-2. Dịch vụ phía máy chủ kiểm tra quyền, loại tệp, kích thước và thông tin liên quan.
-3. Hệ thống cấp địa chỉ tải lên có thời hạn.
-4. Trình duyệt tải trực tiếp lên S3 riêng tư.
-5. Dịch vụ phía máy chủ xác minh tệp trước khi lưu thông tin mô tả và khởi chạy bước xử lý tiếp theo.
+AI chạy theo hướng job bất đồng bộ:
 
-## Ranh giới tích hợp bên ngoài
+```text
+API
+ ↓
+AIJob
+ ↓
+Step Functions
+ ↓
+AI Worker
+ ↓
+Bedrock / Knowledge Base
+```
 
-- Google Calendar là hướng tích hợp để tạo hoặc cập nhật sự kiện và yêu cầu liên kết Google Meet.
-- Google Meet REST API chỉ được dùng khi bản ghi hoặc bản phiên âm thực sự tồn tại và tài khoản có quyền phù hợp.
-- Thông báo trong ứng dụng là dữ liệu chính; lỗi gửi email không được làm mất thông báo đã tạo.
-- Các lệnh gọi Google, Amazon Transcribe, Amazon Bedrock hoặc dịch vụ khác cần có trạng thái, cơ chế chống xử lý lặp và chính sách thử lại.
-- Dữ liệu truy xuất cho AI phải được lọc theo nhóm, cuộc họp, trạng thái phê duyệt và quyền người dùng trước khi gửi cho mô hình.
+Retrieval phải lọc nguồn theo group, meeting, trạng thái source và quyền của người dùng trước khi đưa dữ liệu vào model.
 
-## Bảo mật và vận hành
+## 12. Những phần chưa thuộc core E2E hiện tại
 
-- Lambda sử dụng vai trò thực thi IAM, không sử dụng khóa truy cập được ghi trong biến môi trường.
-- Không ghi JWT, mã OAuth, mật khẩu, địa chỉ tải tệp có chữ ký hoặc toàn bộ nội dung nhạy cảm vào nhật ký.
-- S3 dùng cho giao diện và nội dung người dùng phải ở chế độ riêng tư.
-- Các thao tác cập nhật cạnh tranh sử dụng điều kiện phiên bản hoặc ghi có điều kiện.
-- Thao tác thay đổi nhiều mục cần tính nguyên tử sử dụng giao dịch DynamoDB.
-- CloudWatch được dùng để kiểm tra lỗi API, lỗi Lambda và các quy trình bất đồng bộ.
-- AWS Budgets được dùng để cảnh báo chi phí của môi trường dùng chung.
+Kiến trúc tổng thể có hướng mở rộng cho recording và Amazon Transcribe, nhưng workshop không xem live transcription, recording lifecycle hoặc batch audio transcription là phần đã hoàn tất chỉ vì tài liệu thiết kế hoặc contract đã tồn tại.
 
-## Các tệp cần đối chiếu
+Những phần này được ghi rõ là mở rộng/chưa xác minh khi chưa có runtime E2E tương ứng.
 
-| Tệp | Nội dung |
-| --- | --- |
-| `docs/architecture.md` | Kiến trúc tổng thể và ranh giới thành phần |
-| `docs/CampusMeet-SRS.md` | Yêu cầu nghiệp vụ và phạm vi hệ thống |
-| `docs/dynamodb-data-model.md` | Mô hình vật lý của năm bảng DynamoDB |
-| `docs/api-contract.md` | Đường dẫn API, kiểu dữ liệu và trạng thái triển khai |
-| `infra/data-foundation.yaml` | Ngăn xếp dữ liệu |
-| `infra/auth-integration.yaml` | Cognito, HTTP API và Lambda cốt lõi |
+## 13. Thứ tự triển khai hợp lý
+
+Với môi trường đầy đủ:
+
+```text
+Xác nhận AWS account/region
+        ↓
+Data foundation
+        ↓
+User-content/orchestration
+        ↓
+Full application stack
+        ↓
+Lấy CloudFormation outputs
+        ↓
+Cấu hình frontend/Google
+        ↓
+Deploy frontend
+        ↓
+E2E test
+```
+
+Một số giá trị như CloudFront domain hoặc API URL chỉ có sau lần deploy đầu, vì vậy production run có thể cần update stack lần hai với origin/redirect URI chính xác.
 
 ## Kết quả cần đạt
 
-Sau phần này, người thực hiện cần:
+Sau phần này, người học cần:
 
-- Giải thích được luồng từ giao diện đến API, Lambda và DynamoDB.
-- Phân biệt xác thực JWT với phân quyền theo nhóm.
-- Xác định đúng tài nguyên thuộc ngăn xếp dữ liệu và ngăn xếp ứng dụng.
-- Hiểu vì sao tệp lớn nằm trong S3 thay vì DynamoDB.
-- Biết các thành phần nào là tích hợp ngoài và không được giả định luôn thành công.
+- Hiểu đường đi của request từ browser đến dữ liệu.
+- Phân biệt authentication với authorization.
+- Biết bốn template hiện tại sở hữu những tài nguyên nào.
+- Không nhầm auth/core stack với full application stack.
+- Hiểu vì sao Google và AI được tách khỏi request nghiệp vụ chính.
+- Phân biệt kiến trúc dự kiến với chức năng đã được E2E verify.
