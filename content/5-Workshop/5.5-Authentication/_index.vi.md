@@ -28,7 +28,7 @@ Biên bản được rà soát để bảo đảm nội dung chính xác. Action
 
 Tài liệu được gắn với đúng cuộc họp và chỉ hiển thị cho người có quyền. Phiên âm có thể hỗ trợ tìm lại nội dung nhưng cần được kiểm tra độ chính xác. AI có thể gợi ý tóm tắt, câu trả lời hoặc đầu việc từ nguồn được phép, nhưng không thay người dùng đưa ra quyết định.
 
-Tại mốc workshop, một số phần về tài liệu, biên bản và nhiệm vụ đã có triển khai và kiểm thử liên quan. Phiên âm đầy đủ, xử lý âm thanh và các luồng AI vẫn cần tiếp tục hoàn thiện hoặc kiểm chứng.
+Tại mốc workshop, các phần về tài liệu, biên bản và nhiệm vụ đã có nhiều luồng cùng kiểm thử liên quan. Bản phiên âm đã có các khả năng đọc, phân trang, chỉnh sửa, phê duyệt và chuyển nguồn đã duyệt sang bước xử lý tiếp theo. Phần trợ lý AI đã có tiếp nhận nguồn, hỏi đáp có trích dẫn, tóm tắt, bản nháp biên bản/nhiệm vụ và phân tích tiến độ nhóm. Xử lý âm thanh cùng kiểm chứng đầu-cuối trên cloud vẫn cần tiếp tục hoàn thiện.
 
 ## Kết quả mong đợi
 

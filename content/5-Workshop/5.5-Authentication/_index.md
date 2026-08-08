@@ -28,7 +28,7 @@ Minutes are reviewed for accuracy. Action items become tasks with an owner, due 
 
 Documents belong to the correct meeting and remain visible only to authorized users. Transcription may help retrieve spoken content but requires accuracy review. AI may suggest summaries, answers, or action items from permitted sources, but it must not make decisions on behalf of users.
 
-At the workshop milestone, selected document, minutes, and task areas have implementation and related tests. Complete transcription, audio processing, and AI workflows still require further development or verification.
+At the workshop milestone, documents, minutes, and tasks have several working flows and related tests. Transcript capabilities include reading, pagination, editing, approval, and handoff of approved sources. AI assistance includes source ingestion, citation-grounded questions and answers, summaries, minutes/task drafts, and group progress analysis. Audio processing and complete cloud end-to-end verification still require further work.
 
 ## Expected outcome
 

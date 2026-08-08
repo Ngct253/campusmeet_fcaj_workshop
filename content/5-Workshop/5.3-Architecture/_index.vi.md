@@ -25,14 +25,19 @@ Khi một thành viên xem cuộc họp, CampusMeet trước hết xác nhận t
 
 Đối với tài liệu, người dùng tải tệp lên khu vực lưu trữ riêng thay vì đưa trực tiếp vào phần dữ liệu cuộc họp. CampusMeet chỉ liên kết tệp đó với đúng nhóm và cuộc họp.
 
-## Phần đã có và phần định hướng
+## Xử lý nội dung mở rộng
 
-| Phạm vi | Cách hiểu tại mốc workshop |
+Tài liệu và bản phiên âm đã được kiểm tra hoặc phê duyệt có thể trở thành nguồn cho kho tri thức, đồng thời giữ liên kết với nhóm, cuộc họp và phiên bản nguồn. Khi trợ lý AI trả lời hoặc tạo bản nháp, hệ thống giới hạn dữ liệu theo quyền người dùng, cung cấp trích dẫn và chờ xác nhận trước khi áp dụng vào biên bản hoặc nhiệm vụ chính thức.
+
+## Trạng thái triển khai hiện tại
+
+| Phạm vi | Trạng thái tại mốc workshop |
 | --- | --- |
-| Tài khoản, nhóm, lời mời, cuộc họp và thông báo | Là nền tảng hiện có của sản phẩm |
-| Biểu mẫu cuộc họp, tài liệu, biên bản và nhiệm vụ | Đã có phần triển khai và kiểm thử liên quan, cần tiếp tục kiểm chứng theo từng luồng |
-| Google Calendar và Google Meet | Có hướng tích hợp và một số phần đã được kiểm chứng cục bộ |
-| Phiên âm và AI | Là phần đang phát triển, chưa được xem là hoàn chỉnh trên môi trường thực tế |
-| Giám sát và kiểm soát chi phí | Là yêu cầu cần duy trì khi hệ thống được mở rộng |
+| Tài khoản, nhóm, lời mời, cuộc họp và thông báo | Đã có các chức năng nền tảng và luồng sử dụng chính |
+| Biểu mẫu cuộc họp, tài liệu, biên bản và nhiệm vụ | Đã có nhiều phần trong giao diện, luồng xử lý và kiểm thử liên quan; cần tiếp tục kiểm chứng xuyên suốt trên môi trường dùng chung |
+| Google Calendar và Google Meet | Đã có luồng kết nối, đồng bộ và kiểm chứng cục bộ; còn cần xác minh đầy đủ trên AWS và trình duyệt với tài khoản thực tế |
+| Bản phiên âm | Đã có các phần đọc, phân trang, chỉnh sửa, phê duyệt và chuyển nguồn đã duyệt sang bước xử lý tiếp theo; xử lý âm thanh và kiểm chứng cloud đầu-cuối vẫn cần hoàn thiện |
+| Kho tri thức và trợ lý AI | Đã có luồng tiếp nhận nguồn được phê duyệt, hỏi đáp có trích dẫn, tóm tắt nội dung, tạo bản nháp biên bản/nhiệm vụ và phân tích tiến độ nhóm, cùng các kiểm thử liên quan; còn cần kiểm chứng đầu-cuối trên cloud trước khi xem là sẵn sàng vận hành |
+| Giám sát và kiểm soát chi phí | Đã được đưa vào kiến trúc và hạ tầng; cần tiếp tục theo dõi khi phạm vi sử dụng tăng |
 
-Mũi tên trên sơ đồ thể hiện hướng kết nối mong muốn. Nó không có nghĩa rằng tất cả các nhánh đã được hoàn thiện ở cùng một mức độ.
+Mũi tên trên sơ đồ thể hiện cách các thành phần phối hợp; bảng trên ghi rõ mức độ đã triển khai và phần còn cần kiểm chứng.

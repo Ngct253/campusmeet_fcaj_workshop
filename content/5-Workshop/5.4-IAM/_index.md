@@ -17,6 +17,10 @@ pre: " <b> 5.4. </b> "
 | Integrations and automation | Google Calendar/Meet synchronization, content upload, reminders, and email | Initial flows exist; selected areas are only locally verified or still require verification in a realistic environment |
 | Knowledge and AI assistance | Ingesting approved sources, citation-grounded questions and answers, content summaries, minutes/task drafts, and group progress analysis | Selected flows and related tests exist; the scope is not presented as complete, and users must confirm all suggested content |
 
+## Relationships between feature groups
+
+An account identifies the actor, while membership determines access. Meetings connect documents, transcripts, minutes, and tasks. Approved sources support search and AI assistance, while notifications, reminders, and progress states return outcomes to the group's workflow.
+
 ## Information managed by CampusMeet
 
 CampusMeet connects user profiles, groups, members, meetings, documents, minutes, and tasks. Each meeting belongs to a group; documents and minutes belong to a meeting; follow-up work has an owner, due date, and status.

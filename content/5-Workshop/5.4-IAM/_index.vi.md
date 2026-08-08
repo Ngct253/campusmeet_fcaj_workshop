@@ -17,6 +17,10 @@ pre: " <b> 5.4. </b> "
 | Tích hợp và tự động hóa | Đồng bộ Google Calendar/Meet, upload nội dung, nhắc lịch và email | Đã có các luồng ban đầu; một số phần mới được kiểm chứng cục bộ hoặc vẫn cần xác minh trên môi trường thực tế |
 | Kho tri thức và trợ lý AI | Tiếp nhận nguồn đã được phê duyệt, hỏi đáp có trích dẫn, tóm tắt nội dung, tạo bản nháp biên bản/nhiệm vụ và phân tích tiến độ nhóm | Đã có một số luồng và kiểm thử liên quan; chưa được xem là hoàn chỉnh và mọi nội dung đề xuất vẫn cần người dùng xác nhận |
 
+## Mối liên hệ giữa các nhóm chức năng
+
+Tài khoản xác định người thao tác, còn tư cách thành viên quyết định phạm vi truy cập. Cuộc họp liên kết tài liệu, bản phiên âm, biên bản và nhiệm vụ. Nguồn đã được phê duyệt có thể phục vụ tìm kiếm và trợ lý AI; thông báo, nhắc lịch và trạng thái tiến độ đưa kết quả trở lại quy trình của nhóm.
+
 ## Thông tin được quản lý
 
 CampusMeet kết nối hồ sơ người dùng, nhóm, thành viên, cuộc họp, tài liệu, biên bản và nhiệm vụ. Mỗi cuộc họp thuộc một nhóm; tài liệu và biên bản gắn với cuộc họp; đầu việc có người phụ trách, thời hạn và trạng thái.

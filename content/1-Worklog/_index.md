@@ -22,4 +22,4 @@ The internship worklog is organized by week as follows:
 
 **Week 7:** [CampusMeet data model and core application features](1.7-week7/)
 
-**Week 8:** [Doing task H...](1.8-week8/)
+**Week 8:** [Meeting, document, and task workflow improvements in CampusMeet](1.8-week8/)

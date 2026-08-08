@@ -10,6 +10,8 @@ pre: " <b> 5.6. </b> "
 
 CampusMeet đã hình thành một quy trình sản phẩm tương đối rõ: người dùng có tài khoản, tham gia nhóm, theo dõi cuộc họp và tiếp cận thông tin liên quan. Chức năng cuộc họp cốt lõi đã được ghi nhận trên môi trường phát triển. Một số phần về giao diện, tài liệu, biên bản, nhiệm vụ và thông báo cũng đã có trong mã nguồn hoặc được kiểm thử ở phạm vi tương ứng.
 
+Google, phiên âm, kho tri thức và trợ lý AI đã có mã nguồn hoặc kiểm thử trong từng phạm vi. Mức độ xác minh vẫn khác nhau giữa môi trường cục bộ, môi trường phát triển và kịch bản đầu-cuối với dữ liệu, tài khoản và quyền thực tế.
+
 ## Những điểm cần tiếp tục kiểm chứng
 
 - Tình huống quyền truy cập giữa nhiều nhóm và vai trò.
@@ -23,7 +25,7 @@ CampusMeet đã hình thành một quy trình sản phẩm tương đối rõ: n
 
 1. Ưu tiên làm ổn định quy trình từ nhóm đến cuộc họp và nhiệm vụ.
 2. Kiểm chứng từng luồng trên môi trường dùng chung trước khi công bố hoàn chỉnh.
-3. Hoàn thiện tài liệu và phiên âm trước khi mở rộng AI.
+3. Hoàn thiện luồng đưa tài liệu và bản phiên âm đã duyệt vào kho tri thức, đồng thời kiểm chứng trợ lý AI đầu-cuối.
 4. Giữ AI ở vai trò hỗ trợ, cho phép người dùng xem nguồn và xác nhận.
 5. Cải thiện thông báo lỗi và trạng thái chức năng để người dùng biết bước tiếp theo.
 6. Duy trì quyền truy cập phù hợp và bảo vệ nội dung của từng nhóm.

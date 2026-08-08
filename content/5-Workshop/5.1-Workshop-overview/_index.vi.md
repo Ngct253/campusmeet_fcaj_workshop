@@ -25,6 +25,10 @@ CampusMeet kết nối các thông tin đó theo một mạch thống nhất:
 5. Theo dõi tiến độ sau cuộc họp.
 6. Tra cứu lại thông tin khi cần.
 
+## Cách các phần liên kết với nhau
+
+Nhóm là không gian chung và ranh giới truy cập của CampusMeet. Mỗi cuộc họp liên kết với tài liệu, bản phiên âm, biên bản và nhiệm vụ. Nhờ đó, thành viên có thể lần theo một công việc hoặc quyết định về đúng cuộc họp đã tạo ra nó thay vì tìm kiếm trong nhiều công cụ rời rạc.
+
 ## Giá trị chính
 
 - **Tập trung:** thông tin của nhóm và cuộc họp được đặt trong cùng một không gian.
@@ -35,4 +39,4 @@ CampusMeet kết nối các thông tin đó theo một mạch thống nhất:
 
 ## Phạm vi hiện tại
 
-CampusMeet đã có nền tảng cho tài khoản, nhóm, lời mời, cuộc họp và thông báo. Một số luồng về biểu mẫu cuộc họp, tài liệu, biên bản và công việc cũng đã được xây dựng hoặc cải thiện. Tích hợp Google, phiên âm và AI mới ở các mức hoàn thiện khác nhau, vì vậy workshop chỉ trình bày chúng như chức năng đang được tiếp tục kiểm chứng và phát triển.
+CampusMeet đã có nền tảng cho tài khoản, nhóm, lời mời, cuộc họp và thông báo. Một số luồng về biểu mẫu cuộc họp, tài liệu, biên bản và công việc cũng đã được xây dựng hoặc cải thiện. Tích hợp Google, phiên âm và AI đã có các luồng cùng kiểm thử ở những phạm vi nhất định, nhưng mức độ kiểm chứng trên cloud chưa đồng đều; workshop vì vậy ghi rõ phần đã có và phần cần tiếp tục xác minh.

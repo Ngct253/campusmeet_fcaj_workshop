@@ -25,14 +25,19 @@ When a member opens a meeting, CampusMeet first confirms the account and access 
 
 Documents are uploaded to private file storage rather than placed directly inside meeting records. CampusMeet links each file to the correct group and meeting.
 
-## Existing and target areas
+## Extended content processing
 
-| Scope | Meaning at the workshop milestone |
+Reviewed or approved documents and transcripts can become knowledge sources while retaining their group, meeting, and source-version context. AI answers and drafts remain limited by user access, include citations, and require confirmation before becoming official minutes or tasks.
+
+## Current implementation status
+
+| Scope | Status at the workshop milestone |
 | --- | --- |
-| Accounts, groups, invitations, meetings, and notifications | Existing product foundation |
-| Meeting forms, documents, minutes, and tasks | Implementation and related tests exist in selected areas; each flow still needs appropriate verification |
-| Google Calendar and Google Meet | An integration direction exists, with selected parts verified locally |
-| Transcription and AI | Evolving areas that are not presented as complete in a realistic environment |
-| Monitoring and cost awareness | Ongoing requirements as the system expands |
+| Accounts, groups, invitations, meetings, and notifications | The product foundation and primary user journeys are available |
+| Meeting forms, documents, minutes, and tasks | Several interface, workflow, and related test areas exist; end-to-end verification should continue in the shared environment |
+| Google Calendar and Google Meet | Connection, synchronization, and local verification flows exist; complete AWS and browser verification with a real account is still required |
+| Transcripts | Reading, pagination, editing, approval, and handoff of approved sources are available in selected areas; complete audio processing and cloud end-to-end verification still require further work |
+| Knowledge and AI assistance | Approved-source ingestion, citation-grounded questions and answers, content summaries, minutes/task drafts, group progress analysis, and related tests exist; cloud end-to-end verification is still required before operational readiness |
+| Monitoring and cost awareness | Included in the architecture and infrastructure and should continue as usage expands |
 
-Arrows in the diagram show intended connections. They do not mean that every branch has reached the same level of completion.
+Arrows in the diagram show how the components work together, while the table states what has been implemented and what still requires verification.

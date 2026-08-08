@@ -20,6 +20,10 @@ CampusMeet organizes access around groups. Having an account does not allow a pe
 
 Access is determined from stored membership information rather than a role claimed by the user. AI suggestions also remain drafts until an authorized user reviews them.
 
+## Protecting content
+
+Access is checked for each group and meeting action, not only at sign-in. Documents, transcripts, minutes, tasks, and AI sources inherit the access boundary of their original content.
+
 ## Usage criterion
 
 CampusMeet provides value when users can complete the core journey: sign in, join a group, create or view a meeting, access documents, record outcomes, and track assigned work. Advanced features should support this journey without making it harder to understand.

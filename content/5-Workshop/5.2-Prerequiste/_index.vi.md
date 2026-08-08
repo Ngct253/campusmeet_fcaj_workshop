@@ -20,6 +20,10 @@ CampusMeet tổ chức quyền theo nhóm. Có tài khoản không có nghĩa l�
 
 Quyền được xác định từ thông tin thành viên trong hệ thống, không dựa vào vai trò do người dùng tự khai báo. Nội dung do AI gợi ý cũng không tự động trở thành quyết định chính thức mà cần được người có quyền xem lại.
 
+## Nguyên tắc bảo vệ nội dung
+
+Quyền được kiểm tra theo từng nhóm và cuộc họp, không chỉ tại thời điểm đăng nhập. Tài liệu, bản phiên âm, biên bản, nhiệm vụ và nguồn dùng cho AI đều kế thừa phạm vi truy cập của nội dung gốc.
+
 ## Tiêu chí sử dụng
 
 CampusMeet có giá trị khi người dùng hoàn thành được hành trình cơ bản: đăng nhập, tham gia nhóm, tạo hoặc xem cuộc họp, tiếp cận tài liệu, ghi nhận kết quả và theo dõi việc được giao. Các chức năng nâng cao chỉ nên hỗ trợ, không làm luồng cốt lõi trở nên khó hiểu.

@@ -22,4 +22,4 @@ Nội dung công việc trong quá trình thực tập được trình bày theo
 
 **Tuần 7:** [Mô hình dữ liệu và các chức năng cốt lõi của CampusMeet](1.7-week7/)
 
-**Tuần 8:** [Làm công việc H...](1.8-week8/)
+**Tuần 8:** [Cải thiện cuộc họp, tài liệu và quy trình công việc CampusMeet](1.8-week8/)

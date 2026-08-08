@@ -14,7 +14,7 @@ I proactively traced issues from the UI to infrastructure, corrected upload meta
 
 | No. | Criterion | Description | Good | Fair | Average |
 | --- | --- | --- | --- | --- | --- |
-| 1 | **Professional knowledge and skills** | Applied programming, AWS, and development tools to assigned work | ✅ | ☐ | ☐ |
+| 1 | **Professional knowledge and skills** | Applied programming, AWS, and development tools to assigned work | ☐ | ✅ | ☐ |
 | 2 | **Learning ability** | Learned new technologies, processes, and feedback quickly | ✅ | ☐ | ☐ |
 | 3 | **Initiative** | Proactively investigated and resolved issues | ✅ | ☐ | ☐ |
 | 4 | **Responsibility** | Completed and tested work before handover | ✅ | ☐ | ☐ |

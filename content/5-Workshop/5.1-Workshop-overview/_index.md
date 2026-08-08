@@ -25,6 +25,10 @@ CampusMeet connects this information through one continuous journey:
 5. Track progress after the meeting.
 6. Retrieve previous information when needed.
 
+## How the parts connect
+
+A group is the shared workspace and access boundary. Meetings connect documents, transcripts, minutes, and tasks, allowing members to trace a task or decision back to its meeting.
+
 ## Main value
 
 - **Centralized information:** group and meeting information stays in one place.
@@ -35,4 +39,4 @@ CampusMeet connects this information through one continuous journey:
 
 ## Current scope
 
-CampusMeet has a foundation for accounts, groups, invitations, meetings, and notifications. Meeting forms, documents, minutes, and task workflows have also been built or refined in selected areas. Google integration, transcription, and AI are at different levels of completion, so this workshop presents them as areas that still require verification and further development.
+CampusMeet has a foundation for accounts, groups, invitations, meetings, and notifications. Meeting forms, documents, minutes, and task workflows have also been built or refined in selected areas. Google integration, transcription, and AI have working flows and tests within defined scopes, but their level of cloud verification varies. The workshop therefore identifies both available capabilities and remaining verification.

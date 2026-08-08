@@ -14,7 +14,7 @@ Tôi chủ động kiểm tra lỗi từ giao diện đến hạ tầng, sửa c
 
 | STT | Tiêu chí | Mô tả | Tốt | Khá | Trung bình |
 | --- | --- | --- | --- | --- | --- |
-| 1 | **Kiến thức và kỹ năng chuyên môn** | Áp dụng kiến thức lập trình, AWS và công cụ phát triển vào phần việc được giao | ✅ | ☐ | ☐ |
+| 1 | **Kiến thức và kỹ năng chuyên môn** | Áp dụng kiến thức lập trình, AWS và công cụ phát triển vào phần việc được giao | ☐ | ✅ | ☐ |
 | 2 | **Khả năng học hỏi** | Tiếp thu công nghệ, quy trình và phản hồi mới | ✅ | ☐ | ☐ |
 | 3 | **Tính chủ động** | Chủ động kiểm tra, phát hiện và xử lý vấn đề | ✅ | ☐ | ☐ |
 | 4 | **Tinh thần trách nhiệm** | Hoàn thiện phần việc và kiểm thử trước khi bàn giao | ✅ | ☐ | ☐ |

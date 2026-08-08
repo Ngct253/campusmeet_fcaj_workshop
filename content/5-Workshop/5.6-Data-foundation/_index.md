@@ -10,6 +10,8 @@ pre: " <b> 5.6. </b> "
 
 CampusMeet now has a reasonably clear product journey: users have accounts, join groups, follow meetings, and access related information. The core meeting workflow is recorded in the development environment. Selected areas for the interface, documents, minutes, tasks, and notifications also exist in the source or have been tested within their respective scope.
 
+Google integration, transcription, knowledge, and AI assistance now have source or tests for defined areas. Verification still varies between local, development, and realistic end-to-end scenarios.
+
 ## Areas requiring further verification
 
 - Access scenarios across multiple groups and roles.
@@ -23,7 +25,7 @@ CampusMeet now has a reasonably clear product journey: users have accounts, join
 
 1. Stabilize the journey from groups to meetings and follow-up tasks.
 2. Verify each flow in the shared environment before presenting it as complete.
-3. Strengthen documents and transcription before expanding AI.
+3. Complete the flow from approved documents and transcripts into knowledge sources and verify AI assistance end to end.
 4. Keep AI in a supporting role and let users review sources and confirm results.
 5. Improve error messages and capability states so users understand the next step.
 6. Maintain appropriate access and protect each group's information.
