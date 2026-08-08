@@ -1,90 +1,37 @@
 ---
-title: "Chuẩn bị và quyền truy cập AWS"
-date: 2026-07-27
+title: "Người dùng và mục tiêu"
+date: 2026-08-08
 weight: 2
 chapter: false
 pre: " <b> 5.2. </b> "
 ---
 
-# Chuẩn bị và quyền truy cập AWS
+## Đối tượng sử dụng
 
-Trước khi triển khai CampusMeet, cần chuẩn bị môi trường phát triển và xác nhận đúng tài khoản AWS. Phần này chỉ giữ những yêu cầu cần thiết để bắt đầu workshop.
+CampusMeet phù hợp với nhóm sinh viên, câu lạc bộ và nhóm dự án nhỏ thường xuyên tổ chức họp nhưng chưa có một nơi thống nhất để quản lý thông tin. Người dùng không cần kiến thức kỹ thuật; họ chỉ cần có tài khoản và được tham gia đúng nhóm.
 
-## Công cụ cần có
+| Đối tượng | Nhu cầu |
+| --- | --- |
+| Quản trị viên nhóm | Tạo nhóm, mời thành viên, lập lịch và theo dõi kết quả chung |
+| Thành viên | Xem lịch, chuẩn bị nội dung, tham gia thảo luận và cập nhật công việc |
+| Người phụ trách cuộc họp | Tổ chức nội dung, tổng hợp biên bản và phân công đầu việc |
 
-- Node.js 22 và npm.
-- Git.
-- AWS CLI.
-- AWS SAM CLI.
-- PowerShell trên Windows.
+Một người có thể đảm nhiệm nhiều vai trò tùy theo từng nhóm và cuộc họp.
 
-Kiểm tra nhanh:
+## Mục tiêu của CampusMeet
 
-```powershell
-node --version
-npm --version
-git --version
-aws --version
-sam --version
-```
-
-## Mã nguồn CampusMeet
-
-```powershell
-git clone https://github.com/Ngct253/CampusMeet.git
-cd CampusMeet
-npm ci
-```
-
-Repo được tổ chức thành các phần chính:
-
-```text
-apps/web/       giao diện React
-services/api/   API và nghiệp vụ
-services/ai-worker/  xử lý AI
-infra/          hạ tầng AWS
-scripts/        script hỗ trợ triển khai
-```
-
-Trước khi deploy nên chạy:
-
-```powershell
-npm run lint
-npm run typecheck
-npm run test
-npm run build
-```
-
-## Tài khoản và khu vực AWS
-
-Workshop sử dụng khu vực:
-
-```text
-ap-southeast-1 (Singapore)
-```
-
-Sau khi đăng nhập AWS CLI, luôn xác nhận lại danh tính và region trước khi deploy:
-
-```powershell
-aws sts get-caller-identity
-aws configure get region
-```
-
-Không sử dụng tài khoản root cho công việc hằng ngày và không chia sẻ access key giữa các thành viên.
+- Giảm tình trạng thông tin bị phân tán.
+- Giúp cuộc họp có mục tiêu và nội dung chuẩn bị rõ ràng.
+- Lưu lại kết quả thay vì chỉ kết thúc ở phần trao đổi.
+- Chuyển đầu việc sau họp thành nhiệm vụ có thể theo dõi.
+- Hỗ trợ tìm lại thông tin mà vẫn tôn trọng quyền truy cập.
 
 ## Quyền truy cập
 
-Nhóm phát triển cần phân biệt hai loại quyền:
+CampusMeet tổ chức quyền theo nhóm. Có tài khoản không có nghĩa là được xem mọi nội dung. Quản trị viên có thể điều phối nhóm và thành viên; thành viên chỉ sử dụng các chức năng phù hợp với vai trò của mình. Người ngoài nhóm không được xem cuộc họp, tài liệu hoặc công việc nội bộ.
 
-- **Quyền của người triển khai**: dùng để tạo hoặc cập nhật CloudFormation stack và các IAM role cần thiết.
-- **Execution role của dịch vụ**: quyền mà Lambda hoặc worker sử dụng khi truy cập DynamoDB, S3, Bedrock hay các dịch vụ AWS khác.
+Quyền được xác định từ thông tin thành viên trong hệ thống, không dựa vào vai trò do người dùng tự khai báo. Nội dung do AI gợi ý cũng không tự động trở thành quyết định chính thức mà cần được người có quyền xem lại.
 
-Không cần cấp `AdministratorAccess` cho mọi thành viên chỉ để ứng dụng hoạt động. Các dịch vụ nên nhận đúng quyền mà chúng cần.
+## Tiêu chí sử dụng
 
-Thông tin nhạy cảm như Google client secret, token hoặc AWS credential không được đưa vào Git hoặc biến `VITE_*` của frontend.
-
-## Môi trường sử dụng
-
-Trong quá trình phát triển có thể dùng tài nguyên `campusmeet-dev-*`. Bản nộp production nên sử dụng môi trường riêng như `campusmeet-prod-*` để tránh thay đổi nhầm dữ liệu dev.
-
-Sau khi các công cụ, AWS account và quyền truy cập đã sẵn sàng, có thể chuyển sang kiến trúc và triển khai hệ thống.
+CampusMeet có giá trị khi người dùng hoàn thành được hành trình cơ bản: đăng nhập, tham gia nhóm, tạo hoặc xem cuộc họp, tiếp cận tài liệu, ghi nhận kết quả và theo dõi việc được giao. Các chức năng nâng cao chỉ nên hỗ trợ, không làm luồng cốt lõi trở nên khó hiểu.

@@ -1,84 +1,37 @@
 ---
-title: "Preparation and AWS Access"
-date: 2026-07-27
+title: "Users and Objectives"
+date: 2026-08-08
 weight: 2
 chapter: false
 pre: " <b> 5.2. </b> "
 ---
 
-# Preparation and AWS Access
+## Intended users
 
-Before deploying CampusMeet, prepare the local tools and verify the AWS account that will be used for the workshop.
+CampusMeet is designed for student groups, clubs, and small project teams that meet regularly but lack one consistent place for meeting information. Users do not need technical knowledge; they only need an account and membership in the appropriate group.
 
-## Required tools
+| Participant | Need |
+| --- | --- |
+| Group administrator | Create the group, invite members, schedule meetings, and follow overall outcomes |
+| Member | View schedules, prepare content, join discussions, and update assigned work |
+| Meeting coordinator | Organize content, prepare minutes, and assign follow-up work |
 
-- Node.js 22 and npm.
-- Git.
-- AWS CLI.
-- AWS SAM CLI.
-- PowerShell on Windows.
+One person may hold more than one role depending on the group and meeting.
 
-Quick check:
+## CampusMeet objectives
 
-```powershell
-node --version
-npm --version
-git --version
-aws --version
-sam --version
-```
+- Reduce fragmented information.
+- Give meetings a clear purpose and preparation process.
+- Preserve outcomes instead of ending with a conversation only.
+- Convert follow-up actions into trackable tasks.
+- Help users retrieve information while respecting access boundaries.
 
-## CampusMeet source code
+## Access
 
-```powershell
-git clone https://github.com/Ngct253/CampusMeet.git
-cd CampusMeet
-npm ci
-```
+CampusMeet organizes access around groups. Having an account does not allow a person to view everything. Administrators coordinate their group and members, while members use capabilities appropriate to their role. People outside a group cannot view its meetings, documents, or internal work.
 
-The main project areas are:
+Access is determined from stored membership information rather than a role claimed by the user. AI suggestions also remain drafts until an authorized user reviews them.
 
-```text
-apps/web/       React frontend
-services/api/   API and application logic
-services/ai-worker/  AI processing
-infra/          AWS infrastructure
-scripts/        deployment utilities
-```
+## Usage criterion
 
-Before deployment, run the normal project checks:
-
-```powershell
-npm run lint
-npm run typecheck
-npm run test
-npm run build
-```
-
-## AWS account and Region
-
-The workshop uses:
-
-```text
-ap-southeast-1 (Singapore)
-```
-
-Always verify the current AWS identity and Region before deploying:
-
-```powershell
-aws sts get-caller-identity
-aws configure get region
-```
-
-Do not use the root account for daily work and do not share long-lived access keys between team members.
-
-## Access model
-
-Two types of permission should be kept separate:
-
-- **Deployment permissions** for creating or updating CloudFormation resources.
-- **Service execution roles** used by Lambda and workers to access DynamoDB, S3, Bedrock, and other AWS services.
-
-Secrets such as Google client secrets, OAuth tokens, and AWS credentials must stay out of Git and out of frontend `VITE_*` variables.
-
-Development resources can use the `campusmeet-dev-*` naming pattern. The final deployment should use a separate production environment such as `campusmeet-prod-*` to avoid mixing demo data with development data.
+CampusMeet provides value when users can complete the core journey: sign in, join a group, create or view a meeting, access documents, record outcomes, and track assigned work. Advanced features should support this journey without making it harder to understand.

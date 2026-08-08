@@ -1,79 +1,38 @@
 ---
 title: "CampusMeet Overview"
-date: 2026-07-27
+date: 2026-08-08
 weight: 1
 chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-# CampusMeet Overview
+## What is CampusMeet?
 
-CampusMeet is a meeting and follow-up management platform for study groups, student projects, and small teams. It connects information that would otherwise be spread across calendars, documents, chat tools, and task trackers.
+CampusMeet is a meeting-management platform for study groups and small project teams. It brings together information that is often scattered across different tools, including members, schedules, documents, discussion notes, minutes, and follow-up tasks.
+
+CampusMeet does not replace video-conferencing software. Meetings may still take place through Google Meet or in person. CampusMeet helps the team prepare, record outcomes, and continue tracking work after the meeting ends.
 
 ## The problem
 
-Small teams often struggle with three things:
+Group information is often split across a calendar, shared drives, chat messages, and separate task lists. Team members may struggle to identify the latest information, understand who owns a task, or recall what was agreed.
 
-- meeting information is split across several tools;
-- decisions and follow-up work are easy to lose;
-- access control becomes inconsistent as more members participate.
+CampusMeet connects this information through one continuous journey:
 
-CampusMeet connects these activities into one flow:
+1. Create a group and invite members.
+2. Schedule a meeting and prepare its content.
+3. Share relevant documents.
+4. Record minutes, decisions, and action items.
+5. Track progress after the meeting.
+6. Retrieve previous information when needed.
 
-```text
-Create group
-  ↓
-Invite members
-  ↓
-Create meeting
-  ↓
-Save minutes and action items
-  ↓
-Convert to tasks
-  ↓
-Track progress
-```
+## Main value
 
-Google Calendar/Meet, document storage, and AI are additional integrations around this core workflow.
+- **Centralized information:** group and meeting information stays in one place.
+- **Clear ownership:** follow-up work has an owner and a visible status.
+- **Traceable history:** decisions and meeting outcomes can be reviewed later.
+- **Better collaboration:** members work from a shared source of information.
+- **Controlled intelligent support:** AI suggestions remain drafts until a user reviews them.
 
-## High-level architecture
+## Current scope
 
-![CampusMeet AWS Architecture](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
-
-| Component | Role |
-| --- | --- |
-| React/Vite | User interface |
-| Amazon Cognito | Sign-up and sign-in |
-| API Gateway | HTTP API |
-| AWS Lambda | Business logic and authorization |
-| DynamoDB | Main application data |
-| Amazon S3 | Files and larger content |
-| EventBridge Scheduler / Step Functions | Asynchronous work |
-| Amazon Bedrock | AI-assisted retrieval and drafting |
-| CloudWatch | Logs and monitoring |
-
-CampusMeet does not implement its own video-conferencing system. Google Calendar and Google Meet are external integrations.
-
-## Workshop scope
-
-The workshop focuses on the parts that directly support the final deployment:
-
-- authentication and API;
-- group-based data and authorization;
-- Group, Invitation, Meeting, Minutes, Task, and Dashboard;
-- a production frontend served through CloudFront;
-- document upload and asynchronous processing;
-- Google and AI integration where appropriate;
-- monitoring, security, E2E testing, and cost control.
-
-Live transcription, recording, and batch audio transcription are not required for the current core production E2E.
-
-## Project status
-
-The workshop distinguishes between:
-
-1. implemented in source;
-2. checked by automated tests or local builds;
-3. verified through a real AWS/browser E2E run.
-
-The final submission prioritizes the third level: a production URL and a core workflow that actually runs on AWS.
+CampusMeet has a foundation for accounts, groups, invitations, meetings, and notifications. Meeting forms, documents, minutes, and task workflows have also been built or refined in selected areas. Google integration, transcription, and AI are at different levels of completion, so this workshop presents them as areas that still require verification and further development.

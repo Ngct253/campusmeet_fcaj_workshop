@@ -1,81 +1,38 @@
 ---
 title: "Tổng quan CampusMeet"
-date: 2026-07-27
+date: 2026-08-08
 weight: 1
 chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-# Tổng quan CampusMeet
+## CampusMeet là gì?
 
-CampusMeet là nền tảng hỗ trợ nhóm học tập và nhóm dự án quản lý thông tin trước và sau cuộc họp trong cùng một nơi. Thay vì dùng lịch cho một phần, tài liệu cho một phần và công cụ quản lý việc cho một phần khác, CampusMeet liên kết các dữ liệu này theo từng nhóm và từng cuộc họp.
+CampusMeet là nền tảng quản lý cuộc họp dành cho nhóm học tập và nhóm dự án nhỏ. Hệ thống tập trung các thông tin thường bị phân tán như thành viên, lịch họp, tài liệu, nội dung thảo luận, biên bản và công việc sau cuộc họp.
 
-## Bài toán
+CampusMeet không thay thế công cụ gọi video. Cuộc họp vẫn có thể diễn ra trên Google Meet hoặc trực tiếp. Vai trò của CampusMeet là giúp nhóm chuẩn bị tốt hơn, lưu lại kết quả và tiếp tục theo dõi công việc sau khi cuộc họp kết thúc.
 
-Một nhóm nhỏ thường gặp ba vấn đề chính:
+## Vấn đề cần giải quyết
 
-- lịch họp, thành viên và tài liệu nằm ở nhiều công cụ khác nhau;
-- biên bản và công việc sau cuộc họp dễ bị bỏ sót;
-- dữ liệu khó kiểm soát quyền khi nhiều thành viên cùng sử dụng.
+Trong một nhóm, thông tin thường nằm ở nhiều nơi: lịch trong ứng dụng Calendar, tài liệu trong ổ đĩa, ghi chú trong tin nhắn và công việc trong một danh sách khác. Cách làm này khiến thành viên khó biết đâu là thông tin mới nhất, ai chịu trách nhiệm và quyết định nào đã được thống nhất.
 
-CampusMeet giải quyết bài toán đó bằng một luồng thống nhất:
+CampusMeet kết nối các thông tin đó theo một mạch thống nhất:
 
-```text
-Tạo nhóm
-  ↓
-Mời thành viên
-  ↓
-Tạo cuộc họp
-  ↓
-Lưu biên bản và Action Item
-  ↓
-Chuyển thành Task
-  ↓
-Theo dõi tiến độ
-```
+1. Tạo nhóm và mời thành viên.
+2. Lập lịch cuộc họp và chuẩn bị nội dung.
+3. Chia sẻ tài liệu liên quan.
+4. Ghi nhận biên bản, quyết định và đầu việc.
+5. Theo dõi tiến độ sau cuộc họp.
+6. Tra cứu lại thông tin khi cần.
 
-Ngoài luồng cốt lõi, hệ thống còn có hướng tích hợp Google Calendar/Meet, tài liệu trên Amazon S3 và các chức năng AI dựa trên Amazon Bedrock.
+## Giá trị chính
 
-## Kiến trúc tổng quan
+- **Tập trung:** thông tin của nhóm và cuộc họp được đặt trong cùng một không gian.
+- **Rõ trách nhiệm:** mỗi đầu việc có người phụ trách và trạng thái theo dõi.
+- **Có lịch sử:** quyết định và nội dung cuộc họp có thể được xem lại.
+- **Hỗ trợ cộng tác:** thành viên cùng theo dõi một nguồn thông tin chung.
+- **Hỗ trợ thông minh có kiểm soát:** nội dung do AI gợi ý chỉ là bản nháp và cần người dùng xác nhận.
 
-![Kiến trúc CampusMeet AWS](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
+## Phạm vi hiện tại
 
-CampusMeet sử dụng kiến trúc serverless trên AWS:
-
-| Thành phần | Vai trò |
-| --- | --- |
-| React/Vite | Giao diện người dùng |
-| Amazon Cognito | Đăng ký, đăng nhập và quản lý phiên |
-| Amazon API Gateway | Cung cấp HTTP API |
-| AWS Lambda | Xử lý nghiệp vụ và phân quyền |
-| Amazon DynamoDB | Lưu dữ liệu chính của hệ thống |
-| Amazon S3 | Lưu tệp và nội dung lớn |
-| EventBridge Scheduler / Step Functions | Xử lý các công việc bất đồng bộ |
-| Amazon Bedrock | Hỗ trợ tìm kiếm và tạo nội dung bằng AI |
-| Amazon CloudWatch | Log và giám sát hệ thống |
-
-Google Calendar và Google Meet là dịch vụ tích hợp bên ngoài; CampusMeet không xây dựng hệ thống gọi video riêng.
-
-## Phạm vi của workshop
-
-Workshop tập trung vào những phần có giá trị trực tiếp với bản triển khai cuối:
-
-- xác thực và API;
-- dữ liệu và phân quyền theo nhóm;
-- Group, Invitation, Meeting, Minutes, Task và Dashboard;
-- frontend production chạy qua CloudFront;
-- upload tài liệu và xử lý bất đồng bộ;
-- Google và AI ở mức tích hợp phù hợp với trạng thái dự án;
-- giám sát, bảo mật, kiểm thử E2E và chi phí.
-
-Live transcription, recording và batch audio transcription không được xem là yêu cầu bắt buộc của bản production E2E hiện tại.
-
-## Cách đọc trạng thái dự án
-
-Trong workshop, ba mức sau được phân biệt rõ:
-
-1. **Có trong mã nguồn**: chức năng đã được triển khai trong repository.
-2. **Đã kiểm tra bằng test/build**: logic đã vượt qua kiểm tra tự động hoặc local build.
-3. **Đã xác minh trên AWS**: chức năng đã được deploy và chạy thật từ trình duyệt đến dịch vụ AWS.
-
-Bản nộp cuối cùng ưu tiên mức thứ ba: có production link và một luồng E2E hoạt động thật.
+CampusMeet đã có nền tảng cho tài khoản, nhóm, lời mời, cuộc họp và thông báo. Một số luồng về biểu mẫu cuộc họp, tài liệu, biên bản và công việc cũng đã được xây dựng hoặc cải thiện. Tích hợp Google, phiên âm và AI mới ở các mức hoàn thiện khác nhau, vì vậy workshop chỉ trình bày chúng như chức năng đang được tiếp tục kiểm chứng và phát triển.

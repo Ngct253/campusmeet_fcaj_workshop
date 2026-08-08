@@ -1,40 +1,34 @@
 ---
 title: "Tự đánh giá"
-date: 2024-01-01
+date: 2026-08-15
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+Trong thời gian thực tập tại **Công ty TNHH Amazon Web Services Việt Nam** từ ngày **15/06/2026** đến ngày **15/08/2026**, tôi được củng cố kiến thức về điện toán đám mây và áp dụng kiến thức đã học vào dự án CampusMeet.
 
-Trong suốt thời gian thực tập tại **[Tên công ty/tổ chức]** từ **[ngày bắt đầu]** đến **[ngày kết thúc]**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
-Tôi đã tham gia **[mô tả ngắn gọn dự án hoặc công việc chính]**, qua đó cải thiện kỹ năng **[liệt kê kỹ năng: lập trình, phân tích, viết báo cáo, giao tiếp…]**.  
+Phạm vi tôi trực tiếp thực hiện gồm cập nhật tài liệu và script xác minh trạng thái triển khai M2; điều chỉnh cấu hình hạ tầng cho bảng dữ liệu cuộc họp và quyền của reminder Lambda; cải thiện một số màn hình và luồng thuộc M1–M4; xây dựng, sửa biểu mẫu cuộc họp và luồng upload tài liệu bằng presigned S3 URL; làm rõ giao diện biên bản, action item và cập nhật trạng thái task; đồng thời bổ sung kiểm thử cho các phần liên quan. Qua những công việc này, tôi cải thiện kỹ năng React/TypeScript, AWS Lambda, Amazon S3, AWS SAM/CloudFormation, kiểm thử, xử lý lỗi và viết tài liệu kỹ thuật.
 
-Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân thủ nội quy, và tích cực trao đổi với đồng nghiệp để nâng cao hiệu quả công việc.
+Tôi chủ động kiểm tra lỗi từ giao diện đến hạ tầng, sửa các vấn đề về metadata upload, quyền truy cập và bố cục, đồng thời cập nhật tài liệu để phản ánh đúng trạng thái đã triển khai. Tôi cũng nghiêm túc tiếp nhận phản hồi và điều chỉnh sản phẩm trước thời điểm tổng kết.
 
-Để phản ánh một cách khách quan quá trình thực tập, tôi xin tự đánh giá bản thân dựa trên các tiêu chí dưới đây:
+| STT | Tiêu chí | Mô tả | Tốt | Khá | Trung bình |
+| --- | --- | --- | --- | --- | --- |
+| 1 | **Kiến thức và kỹ năng chuyên môn** | Áp dụng kiến thức lập trình, AWS và công cụ phát triển vào phần việc được giao | ✅ | ☐ | ☐ |
+| 2 | **Khả năng học hỏi** | Tiếp thu công nghệ, quy trình và phản hồi mới | ✅ | ☐ | ☐ |
+| 3 | **Tính chủ động** | Chủ động kiểm tra, phát hiện và xử lý vấn đề | ✅ | ☐ | ☐ |
+| 4 | **Tinh thần trách nhiệm** | Hoàn thiện phần việc và kiểm thử trước khi bàn giao | ✅ | ☐ | ☐ |
+| 5 | **Kỷ luật** | Tuân thủ kế hoạch, quy trình làm việc và quản lý thời gian | ☐ | ✅ | ☐ |
+| 6 | **Tính cầu tiến** | Tiếp nhận phản hồi và cải thiện chất lượng sản phẩm | ✅ | ☐ | ☐ |
+| 7 | **Giao tiếp** | Trình bày tiến độ, vấn đề và kết quả công việc | ☐ | ✅ | ☐ |
+| 8 | **Hợp tác nhóm** | Phối hợp với các phần việc chung và tránh ảnh hưởng chức năng của thành viên khác | ✅ | ☐ | ☐ |
+| 9 | **Ứng xử chuyên nghiệp** | Tôn trọng thành viên, tài nguyên dùng chung và quy trình của nhóm | ✅ | ☐ | ☐ |
+| 10 | **Tư duy giải quyết vấn đề** | Phân tích lỗi từ giao diện, API đến hạ tầng và kiểm chứng bản sửa | ☐ | ✅ | ☐ |
+| 11 | **Đóng góp cho dự án** | Đóng góp vào giao diện, upload tài liệu, task workflow, hạ tầng và tài liệu triển khai | ✅ | ☐ | ☐ |
+| 12 | **Đánh giá tổng thể** | Đánh giá chung về quá trình thực tập và phần việc đã hoàn thành | ✅ | ☐ | ☐ |
 
+### Nội dung cần cải thiện
 
-| STT | Tiêu chí                            | Mô tả                                                                                            | Tốt | Khá | Trung bình |
-| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | --- | --- | ---------- |
-| 1   | **Kiến thức và kỹ năng chuyên môn** | Hiểu biết về ngành, áp dụng kiến thức vào thực tế, kỹ năng sử dụng công cụ, chất lượng công việc | ✅   | ☐   | ☐          |
-| 2   | **Khả năng học hỏi**                | Tiếp thu kiến thức mới, học hỏi nhanh                                                            | ☐   | ✅   | ☐          |
-| 3   | **Chủ động**                        | Tự tìm hiểu, nhận nhiệm vụ mà không chờ chỉ dẫn                                                  | ✅   | ☐   | ☐          |
-| 4   | **Tinh thần trách nhiệm**           | Hoàn thành công việc đúng hạn, đảm bảo chất lượng                                                | ✅   | ☐   | ☐          |
-| 5   | **Kỷ luật**                         | Tuân thủ giờ giấc, nội quy, quy trình làm việc                                                   | ☐   | ☐   | ✅          |
-| 6   | **Tính cầu tiến**                   | Sẵn sàng nhận feedback và cải thiện bản thân                                                     | ☐   | ✅   | ☐          |
-| 7   | **Giao tiếp**                       | Trình bày ý tưởng, báo cáo công việc rõ ràng                                                     | ☐   | ✅   | ☐          |
-| 8   | **Hợp tác nhóm**                    | Làm việc hiệu quả với đồng nghiệp, tham gia nhóm                                                 | ✅   | ☐   | ☐          |
-| 9   | **Ứng xử chuyên nghiệp**            | Tôn trọng đồng nghiệp, đối tác, môi trường làm việc                                              | ✅   | ☐   | ☐          |
-| 10  | **Tư duy giải quyết vấn đề**        | Nhận diện vấn đề, đề xuất giải pháp, sáng tạo                                                    | ☐   | ✅   | ☐          |
-| 11  | **Đóng góp vào dự án/tổ chức**      | Hiệu quả công việc, sáng kiến cải tiến, ghi nhận từ team                                         | ✅   | ☐   | ☐          |
-| 12  | **Tổng thể**                        | Đánh giá chung về toàn bộ quá trình thực tập                                                     | ✅   | ☐   | ☐          |
-
-### Cần cải thiện
-
-* Nâng cao tính kỹ luật, chấp hành nghiêm chỉnh nội quy của công ty hoặc bất kỳ trong một tổ chức nào
-* Cải thiện trong cách tư duy giải quyết vấn đề
-* Học cách giao tiếp tốt hơn trong giao tiếp hằng ngày và trong công việc, xử lý tình huống
+- Duy trì kỷ luật và quản lý thời gian ổn định hơn trong giai đoạn có nhiều hạng mục cần hoàn thiện đồng thời.
+- Trình bày ngắn gọn hơn khi báo cáo vấn đề kỹ thuật, nêu rõ nguyên nhân, phạm vi ảnh hưởng và kết quả kiểm chứng.
+- Tiếp tục rèn luyện tư duy giải quyết vấn đề theo hướng xác định nguyên nhân gốc trước khi lựa chọn phương án sửa.

@@ -1,39 +1,34 @@
 ---
-title: "Self-Assessment"
-date: 2024-01-01
+title: "Self-evaluation"
+date: 2026-08-15
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
+During my internship at **Amazon Web Services Vietnam Company Limited** from **15 June 2026** to **15 August 2026**, I strengthened my cloud-computing knowledge and applied it to CampusMeet.
 
-During my internship at **[Company/Organization Name]** from **[start date]** to **[end date]**, I had the opportunity to learn, practice, and apply the knowledge acquired in school to a real-world working environment.  
-I participated in **[briefly describe the main project or task]**, through which I improved my skills in **[list skills: programming, analysis, reporting, communication, etc.]**.  
+My direct contributions included updating the M2 deployment documentation and verification script; correcting the meeting-table infrastructure configuration and reminder Lambda permissions; improving selected M1–M4 screens and workflows; building and repairing meeting forms and presigned S3 document uploads; clarifying minutes, action-item, and task-status workflows; and adding the related tests. This work improved my React/TypeScript, AWS Lambda, Amazon S3, AWS SAM/CloudFormation, testing, debugging, and technical-writing skills.
 
-In terms of work ethic, I always strived to complete tasks well, complied with workplace regulations, and actively engaged with colleagues to improve work efficiency.
+I proactively traced issues from the UI to infrastructure, corrected upload metadata, access permissions, and layout problems, and kept the documentation aligned with the verified deployment state. I also incorporated feedback before the project handover.
 
-To objectively reflect on my internship period, I would like to evaluate myself based on the following criteria:
+| No. | Criterion | Description | Good | Fair | Average |
+| --- | --- | --- | --- | --- | --- |
+| 1 | **Professional knowledge and skills** | Applied programming, AWS, and development tools to assigned work | ✅ | ☐ | ☐ |
+| 2 | **Learning ability** | Learned new technologies, processes, and feedback quickly | ✅ | ☐ | ☐ |
+| 3 | **Initiative** | Proactively investigated and resolved issues | ✅ | ☐ | ☐ |
+| 4 | **Responsibility** | Completed and tested work before handover | ✅ | ☐ | ☐ |
+| 5 | **Discipline** | Followed plans and processes and managed time | ☐ | ✅ | ☐ |
+| 6 | **Growth mindset** | Used feedback to improve product quality | ✅ | ☐ | ☐ |
+| 7 | **Communication** | Reported progress, problems, and results | ☐ | ✅ | ☐ |
+| 8 | **Teamwork** | Coordinated with shared work without disrupting other members' features | ✅ | ☐ | ☐ |
+| 9 | **Professional conduct** | Respected team members, shared resources, and team processes | ✅ | ☐ | ☐ |
+| 10 | **Problem-solving** | Traced UI, API, and infrastructure issues and verified fixes | ☐ | ✅ | ☐ |
+| 11 | **Project contribution** | Improved UI, document upload, task workflows, infrastructure, and deployment documentation | ✅ | ☐ | ☐ |
+| 12 | **Overall assessment** | Overall assessment of the internship and completed responsibilities | ✅ | ☐ | ☐ |
 
-| No. | Criteria                            | Description                                                                                      | Good | Fair | Average |
-| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ------- |
-| 1   | **Professional knowledge & skills** | Understanding of the field, applying knowledge in practice, proficiency with tools, work quality | ✅    | ☐    | ☐       |
-| 2   | **Ability to learn**                | Ability to absorb new knowledge and learn quickly                                                | ☐    | ✅    | ☐       |
-| 3   | **Proactiveness**                   | Taking initiative, seeking out tasks without waiting for instructions                            | ✅    | ☐    | ☐       |
-| 4   | **Sense of responsibility**         | Completing tasks on time and ensuring quality                                                    | ✅    | ☐    | ☐       |
-| 5   | **Discipline**                      | Adhering to schedules, rules, and work processes                                                 | ☐    | ☐    | ✅       |
-| 6   | **Progressive mindset**             | Willingness to receive feedback and improve oneself                                              | ☐    | ✅    | ☐       |
-| 7   | **Communication**                   | Presenting ideas and reporting work clearly                                                      | ☐    | ✅    | ☐       |
-| 8   | **Teamwork**                        | Working effectively with colleagues and participating in teams                                   | ✅    | ☐    | ☐       |
-| 9   | **Professional conduct**            | Respecting colleagues, partners, and the work environment                                        | ✅    | ☐    | ☐       |
-| 10  | **Problem-solving skills**          | Identifying problems, proposing solutions, and showing creativity                                | ☐    | ✅    | ☐       |
-| 11  | **Contribution to project/team**    | Work effectiveness, innovative ideas, recognition from the team                                  | ✅    | ☐    | ☐       |
-| 12  | **Overall**                         | General evaluation of the entire internship period                                               | ✅    | ☐    | ☐       |
+### Areas for improvement
 
-### Needs Improvement
-
-* Strengthen discipline and strictly comply with the rules and regulations of the company or any organization  
-* Improve problem-solving thinking  
-* Enhance communication skills in both daily interactions and professional contexts, including handling situations effectively
+- Maintain more consistent discipline and time management when several items must be completed at the same time.
+- Report technical problems more concisely by stating the cause, impact, and verification result.
+- Continue improving root-cause analysis before selecting a fix.

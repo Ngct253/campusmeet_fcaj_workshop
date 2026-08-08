@@ -1,81 +1,38 @@
 ---
-title: "System Architecture"
-date: 2026-07-27
+title: "High-level Architecture"
+date: 2026-08-08
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-# CampusMeet System Architecture
+## Reading the diagram
 
-CampusMeet uses a serverless AWS architecture to separate the frontend, API, data, and asynchronous integrations.
+![CampusMeet high-level architecture diagram](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
 
-## Main request flow
+The diagram shows the main parts of CampusMeet and how information moves between them. Readers do not need implementation knowledge; the architecture can be understood through six layers:
 
-```text
-User
-  ↓
-CloudFront + React
-  ↓
-Amazon Cognito
-  ↓
-API Gateway
-  ↓
-AWS Lambda
-  ↓
-DynamoDB / S3
-  ↓
-Google / Bedrock when needed
-```
+1. **User experience:** where users sign in, manage groups, view meetings, and update work.
+2. **Identity and access protection:** confirms who the user is before allowing an action.
+3. **Central processing:** receives requests, checks permissions, and applies CampusMeet rules.
+4. **Storage:** keeps group, meeting, task, and file information.
+5. **Supporting services:** connect calendars, send notifications, transcribe content, or provide AI suggestions when appropriate.
+6. **Operational visibility:** supports monitoring of errors, service health, and cost.
 
-Cognito authenticates the user, while the backend still checks group membership, role, and resource scope before returning application data.
+## A simple information flow
 
-## Main AWS services
+When a member opens a meeting, CampusMeet first confirms the account and access to the group. It then retrieves the appropriate information and displays it. When a user updates minutes or a task, the change is stored so other authorized members can follow it.
 
-| Service | Role |
+Documents are uploaded to private file storage rather than placed directly inside meeting records. CampusMeet links each file to the correct group and meeting.
+
+## Existing and target areas
+
+| Scope | Meaning at the workshop milestone |
 | --- | --- |
-| Amazon Cognito | Authentication |
-| API Gateway | HTTP API |
-| AWS Lambda | Business logic |
-| DynamoDB | Main application data |
-| Amazon S3 | Frontend assets and user files |
-| CloudFront | Production frontend over HTTPS |
-| EventBridge Scheduler | Reminders and delayed retries |
-| Step Functions | Long-running workflows |
-| Amazon Bedrock | AI and retrieval |
-| CloudWatch | Logs and monitoring |
+| Accounts, groups, invitations, meetings, and notifications | Existing product foundation |
+| Meeting forms, documents, minutes, and tasks | Implementation and related tests exist in selected areas; each flow still needs appropriate verification |
+| Google Calendar and Google Meet | An integration direction exists, with selected parts verified locally |
+| Transcription and AI | Evolving areas that are not presented as complete in a realistic environment |
+| Monitoring and cost awareness | Ongoing requirements as the system expands |
 
-## Infrastructure templates
-
-CampusMeet separates infrastructure into several templates:
-
-- `data-foundation.yaml` for DynamoDB tables;
-- `auth-integration.yaml` for the smaller development auth/core stack;
-- `user-content-orchestration.yaml` for user content and asynchronous workflows;
-- `template.yaml` for the full application stack, including production frontend hosting, API, Google sync, AI, and monitoring.
-
-The full production E2E uses the complete application stack rather than assuming the smaller auth stack contains every feature.
-
-## Data and external services
-
-DynamoDB remains the source of truth for CampusMeet business data. Google Calendar/Meet is an external synchronization target, not the primary Meeting store.
-
-Large files are stored in S3. Google sync, reminders, and AI processing run asynchronously so a temporary external-service failure does not remove the main CampusMeet data.
-
-## Production deployment order
-
-```text
-Data stack
-  ↓
-User-content / orchestration
-  ↓
-Full application stack
-  ↓
-Read API URL + CloudFront domain
-  ↓
-Build and publish frontend
-  ↓
-Run E2E on production URL
-```
-
-The final CloudFront URL is the production link used for the project demo and submission.
+Arrows in the diagram show intended connections. They do not mean that every branch has reached the same level of completion.

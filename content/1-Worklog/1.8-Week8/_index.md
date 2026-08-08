@@ -1,57 +1,31 @@
 ---
 title: "Week 8 Worklog"
-date: 2024-01-01
+date: 2026-08-03
 weight: 8
 chapter: false
 pre: " <b> 1.8. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+### Week 8 objectives
 
-### Week 8 Objectives:
+- Record and verify the deployment status of the M2 meeting core in the shared AWS development environment.
+- Refine selected M1–M4 screens and workflows within the scope of my commits.
+- Improve meeting forms, document uploads, minutes, and task-status workflows within my assigned scope.
+- Fix infrastructure, presigned-upload, and layout issues found during testing.
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+### Work completed
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+| Day | Detailed work | Start date | Completion date | References |
+| --- | --- | --- | --- | --- |
+| Thursday | Aligned the `meeting-data` table environment variable so Lambda uses the correct table (64f5035).<br>Updated the README, architecture documentation, deployment runbook, and verification script to record the verified M2 AWS deployment status (d3b111d). | 06/08/2026 | 06/08/2026 | <https://github.com/Ngct253/CampusMeet> |
+| Saturday | Refined selected M1–M4 UI and configuration related to groups, meetings, tasks, settings, navigation, and capability states (1c8874a).<br>Improved the create/update meeting form and document-upload flow, including tests and user-content infrastructure updates (1659f86).<br>Clarified the minutes, action-item, and task-status experience and updated the related shared types, repository, service, and tests (1c9e99f).<br>Added batch profile-read permission for the reminder Lambda (9413b12).<br>Updated the UI to send the metadata required by the signed S3 upload (db775ce).<br>Stabilized presigned document uploads across the frontend, S3 adapter, and integration tests (5814e4a).<br>Repaired the meeting-form layout and shared styling (3b50dee). | 08/08/2026 | 08/08/2026 | <https://github.com/Ngct253/CampusMeet> |
 
+### Week 8 outcomes
 
-### Week 8 Achievements:
-
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+- Recorded the M2 deployment status accurately and aligned documentation with the AWS development environment.
+- Corrected the meeting-table configuration and reminder Lambda data-access permission.
+- Refined selected M1–M4 screens and workflows within my assigned scope.
+- Improved the meeting form and presigned document-upload flow within my assigned scope.
+- Improved the presentation of minutes, action items, and task-status updates.
+- Fixed signed S3 metadata handling, improved upload reliability, and repaired the meeting-form layout.
+- Added or updated tests for meetings, tasks, attachments, and S3 integration.

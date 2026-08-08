@@ -1,81 +1,38 @@
 ---
-title: "Kiến trúc hệ thống"
-date: 2026-07-27
+title: "Kiến trúc tổng quan"
+date: 2026-08-08
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-# Kiến trúc hệ thống CampusMeet
+## Cách đọc sơ đồ
 
-CampusMeet sử dụng kiến trúc serverless để giảm việc quản lý máy chủ và tách rõ frontend, API, dữ liệu và các tác vụ bất đồng bộ.
+![Sơ đồ kiến trúc tổng quan của CampusMeet](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
 
-## Luồng chính
+Sơ đồ cho biết các phần lớn của CampusMeet và cách thông tin di chuyển giữa chúng. Người đọc không cần hiểu chi tiết kỹ thuật; có thể xem kiến trúc theo sáu lớp sau:
 
-```text
-Người dùng
-   ↓
-CloudFront + React
-   ↓
-Amazon Cognito
-   ↓
-API Gateway
-   ↓
-AWS Lambda
-   ↓
-DynamoDB / S3
-   ↓
-Google / Bedrock khi cần
-```
+1. **Giao diện người dùng:** nơi người dùng đăng nhập, quản lý nhóm, xem cuộc họp và cập nhật công việc.
+2. **Danh tính và bảo vệ truy cập:** xác nhận người dùng là ai trước khi cho phép sử dụng chức năng.
+3. **Xử lý trung tâm:** tiếp nhận yêu cầu, kiểm tra quyền và thực hiện quy tắc của CampusMeet.
+4. **Lưu trữ:** giữ thông tin nhóm, cuộc họp, nhiệm vụ và các tệp liên quan.
+5. **Dịch vụ hỗ trợ:** kết nối lịch, gửi thông báo, phiên âm hoặc đề xuất nội dung bằng AI khi phù hợp.
+6. **Theo dõi vận hành:** hỗ trợ quan sát lỗi, tình trạng hoạt động và chi phí.
 
-Cognito xác thực người dùng, nhưng quyền truy cập dữ liệu vẫn được kiểm tra ở backend dựa trên group, role và tài nguyên mà người dùng đang thao tác.
+## Luồng thông tin đơn giản
 
-## Các thành phần chính
+Khi một thành viên xem cuộc họp, CampusMeet trước hết xác nhận tài khoản và quyền tham gia nhóm. Hệ thống sau đó lấy thông tin phù hợp và hiển thị trên giao diện. Khi người dùng cập nhật biên bản hoặc nhiệm vụ, thay đổi được lưu lại để các thành viên có quyền cùng theo dõi.
 
-| Dịch vụ | Vai trò trong CampusMeet |
+Đối với tài liệu, người dùng tải tệp lên khu vực lưu trữ riêng thay vì đưa trực tiếp vào phần dữ liệu cuộc họp. CampusMeet chỉ liên kết tệp đó với đúng nhóm và cuộc họp.
+
+## Phần đã có và phần định hướng
+
+| Phạm vi | Cách hiểu tại mốc workshop |
 | --- | --- |
-| Amazon Cognito | Xác thực người dùng |
-| API Gateway | Nhận request từ frontend |
-| AWS Lambda | Xử lý nghiệp vụ |
-| DynamoDB | Lưu Group, Meeting, Minutes, Task và dữ liệu liên quan |
-| Amazon S3 | Lưu frontend và tệp người dùng |
-| CloudFront | Phục vụ frontend production qua HTTPS |
-| EventBridge Scheduler | Reminder và retry theo thời gian |
-| Step Functions | Điều phối các công việc dài |
-| Amazon Bedrock | AI và retrieval |
-| CloudWatch | Log và giám sát |
+| Tài khoản, nhóm, lời mời, cuộc họp và thông báo | Là nền tảng hiện có của sản phẩm |
+| Biểu mẫu cuộc họp, tài liệu, biên bản và nhiệm vụ | Đã có phần triển khai và kiểm thử liên quan, cần tiếp tục kiểm chứng theo từng luồng |
+| Google Calendar và Google Meet | Có hướng tích hợp và một số phần đã được kiểm chứng cục bộ |
+| Phiên âm và AI | Là phần đang phát triển, chưa được xem là hoàn chỉnh trên môi trường thực tế |
+| Giám sát và kiểm soát chi phí | Là yêu cầu cần duy trì khi hệ thống được mở rộng |
 
-## Hạ tầng của dự án
-
-CampusMeet tách hạ tầng thành các template để dễ triển khai và giảm rủi ro ảnh hưởng đến dữ liệu:
-
-- `data-foundation.yaml`: các bảng DynamoDB.
-- `auth-integration.yaml`: stack nhỏ dùng cho auth/core ở môi trường dev.
-- `user-content-orchestration.yaml`: S3 user content, reminder và orchestration.
-- `template.yaml`: application stack đầy đủ với API, frontend hosting, Google sync, AI và monitoring.
-
-Trong bản production E2E, `template.yaml` là stack chính cho ứng dụng đầy đủ; `auth-integration.yaml` không đại diện cho toàn bộ CampusMeet.
-
-## Dữ liệu và tích hợp ngoài
-
-DynamoDB là nguồn dữ liệu nghiệp vụ chính. Google Calendar/Meet chỉ đồng bộ thông tin lịch và không thay thế Meeting bên trong CampusMeet.
-
-Các tệp lớn được lưu trên S3 thay vì DynamoDB. Các tác vụ như Google sync, reminder hoặc AI được xử lý bất đồng bộ để một lỗi từ dịch vụ ngoài không làm mất dữ liệu cuộc họp chính.
-
-## Thứ tự triển khai production
-
-```text
-Data stack
-   ↓
-User-content / orchestration
-   ↓
-Full application stack
-   ↓
-Lấy API URL + CloudFront domain
-   ↓
-Build và publish frontend
-   ↓
-E2E trên production URL
-```
-
-CloudFront URL sau cùng là đường dẫn production dùng để demo và nộp bài.
+Mũi tên trên sơ đồ thể hiện hướng kết nối mong muốn. Nó không có nghĩa rằng tất cả các nhánh đã được hoàn thiện ở cùng một mức độ.

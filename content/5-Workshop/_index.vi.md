@@ -1,28 +1,40 @@
 ---
 title: "Workshop"
-date: 2026-07-27
+date: 2026-08-08
 weight: 5
 chapter: false
 pre: " <b> 5. </b> "
 ---
 
-# Xây dựng và triển khai CampusMeet trên AWS
+## Giới thiệu CampusMeet
 
-Workshop trình bày cách CampusMeet được xây dựng và đưa lên AWS từ kiến trúc, xác thực và dữ liệu đến các chức năng chính, giao diện production, tích hợp AI và kiểm thử E2E.
+CampusMeet là nền tảng hỗ trợ nhóm học tập và nhóm dự án quản lý thông tin trước, trong và sau cuộc họp tại một nơi. Thay vì tách lịch họp, tài liệu, biên bản và công việc sang nhiều công cụ, CampusMeet liên kết chúng theo từng nhóm và từng cuộc họp.
 
-Nội dung tập trung vào **cách hệ thống hoạt động và cách triển khai**, không đi sâu vào từng khóa DynamoDB, từng endpoint hay từng test case nội bộ. Những phần chưa được xác minh trên AWS thật sẽ được ghi rõ ở phần cuối.
+Workshop trình bày CampusMeet theo góc nhìn sản phẩm, tập trung vào vấn đề cần giải quyết, người dùng, kiến trúc tổng quan, chức năng hiện tại và quy trình cuộc họp. Các chi tiết dành cho triển khai như mã nguồn, câu lệnh, cấu hình và đường dẫn API đã được lược bỏ.
 
-## Nội dung Workshop
+### Mục tiêu
+
+Sau khi đọc workshop, người xem có thể:
+
+- Hiểu CampusMeet giải quyết vấn đề gì và dành cho ai.
+- Nắm được quy trình từ khi tạo nhóm đến khi kết thúc cuộc họp và theo dõi công việc.
+- Hiểu vai trò của các thành phần AWS trong sơ đồ ở mức tổng quan.
+- Phân biệt phần đã có, phần cần kiểm chứng thêm và định hướng phát triển.
+- Nhận biết nguyên tắc về quyền truy cập, bảo vệ thông tin và kiểm soát nội dung do AI đề xuất.
+
+### Kiến trúc tổng quan
+
+![Kiến trúc tổng quan của CampusMeet](images/5-Workshop/5.1-Workshop-overview/architecture-diagram.png?v=2)
+
+Sơ đồ mô tả một luồng đơn giản: người dùng truy cập CampusMeet, đăng nhập, thực hiện thao tác qua hệ thống trung tâm, sau đó thông tin được lưu trữ và có thể được hỗ trợ bởi lịch, thông báo, phiên âm và AI. Một số nhánh là định hướng kiến trúc, chưa được xem là chức năng hoàn chỉnh.
+
+### Nội dung workshop
 
 1. [Tổng quan CampusMeet](5.1-Workshop-overview/)
-2. [Chuẩn bị và quyền truy cập AWS](5.2-Prerequiste/)
-3. [Kiến trúc hệ thống](5.3-Architecture/)
-4. [Xác thực và API](5.4-Authentication-api/)
-5. [Dữ liệu và cộng tác nhóm](5.5-Data-collaboration/)
-6. [Cuộc họp, biên bản và công việc](5.6-Meeting-workflow/)
-7. [Giao diện và triển khai production](5.7-Frontend-deployment/)
-8. [Xử lý bất đồng bộ, Google và AI](5.8-Integrations-ai/)
-9. [Giám sát, bảo mật và chi phí](5.9-Operations/)
-10. [Kiểm thử E2E và kết quả production](5.10-E2E-production/)
+2. [Người dùng và mục tiêu](5.2-Prerequiste/)
+3. [Kiến trúc tổng quan](5.3-Architecture/)
+4. [Phạm vi chức năng hiện tại](5.4-IAM/)
+5. [Quy trình cuộc họp](5.5-Authentication/)
+6. [Đánh giá và định hướng](5.6-Data-foundation/)
 
-Workshop kết thúc bằng bản triển khai thực tế: frontend chạy qua HTTPS, backend hoạt động trên AWS và một luồng CampusMeet cốt lõi được kiểm thử từ đầu đến cuối.
+Sáu phần trên tạo thành một câu chuyện đầy đủ về CampusMeet, không phải hướng dẫn cài đặt hay tài liệu triển khai kỹ thuật.
