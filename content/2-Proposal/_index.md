@@ -56,9 +56,9 @@ Out of scope: a custom video/WebRTC service; recording without consent; AI mutat
 | Transcript | Read, pagination, and segment editing exist; approval/live transcription is not yet a complete cloud workflow |
 | AI | Step Functions, the AI Worker, Bedrock Knowledge Base, S3 Vectors, and Bedrock Mantle configuration exist in AWS; end-to-end retrieval, citations, and result confirmation still require verification |
 | Monitoring | Four CloudWatch alarms are in `OK`; Lambda log retention is configured by functional area |
-| Production readiness | Not achieved; `campusmeet-dev-app` must be recovered from `UPDATE_ROLLBACK_FAILED`, and smoke tests, backup/retention, security/cost review, and cleanup rehearsal remain |
+| Readiness | The system has an AWS deployment foundation; end-to-end testing, backup, monitoring, security, and cost controls still need to be completed before practical production use |
 
-This table distinguishes source implementation, local verification, and AWS deployment. A template or resource alone does not prove that an entire feature is complete. At the time of verification, `campusmeet-dev-data`, `campusmeet-dev-auth`, and `campusmeet-dev-user-content` were `UPDATE_COMPLETE`; the application stack still required rollback recovery even though selected child resources remained active.
+This table distinguishes source implementation, local verification, and AWS deployment. A template or resource alone does not prove that an entire feature is complete; the report records only outcomes supported by suitable evidence at the time of verification.
 
 ### 4. Solution architecture
 
@@ -128,13 +128,4 @@ Cost depends on API requests, Lambda/Step Functions duration, DynamoDB/S3 usage,
 
 Primary risks are incomplete authorization, duplicate Google events, cross-group AI retrieval, use of unapproved transcripts, increased AI cost, and retained test resources. Mitigations are server-side authorization, idempotency, group/meeting/source-version filters, human confirmation, alarms, and documented cleanup.
 
-The expected demonstrable flow is:
-
-- Sign in → create a group → invite members.
-- Schedule a meeting → manage the agenda → synchronize Google and reminders.
-- Upload a document → verify S3 → process asynchronously.
-- Transcript/minutes → action item → task → dashboard.
-- Generate citation-backed AI answers or drafts → review and confirm.
-- Manage infrastructure as code with logs, tests, cost alerts, and cleanup guidance.
-
-The deliverable is not only an architecture diagram; it is a set of vertical slices with explicit evidence for source implementation, testing, and deployment status.
+The proposal aims to progressively deliver a unified, access-controlled meeting-information platform that can be extended through AWS services. At this reporting point, it records only capabilities supported by source, interface, test, or development-environment evidence; integrations that have not been fully verified are presented as areas for continued work.

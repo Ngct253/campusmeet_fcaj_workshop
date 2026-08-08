@@ -56,9 +56,9 @@ Ngoài phạm vi: xây dựng dịch vụ gọi video/WebRTC riêng; ghi âm khi
 | Transcript | Đọc, phân trang và chỉnh sửa segment đã có; approval/live transcription chưa phải luồng cloud hoàn chỉnh |
 | AI | Step Functions, AI Worker, Bedrock Knowledge Base, S3 Vectors và cấu hình Bedrock Mantle đã tồn tại trên AWS; luồng truy xuất, citation và xác nhận kết quả vẫn cần kiểm thử đầu-cuối |
 | Giám sát | Bốn CloudWatch alarm đang ở trạng thái `OK`; log Lambda có retention theo từng nhóm chức năng |
-| Production readiness | Chưa đạt; stack `campusmeet-dev-app` cần được phục hồi từ trạng thái `UPDATE_ROLLBACK_FAILED`, đồng thời cần hoàn tất smoke test, backup/retention, security/cost review và cleanup rehearsal |
+| Mức độ sẵn sàng | Hệ thống đã có nền tảng triển khai trên AWS; cần tiếp tục kiểm thử đầu-cuối, hoàn thiện cơ chế sao lưu, giám sát, bảo mật và kiểm soát chi phí trước khi đưa vào môi trường thực tế |
 
-Bảng này phân biệt ba mức: có mã nguồn, đã kiểm thử cục bộ và đã triển khai/xác minh trên AWS. Template hoặc tài nguyên tồn tại không tự động chứng minh toàn bộ chức năng đã hoàn thành. Tại thời điểm đối chiếu, ba stack `campusmeet-dev-data`, `campusmeet-dev-auth` và `campusmeet-dev-user-content` ở trạng thái `UPDATE_COMPLETE`; stack ứng dụng vẫn cần xử lý lỗi rollback dù một số tài nguyên con vẫn đang hoạt động.
+Bảng này phân biệt ba mức: có mã nguồn, đã kiểm thử cục bộ và đã triển khai/xác minh trên AWS. Template hoặc tài nguyên tồn tại không tự động chứng minh toàn bộ chức năng đã hoàn thành; báo cáo chỉ ghi nhận những kết quả có bằng chứng phù hợp tại thời điểm đối chiếu.
 
 ### 4. Kiến trúc giải pháp
 
@@ -128,13 +128,4 @@ Chi phí phụ thuộc request API, thời gian Lambda/Step Functions, DynamoDB/
 
 Rủi ro chính gồm thiếu kiểm tra quyền, tạo trùng sự kiện Google, AI truy xuất chéo nhóm, dùng transcript chưa duyệt, chi phí AI tăng và giữ lại tài nguyên thử nghiệm. Biện pháp giảm thiểu là authorization phía server, idempotency, filter theo group/meeting/source version, human-in-the-loop, alarm và runbook dọn dẹp.
 
-Kết quả kỳ vọng là một luồng có thể trình diễn và kiểm chứng:
-
-- Đăng nhập → tạo nhóm → mời thành viên.
-- Lập lịch → quản lý agenda → đồng bộ Google và nhắc lịch.
-- Upload tài liệu → xác minh S3 → xử lý bất đồng bộ.
-- Transcript/biên bản → action item → task → dashboard.
-- AI tạo câu trả lời hoặc bản nháp có citation → người dùng xem lại và xác nhận.
-- Hạ tầng được quản lý bằng mã nguồn, có log, kiểm thử, cảnh báo chi phí và hướng dẫn cleanup.
-
-Sản phẩm bàn giao không chỉ là sơ đồ kiến trúc, mà là các vertical slice có bằng chứng rõ ràng về mã nguồn, kiểm thử và trạng thái triển khai.
+Kết quả kỳ vọng của đề xuất là từng bước hoàn thiện một nền tảng quản lý thông tin cuộc họp thống nhất, có phân quyền và có khả năng mở rộng bằng các dịch vụ AWS. Tại mốc báo cáo, nội dung chỉ ghi nhận những chức năng đã có bằng chứng từ mã nguồn, giao diện, kiểm thử hoặc môi trường phát triển; các tích hợp chưa được kiểm chứng đầy đủ được trình bày như hướng tiếp tục hoàn thiện.

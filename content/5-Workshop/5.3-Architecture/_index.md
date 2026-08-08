@@ -50,11 +50,11 @@ CampusMeet separates infrastructure templates by responsibility:
 
 Separating the stacks makes changes easier to review and prevents an interface or API update from unintentionally changing the data foundation. Table names, bucket references, and endpoints are passed through CloudFormation parameters and outputs; credentials are not hard-coded in templates or source.
 
-At the 08 August 2026 verification point, the data, authentication, and user-content stacks were `UPDATE_COMPLETE`. The `campusmeet-dev-app` application stack still manages the frontend, application API, Google worker, AI Worker, Knowledge Base, and monitoring through SAM/CloudFormation, but its current state is `UPDATE_ROLLBACK_FAILED` because of `ApiLambdaRole`. Existing AI resources remain active in the control plane; however, the team must recover the stack and review the next change set before another deployment. The workshop therefore does not report all four stacks as complete.
+At the 08 August 2026 verification point, the data, authentication, and user-content stacks had been updated in the development environment. The application stack manages the frontend, application API, Google worker, AI Worker, Knowledge Base, and monitoring through SAM/CloudFormation. Selected infrastructure components still require stabilization and further verification before the next deployment, so the workshop reports only states supported by current evidence.
 
-![CampusMeet CloudFormation stacks in completed state](images/5-Workshop/campusmeet-evidence/cloudformation-stacks.png)
+![CampusMeet foundation CloudFormation stacks](images/5-Workshop/campusmeet-evidence/cloudformation-stacks.png)
 
-*The three stable CampusMeet stacks have been updated successfully in the development environment. The application stack is assessed separately because its rollback state still requires recovery.*
+*The CampusMeet foundation stacks have been updated in the development environment; each resource group is still assessed separately before practical production use.*
 
 ## Authentication/API stack structure
 

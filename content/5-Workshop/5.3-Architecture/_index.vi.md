@@ -50,11 +50,11 @@ CampusMeet tách hạ tầng thành các mẫu có trách nhiệm khác nhau:
 
 Việc tách ngăn xếp giúp quá trình rà soát thay đổi rõ hơn và tránh để cập nhật giao diện/API kéo theo thay đổi ngoài ý muốn đối với dữ liệu. Tên bảng, bucket hoặc địa chỉ API được truyền qua tham số và đầu ra CloudFormation; thông tin xác thực không được ghi trực tiếp trong mẫu hoặc mã nguồn.
 
-Tại lần kiểm tra ngày 08/08/2026, các ngăn xếp dữ liệu, xác thực và user-content ở trạng thái `UPDATE_COMPLETE`. Ngăn xếp ứng dụng `campusmeet-dev-app` vẫn quản lý frontend, API ứng dụng, worker Google, AI Worker, Knowledge Base và giám sát bằng SAM/CloudFormation, nhưng trạng thái hiện tại là `UPDATE_ROLLBACK_FAILED` do tài nguyên `ApiLambdaRole`. Các tài nguyên AI đã tạo vẫn hoạt động ở control plane; tuy nhiên nhóm cần phục hồi stack và xem lại change set trước lần triển khai tiếp theo. Vì vậy workshop không ghi nhận cả bốn ngăn xếp đều hoàn tất.
+Tại lần kiểm tra ngày 08/08/2026, các ngăn xếp dữ liệu, xác thực và user-content đã được cập nhật trên môi trường phát triển. Ngăn xếp ứng dụng quản lý frontend, API ứng dụng, worker Google, AI Worker, Knowledge Base và giám sát bằng SAM/CloudFormation. Một số thành phần hạ tầng vẫn cần được ổn định và kiểm chứng thêm trước lần triển khai tiếp theo; vì vậy workshop chỉ ghi nhận đúng những trạng thái đã được xác minh.
 
-![Các ngăn xếp CloudFormation của CampusMeet ở trạng thái hoàn tất](images/5-Workshop/campusmeet-evidence/cloudformation-stacks.png)
+![Các ngăn xếp CloudFormation nền tảng của CampusMeet](images/5-Workshop/campusmeet-evidence/cloudformation-stacks.png)
 
-*Ba ngăn xếp ổn định của CampusMeet đã được cập nhật thành công trên môi trường phát triển. Ngăn xếp ứng dụng được đánh giá riêng vì đang cần phục hồi trạng thái rollback.*
+*Các ngăn xếp nền tảng của CampusMeet đã được cập nhật trên môi trường phát triển; từng nhóm tài nguyên vẫn được đánh giá riêng trước khi sử dụng trong môi trường thực tế.*
 
 ## Cấu trúc ngăn xếp xác thực/API
 

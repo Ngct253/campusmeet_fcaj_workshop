@@ -12,7 +12,7 @@ My direct contributions included updating the core meeting workflow deployment d
 
 I proactively traced issues from the UI to infrastructure, corrected upload metadata, access permissions, and layout problems, and kept the documentation aligned with the verified deployment state. I also incorporated feedback before the project handover.
 
-| No. | Criterion | Description | Good | Fair | Average |
+| No. | Criterion | Description | Excellent | Good | Average |
 | --- | --- | --- | --- | --- | --- |
 | 1 | **Professional knowledge and skills** | Applied programming, AWS, and development tools to assigned work | ☐ | ✅ | ☐ |
 | 2 | **Learning ability** | Learned new technologies, processes, and feedback quickly | ✅ | ☐ | ☐ |

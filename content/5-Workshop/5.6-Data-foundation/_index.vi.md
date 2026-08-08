@@ -79,11 +79,11 @@ Kiểm tra read-only trên môi trường dev ghi nhận các thành phần sau:
 
 Dashboard Mantle tại thời điểm kiểm tra có ghi nhận request và token của model `openai.gpt-oss-20b`. Dữ liệu sử dụng này cho thấy model endpoint đã được gọi trong tài khoản AWS, nhưng không đủ để quy mọi request cho CampusMeet hoặc xác nhận luồng retrieval–citation–authorization đã đạt đầu-cuối.
 
-Các tài nguyên AI Worker, Knowledge Base, S3 Vectors, IAM role và alarm có tag CloudFormation/SAM tương ứng với `campusmeet-dev-app`. Tuy nhiên, application stack hiện ở trạng thái `UPDATE_ROLLBACK_FAILED` do `ApiLambdaRole`. Nhóm cần phục hồi stack trước khi tiếp tục cập nhật hạ tầng; không nên dựa vào việc từng tài nguyên con đang `Active` để kết luận toàn bộ stack khỏe mạnh.
+Các tài nguyên AI Worker, Knowledge Base, S3 Vectors, IAM role và alarm được quản lý bằng CloudFormation/SAM trong ngăn xếp ứng dụng. Nhóm vẫn cần rà soát trạng thái tổng thể và change set trước các lần cập nhật hạ tầng tiếp theo; việc từng tài nguyên con đang `Active` không tự động chứng minh toàn bộ luồng đã sẵn sàng.
 
 ## Kết quả hiện tại
 
-Giao diện cho xác thực, nhóm, lời mời, thông báo và các thao tác tạo, xem, cập nhật, xóa cuộc họp đã kết nối API. Năm bảng DynamoDB đã được triển khai và xác minh trong `ap-southeast-1`. Các stack dữ liệu, xác thực và user-content đang `UPDATE_COMPLETE`; riêng application stack cần phục hồi trạng thái rollback. Phần xác thực/API và lõi cuộc họp đã có trên môi trường phát triển, trong khi một số kiểm thử nhanh về thao tác dữ liệu và phân quyền trên môi trường dùng chung vẫn còn thiếu điều kiện phù hợp.
+Giao diện cho xác thực, nhóm, lời mời, thông báo và các thao tác tạo, xem, cập nhật, xóa cuộc họp đã kết nối API. Năm bảng DynamoDB đã được triển khai và xác minh trong `ap-southeast-1`. Phần xác thực/API và lõi cuộc họp đã có trên môi trường phát triển, trong khi ngăn xếp ứng dụng và một số kiểm thử nhanh về thao tác dữ liệu, phân quyền trên môi trường dùng chung vẫn cần được ổn định và kiểm chứng thêm.
 
 Tải tệp, bản phiên âm, kho tri thức và trợ lý AI đã có thêm mã nguồn, hợp đồng dữ liệu, giao diện và tài nguyên AWS cho nhiều phạm vi như đọc, chỉnh sửa, phê duyệt bản phiên âm, giữ nguồn bất biến, hỏi đáp kèm trích dẫn, tạo bản nháp và phân tích tiến độ. Kiểm tra Google đã đi đến trạng thái cần kết nối lại nhưng chưa tạo được Meet URL; AI đã có model usage và pipeline control-plane nhưng chưa có bằng chứng đầy đủ cho retrieval, citation và xác nhận xuyên suốt. Vì vậy toàn hệ thống chưa được xem là sẵn sàng cho môi trường thực tế.
 
@@ -97,7 +97,7 @@ Tải tệp, bản phiên âm, kho tri thức và trợ lý AI đã có thêm m�
 
 - Tình huống quyền truy cập giữa nhiều nhóm và vai trò.
 - Luồng tải tài liệu trên môi trường sử dụng thực tế.
-- Phục hồi `campusmeet-dev-app` khỏi `UPDATE_ROLLBACK_FAILED` và rà lại change set trước lần triển khai tiếp theo.
+- Hoàn tất việc ổn định ngăn xếp ứng dụng và rà lại change set trước lần triển khai tiếp theo.
 - Đồng bộ Google Calendar và Google Meet sau khi tài khoản thử nghiệm được cấp đúng quyền OAuth.
 - Xử lý âm thanh và phiên âm xuyên suốt.
 - Luồng AI đầu-cuối từ nguồn đã duyệt đến retrieval, nguồn dẫn, phản hồi Mantle và bước xác nhận.

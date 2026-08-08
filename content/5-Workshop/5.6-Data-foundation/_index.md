@@ -79,11 +79,11 @@ Read-only checks in the development environment recorded the following component
 
 At the verification point, the Mantle dashboard recorded requests and tokens for `openai.gpt-oss-20b`. This usage shows that the model endpoint has been called in the AWS account, but it cannot attribute every request to CampusMeet or confirm the full retrieval–citation–authorization flow.
 
-The AI Worker, Knowledge Base, S3 Vectors, IAM roles, and alarms carry CloudFormation/SAM ownership associated with `campusmeet-dev-app`. However, the application stack is currently `UPDATE_ROLLBACK_FAILED` because of `ApiLambdaRole`. The team must recover the stack before further infrastructure updates; active child resources are not evidence that the complete stack is healthy.
+The AI Worker, Knowledge Base, S3 Vectors, IAM roles, and alarms are managed through CloudFormation/SAM in the application stack. The team still needs to review the overall state and change set before subsequent infrastructure updates; active child resources do not by themselves prove that the complete workflow is ready.
 
 ## Current result
 
-The authentication, group, invitation, notification, and meeting CRUD interfaces are connected to APIs. The five DynamoDB tables have been deployed and verified in `ap-southeast-1`. The data, authentication, and user-content stacks are `UPDATE_COMPLETE`, while the application stack requires rollback recovery. Auth/API and the meeting core exist in the development environment, but selected CRUD and authorization smoke tests in shared data still lack the required test conditions.
+The authentication, group, invitation, notification, and meeting CRUD interfaces are connected to APIs. The five DynamoDB tables have been deployed and verified in `ap-southeast-1`. Auth/API and the meeting core exist in the development environment, while the application stack and selected CRUD and authorization smoke tests in shared data still require stabilization and further verification.
 
 Upload, transcripts, knowledge, and AI assistance now include source, contracts, interface behavior, tests, and AWS resources for transcript read/edit/approval, immutable sources, citation-grounded answers, drafts, and progress analysis. The Google check reached a reconnect-required state without creating a Meet URL; AI has model usage and deployed control-plane components but lacks complete evidence for retrieval, citations, and confirmation. The full system is therefore not considered production-ready.
 
@@ -97,7 +97,7 @@ Upload, transcripts, knowledge, and AI assistance now include source, contracts,
 
 - Access scenarios across multiple groups and roles.
 - Document upload in the intended environment.
-- Recover `campusmeet-dev-app` from `UPDATE_ROLLBACK_FAILED` and review the next change set.
+- Complete application-stack stabilization and review the next change set before another deployment.
 - Google Calendar and Google Meet synchronization after the test account receives the correct OAuth access.
 - End-to-end audio processing and transcription.
 - End-to-end AI flow from an approved source through retrieval, citations, Mantle response, and user confirmation.
