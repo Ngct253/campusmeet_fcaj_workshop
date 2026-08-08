@@ -1,31 +1,50 @@
 ---
-title: "Current Feature Scope"
+title: "Cognito, API, and Data Foundation"
 date: 2026-08-08
 weight: 4
 chapter: false
 pre: " <b> 5.4. </b> "
 ---
 
-## Feature overview
+## Amazon Cognito configuration
 
-| Feature group | Scope | General status |
-| --- | --- | --- |
-| Accounts and profiles | Registration, sign-in, and personal information | Main foundation available |
-| Groups and collaboration | Groups, members, invitations, and notifications | Core workflows are available |
-| Meeting management | Create, view, update, cancel, and prepare meetings | The core workflow exists; selected authorization scenarios still require verification |
-| Post-meeting content and work | Documents, minutes, transcript editing and approval, action items, tasks, and progress tracking | Several interface and workflow areas exist; end-to-end testing should continue |
-| Integrations and automation | Google Calendar/Meet synchronization, content upload, reminders, and email | Initial flows exist; selected areas are only locally verified or still require verification in a realistic environment |
-| Knowledge and AI assistance | Ingesting approved sources, citation-grounded questions and answers, content summaries, minutes/task drafts, and group progress analysis | Selected flows and related tests exist; the scope is not presented as complete, and users must confirm all suggested content |
+The authentication stack creates a Cognito User Pool that uses email as the username and automatically requires email verification. The current password policy requires at least eight characters with lowercase, uppercase, numeric, and symbol characters. MFA is disabled in the current development configuration; this records the present state and is not a recommendation to omit MFA from a production environment.
 
-## Cross-cutting requirements
+The User Pool Client is intended for the web application and therefore does not generate a client secret in the browser. It allows SRP authentication and refresh tokens for session continuity, and user-existence error prevention is enabled. After account confirmation and successful sign-in, Cognito issues tokens for frontend API requests.
 
-Every workflow should identify the actor, input information, resulting output, and next step. Access must be checked before content is displayed or changed. Drafts, confirmed information, and completed work need distinct states so members do not confuse them. When a data source or integration fails, the interface should explain what is unavailable and preserve the rest of the journey whenever possible.
+![Cognito User Pool owned by the CampusMeet authentication stack](images/5-Workshop/campusmeet-evidence/cognito-auth-user-pool.png)
 
-## End-to-end journey across feature groups
+*The `campusmeet-dev-auth-users` User Pool was matched against the physical resource in the `campusmeet-dev-auth` stack. This ID-based check prevents confusion with another User Pool that remains in the development account.*
 
-An account identifies the actor, membership places that person in the correct group, and a meeting provides context for preparation and documents. Minutes and action items continue into tasks with owners, due dates, and states. Only documents or transcripts approved through the appropriate flow move into the knowledge process, and AI results return to user confirmation. If calendar or AI support is unavailable, the team must still be able to open a meeting, record its outcome, and track the resulting tasks.
+## Connecting Cognito to API Gateway
 
-## Information managed by CampusMeet
+The HTTP API uses a JWT authorizer by default. The authorizer checks two primary token values:
+
+- the `issuer` must belong to the stack's Cognito User Pool;
+- the `audience` must match the web application's User Pool Client.
+
+The `/health` endpoint does not require sign-in so it can support service checks. Business routes under `/{proxy+}` use the authorizer, while `OPTIONS` requests remain separate for browser CORS handling. The frontend origin is supplied through `AllowedOrigin`, and permitted methods and headers are restricted in the template.
+
+![JWT authorizer attached to the business route](images/5-Workshop/campusmeet-evidence/api-jwt-routes.png)
+
+*The API Gateway configuration shows that `ANY /{proxy+}` is protected by `JWT Auth`, while `/health`, the Google callback, and `OPTIONS` are handled separately for their respective purposes.*
+
+## From JWT to business authorization
+
+API Gateway rejects invalid tokens before invoking Lambda. For a valid request, Lambda obtains the user identity from the token, maps it to the internal profile, and checks membership and role for the target resource. Cognito therefore performs authentication, while the backend performs authorization.
+
+```text
+Frontend signs in through Cognito
+  → receives a JWT
+  → sends an Authorization header to the HTTP API
+  → API Gateway validates issuer and audience
+  → Lambda resolves the user and checks access
+  → the application layer reads or updates data
+```
+
+Authentication failures, denied access, invalid input, and system failures should return different statuses so the interface can guide the user toward the appropriate next action.
+
+## DynamoDB foundation
 
 CampusMeet uses five physical DynamoDB tables organized around access patterns and data boundaries instead of creating one table per entity:
 
@@ -39,7 +58,13 @@ CampusMeet uses five physical DynamoDB tables organized around access patterns a
 
 Binary files and audio are not stored in DynamoDB. The objects remain in private S3 storage, while DynamoDB stores only the metadata and references required to identify the group, meeting, source, and state.
 
-## Data-processing path
+CloudFormation creates the tables in `PAY_PER_REQUEST` mode with server-side encryption and TTL for temporary records. `DeletionPolicy` and `UpdateReplacePolicy` use `Retain`; PITR and deletion protection can be enabled through parameters after considering the environment and cost. The `meeting-data` table has a stream for workflows that react to data changes.
+
+![Five CampusMeet DynamoDB tables](images/5-Workshop/campusmeet-evidence/dynamodb-tables.png)
+
+*All five CampusMeet data tables are `Active`. The screenshot also records the index counts and current deletion-protection state so the assessment does not overstate the deployed configuration.*
+
+## API-to-data path
 
 ```text
 Interface
@@ -67,6 +92,6 @@ Several data principles apply throughout the product:
 
 These principles explain the implementation approach without reproducing every PK, SK, GSI, or transaction expression in the workshop.
 
-## Reporting principle
+## Significance of this implementation area
 
-The presence of a screen does not prove that the complete feature behind it is finished. A locally working flow may also require verification in a shared environment. The report therefore records only what has been observed and clearly identifies remaining work.
+Cognito, API Gateway, Lambda, and DynamoDB provide a common identity, access boundary, and persistence approach for CampusMeet capabilities. A substantial part of the internship scope focused on this foundation, from infrastructure templates to authentication integration and the table model. The workshop presents the method and main decisions without replacing the project's full endpoint catalogue or PK, SK, and GSI specification.

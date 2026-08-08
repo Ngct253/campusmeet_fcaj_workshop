@@ -1,5 +1,5 @@
 ---
-title: "CampusMeet Overview"
+title: "CampusMeet Overview and Scope"
 date: 2026-08-08
 weight: 1
 chapter: false
@@ -42,6 +42,12 @@ The general sequence contains four layers:
 
 This sequence allows advanced capabilities to continue evolving without changing the meaning of meeting information already stored in CampusMeet.
 
+## Internship implementation focus
+
+The workshop gives more detail to authentication and the data foundation: contributing to the Amazon Cognito configuration, connecting API Gateway to Lambda through a JWT authorizer, organizing resources with AWS SAM/CloudFormation, and building and verifying the five-table DynamoDB model. This foundation gives account, group, invitation, and meeting workflows a consistent identity, authorization, and persistence boundary.
+
+The workshop does not present the whole of CampusMeet as one person's work. Integrations, interface features, and AI are described in the wider project context; authentication and DynamoDB receive additional explanation because they are directly connected to the internship work performed.
+
 ## Success criteria
 
 CampusMeet is not evaluated only by the number of screens. A journey is valuable when members receive enough information to prepare, post-meeting outcomes identify decisions, owners, and due dates, records remain traceable to the correct group and meeting, and unauthorized people cannot access the content. Advanced capabilities are successful when they reduce effort or improve retrieval without removing the user's responsibility to confirm results.
@@ -49,6 +55,14 @@ CampusMeet is not evaluated only by the number of screens. A journey is valuable
 ## How the parts connect
 
 A group is the shared workspace and access boundary. Meetings connect documents, transcripts, minutes, and tasks, allowing members to trace a task or decision back to its meeting.
+
+## CampusMeet in use
+
+After sign-in, the overview brings together the user's groups, upcoming meetings, notifications, account state, and personal work. This layout reflects the CampusMeet goal: a user begins from one shared workspace and moves into the relevant group, meeting, and follow-up work instead of manually combining information from several tools.
+
+![CampusMeet overview after sign-in](images/5-Workshop/campusmeet-evidence/product-dashboard.png)
+
+*The overview shows how the capability groups form one product journey. The interface confirms what a user can observe, while API behavior, persisted data, and AWS state provide separate evidence for the completeness of each flow.*
 
 ## Main value
 
@@ -61,3 +75,10 @@ A group is the shared workspace and access boundary. Meetings connect documents,
 ## Current scope
 
 CampusMeet has a foundation for accounts, groups, invitations, meetings, and notifications. Meeting forms, documents, minutes, and task workflows have also been built or refined in selected areas. Google integration, transcription, and AI have working flows and tests within defined scopes, but their level of cloud verification varies. The workshop therefore identifies both available capabilities and remaining verification.
+
+| Capability group | Scope | General status |
+| --- | --- | --- |
+| Accounts and collaboration | Registration, sign-in, profiles, groups, membership, invitations, and notifications | Foundational flows are available |
+| Meeting management | Create, view, update, cancel, and prepare meeting content | Core capability is available; selected authorization cases require further verification |
+| Post-meeting content | Documents, minutes, transcripts, tasks, and progress tracking | Several interface and processing areas exist; end-to-end testing should continue |
+| Integrations and AI | Google Calendar/Meet, reminders, knowledge sources, and suggested content | Selected scopes are implemented or tested; the complete production workflow is not yet verified |

@@ -12,7 +12,7 @@ pre: " <b> 2. </b> "
 
 CampusMeet is a web application for study groups, capstone teams, and small projects to manage activities before, during, and after meetings in one place. It does not replace Google Meet or implement video calling. CampusMeet manages groups, schedules, meeting content, minutes, tasks, files, and access control, while integrating with Google Calendar/Meet when authorized.
 
-The solution uses React/TypeScript for the web client, Amazon Cognito for authentication, Amazon API Gateway and AWS Lambda for APIs, Amazon DynamoDB for business data, Amazon S3 for files, EventBridge Scheduler and AWS Step Functions for asynchronous processing, and Amazon Bedrock for grounded AI features. AWS SAM and CloudFormation manage the infrastructure.
+The solution uses React/TypeScript for the web client, Amazon Cognito for authentication, Amazon API Gateway and AWS Lambda for APIs, Amazon DynamoDB for business data, Amazon S3 for files, and EventBridge Scheduler and AWS Step Functions for asynchronous processing. The AI path uses a Bedrock Knowledge Base and S3 Vectors in `ap-southeast-1`, then calls Bedrock Mantle in `us-east-1` to generate grounded content. AWS SAM and CloudFormation manage the infrastructure.
 
 End-to-end goals:
 
@@ -51,13 +51,14 @@ Out of scope: a custom video/WebRTC service; recording without consent; AI mutat
 | Groups and invitations | Frontend, API, repositories, and authorization checks are implemented |
 | Core meeting workflow | The create, view, update, and cancel flow was deployed on 6 August 2026; service checks passed, while selected authorization scenarios still require suitable test data |
 | Agendas, minutes, and tasks | UI, APIs, version controls, and related tests are present |
-| Document upload | Presigned upload, metadata/checksum verification, and AIJob creation exist; audio completion still requires the Amazon Transcribe worker |
-| Google Calendar/Meet | OAuth, side panel, and synchronization runtime are locally verified; full AWS and browser verification remains pending |
+| Document upload | Presigned upload, metadata/checksum verification, and AIJob creation exist; audio completion still requires completion of the Amazon Transcribe worker |
+| Google Calendar/Meet | OAuth, the synchronization worker, and failure monitoring are deployed; a browser smoke test showed that the test account was not included in OAuth Test users, so a Meet URL was not created |
 | Transcript | Read, pagination, and segment editing exist; approval/live transcription is not yet a complete cloud workflow |
-| AI | Chat/draft/proposal and task confirmation exist as vertical slices; progress snapshots are locally verified but not fully deployed |
-| Production readiness | Not achieved; smoke tests, browser tests, alarms, retention, security/cost review, and cleanup rehearsal remain |
+| AI | Step Functions, the AI Worker, Bedrock Knowledge Base, S3 Vectors, and Bedrock Mantle configuration exist in AWS; end-to-end retrieval, citations, and result confirmation still require verification |
+| Monitoring | Four CloudWatch alarms are in `OK`; Lambda log retention is configured by functional area |
+| Production readiness | Not achieved; `campusmeet-dev-app` must be recovered from `UPDATE_ROLLBACK_FAILED`, and smoke tests, backup/retention, security/cost review, and cleanup rehearsal remain |
 
-This table distinguishes source implementation, local verification, and AWS deployment. A template or resource alone does not prove that an entire feature is complete.
+This table distinguishes source implementation, local verification, and AWS deployment. A template or resource alone does not prove that an entire feature is complete. At the time of verification, `campusmeet-dev-data`, `campusmeet-dev-auth`, and `campusmeet-dev-user-content` were `UPDATE_COMPLETE`; the application stack still required rollback recovery even though selected child resources remained active.
 
 ### 4. Solution architecture
 
@@ -78,8 +79,9 @@ This table distinguishes source implementation, local verification, and AWS depl
 2. The client uploads directly to private S3 through a presigned URL.
 3. The backend verifies the object through `HeadObject`.
 4. Exactly one AIJob is created; Step Functions and workers handle long-running work.
-5. Authorized sources are normalized and ingested into a Bedrock Knowledge Base/S3 Vectors.
-6. Answers and drafts include citations and pass through preview/confirmation.
+5. Authorized sources are normalized and ingested into a Bedrock Knowledge Base/S3 Vectors in Singapore.
+6. After authorization and source-scope checks, the AI Worker calls Bedrock Mantle in N. Virginia to generate an answer or draft.
+7. The result includes citations and passes through preview/confirmation before changing business data.
 
 #### Five-table model
 

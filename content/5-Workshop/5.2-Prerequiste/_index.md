@@ -1,22 +1,16 @@
 ---
-title: "Objectives, Preparation, and Access"
+title: "Environment Preparation and Deployment Architecture"
 date: 2026-08-08
 weight: 2
 chapter: false
 pre: " <b> 5.2. </b> "
 ---
 
-## CampusMeet objectives
+## Required environment
 
-- Reduce fragmented information.
-- Give meetings a clear purpose and preparation process.
-- Preserve outcomes instead of ending with a conversation only.
-- Convert follow-up actions into trackable tasks.
-- Help users retrieve information while respecting access boundaries.
+The CampusMeet repository uses Node.js 22 and npm. Git manages source history, while AWS CLI and AWS SAM CLI support account verification, template validation, and AWS deployment. PowerShell is used by selected project verification scripts.
 
-## Technical environment preparation
-
-The current repository uses Node.js 22 and npm. AWS CLI and AWS SAM CLI are required only when validating or deploying AWS resources, while PowerShell supports selected verification scripts. The following commands check the tools and install the source:
+The tools and source installation can be checked with:
 
 ```powershell
 node --version
@@ -30,6 +24,10 @@ cd CampusMeet
 npm ci
 ```
 
+Tool versions should remain compatible with the repository configuration. Successful dependency installation only confirms that the local environment is prepared; source, infrastructure, and AWS checks are still performed separately before handover.
+
+## Repository structure
+
 The repository is separated by responsibility:
 
 | Area | Responsibility |
@@ -42,16 +40,18 @@ The repository is separated by responsibility:
 | `scripts` | Configuration, infrastructure, and workflow verification |
 | `docs` | Requirements, architecture, data model, and runbooks |
 
-Before connecting changes to a shared environment, the repository should pass the source, type, test, build, and infrastructure checks described in the handover section. These checks do not replace AWS verification, but they remove common failures before deployment.
+This structure allows data contracts and authorization rules to remain consistent across the frontend, API, and tests. AWS resources are managed through templates rather than being created manually and tied to one developer's machine. Before changes reach a shared environment, they still pass the checks described in the handover section.
 
-## Connecting the AWS environment
+## Connecting to the correct AWS environment
 
-The CampusMeet development environment uses the `ap-southeast-1` Region. Before updating a stack, the deployer should verify the AWS account and Region to avoid creating resources in the wrong environment:
+The CampusMeet development environment uses the `ap-southeast-1` Region. Before inspecting or updating a stack, the deployer should verify the account and Region:
 
 ```powershell
 aws sts get-caller-identity
 aws configure get region
 ```
+
+Application, data, source storage, and knowledge retrieval resources remain in `ap-southeast-1`. The generation step is configured through the AI Worker to call Bedrock Mantle in `us-east-1`. This Region split requires review of authorization, permitted outbound context, latency, quotas, and cost; it does not move the primary business data Region.
 
 After the auth/API stack is deployed, the frontend uses three public outputs:
 
@@ -63,29 +63,60 @@ VITE_API_BASE_URL=...
 
 These values connect the frontend to the correct Cognito and API environment and are not secrets. Access keys, Google client secrets, OAuth tokens, and other server-side information must not be placed in `VITE_*` variables, source code, or Git.
 
-## Access
+## Deployment architecture
 
-CampusMeet organizes access around groups. Having an account does not allow a person to view everything. Administrators coordinate their group and members, while members use capabilities appropriate to their role. People outside a group cannot view its meetings, documents, or internal work.
+![CampusMeet high-level architecture diagram](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
 
-Infrastructure access also separates deployer permissions from service execution roles. A deployer needs only the permissions required to update the stacks in scope. Lambda functions and workers use dedicated roles for the exact tables, buckets, and services they need. Using several AWS services does not justify giving every team member or every Lambda function `AdministratorAccess`.
+The diagram moves from the user interface, identity, API, business processing, and storage to supporting services and operational visibility. The core meeting flow uses Cognito, API Gateway, Lambda, and DynamoDB; S3, calendar, transcription, and AI services are connected according to each capability's needs.
 
-Access is determined from stored membership information rather than a role claimed by the user. AI suggestions also remain drafts until an authorized user reviews them.
+The target architecture does not mean that every branch is complete at the same level. The workshop distinguishes implemented or verified areas from work that still requires testing in the shared environment.
 
-## Access-decision approach
+## Service responsibilities
 
-Each action is considered through four questions:
+| Component | Responsibility in CampusMeet |
+| --- | --- |
+| React, TypeScript, and Vite | Build the web interface and manage the user journey |
+| Amazon Cognito | Registration, account confirmation, sign-in, and JWT issuance |
+| API Gateway HTTP API | Validate the JWT before forwarding requests to the backend |
+| AWS Lambda | Execute use cases, enforce access, and coordinate data access |
+| Amazon DynamoDB | Store business information across five physical tables |
+| Amazon S3 | Store private user content and serve web assets in the target architecture |
+| EventBridge Scheduler | Invoke reminders at the appropriate time |
+| Step Functions and AI Worker | Coordinate AI jobs, bounded retries, source normalization, and processing state |
+| Bedrock Knowledge Base, Cohere embedding, and S3 Vectors | Retrieve approved sources in `ap-southeast-1` |
+| Bedrock Mantle | Generate answers or drafts in `us-east-1` with `openai.gpt-oss-20b` |
+| Amazon Transcribe | Support audio processing and transcription when the relevant flow is enabled |
+| CloudWatch, SNS, and SES | Observe operations, deliver alerts, and support notifications |
 
-1. Is the account signed in and valid?
-2. Is the person an active member of the group?
-3. Does the current role permit the specific action?
-4. Does the action target the correct group, meeting, and version?
+The table only identifies the architectural responsibility of each service. Section 5.4 presents the Cognito–API–Lambda flow and the authorization checks performed before data is stored, avoiding repetition of the same process in several sections.
 
-This approach separates identity from resource access: signing in does not permit reading another group's data, and viewing a meeting does not automatically permit editing or approval. Members receive access only through valid membership, while organizers or administrators perform actions that need additional authority. Documents and transcripts used by AI retain their group, meeting, and source context so answers cannot use information outside the requester's access.
+## Synchronous and asynchronous flows
 
-## Protecting content
+In the synchronous path, the frontend calls the HTTP API with a JWT; API Gateway validates the token, and Lambda checks membership and role before querying DynamoDB. The response returns to the interface within the same request. The browser neither declares its own access rights nor connects directly to the data tables.
 
-Access is checked for each group and meeting action, not only at sign-in. Documents, transcripts, minutes, tasks, and AI sources inherit the access boundary of their original content.
+Work that depends on external services or takes longer is separated from the primary request. A DynamoDB Stream can invoke the Google synchronization worker, EventBridge Scheduler triggers reminders, and uploads use short-lived URLs so the browser sends files directly to private S3 storage.
 
-## Usage criterion
+The AI path follows this sequence:
 
-CampusMeet provides value when users can complete the core journey: sign in, join a group, create or view a meeting, access documents, record outcomes, and track assigned work. Advanced features should support this journey without making it harder to understand.
+```text
+Reviewed and approved source
+  → normalize under the kb/ storage area in Singapore
+  → Bedrock Knowledge Base embeds and retrieves through S3 Vectors
+  → backend filters by group, meeting, source, and version
+  → AI Worker calls Bedrock Mantle in N. Virginia
+  → return a citation-grounded answer or draft
+  → user reviews and confirms before an official write
+```
+
+Step Functions manages AI job state and retries. The existence of a state machine, Knowledge Base, or model endpoint proves infrastructure configuration, not the quality of retrieval, citations, or end-to-end authorization.
+
+## Environment setup sequence
+
+1. Confirm the AWS account, Region, and deployment permissions.
+2. Validate the data template, review the change, deploy it, and verify the five DynamoDB tables.
+3. Deploy or update the authentication/API stack with the correct table prefix and allowed frontend origin.
+4. Use the CloudFormation outputs for the User Pool ID, User Pool Client ID, and API URL to configure the interface.
+5. Set up content and orchestration resources when the environment enables upload, reminders, transcription, or AI.
+6. Check `/health`, sign-in, protected routes, logs, and the features enabled in that environment.
+
+This sequence establishes dependencies in a clear order. It is a deployment and verification method, not a claim that the complete target architecture is production-ready.

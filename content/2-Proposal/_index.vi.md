@@ -12,7 +12,7 @@ pre: " <b> 2. </b> "
 
 CampusMeet là ứng dụng web hỗ trợ nhóm học tập, đồ án và dự án nhỏ quản lý thống nhất các hoạt động trước, trong và sau cuộc họp. Hệ thống không thay thế Google Meet và không tự xây dựng chức năng gọi video; CampusMeet quản lý nhóm, lịch họp, nội dung, biên bản, công việc, tệp và quyền truy cập, đồng thời tích hợp Google Calendar/Meet khi người dùng cho phép.
 
-Giải pháp sử dụng React/TypeScript ở phía giao diện, Amazon Cognito cho xác thực, Amazon API Gateway và AWS Lambda cho API, Amazon DynamoDB cho dữ liệu nghiệp vụ, Amazon S3 cho tệp, EventBridge Scheduler và AWS Step Functions cho xử lý bất đồng bộ, cùng Amazon Bedrock cho các chức năng AI có nguồn dẫn. Hạ tầng được quản lý bằng AWS SAM và CloudFormation.
+Giải pháp sử dụng React/TypeScript ở phía giao diện, Amazon Cognito cho xác thực, Amazon API Gateway và AWS Lambda cho API, Amazon DynamoDB cho dữ liệu nghiệp vụ, Amazon S3 cho tệp, EventBridge Scheduler và AWS Step Functions cho xử lý bất đồng bộ. Phần AI sử dụng Bedrock Knowledge Base và S3 Vectors tại `ap-southeast-1`, sau đó gọi Bedrock Mantle tại `us-east-1` để sinh nội dung có nguồn dẫn. Hạ tầng được quản lý bằng AWS SAM và CloudFormation.
 
 Mục tiêu đầu-cuối của dự án:
 
@@ -51,13 +51,14 @@ Ngoài phạm vi: xây dựng dịch vụ gọi video/WebRTC riêng; ghi âm khi
 | Nhóm và lời mời | Frontend, API, repository và kiểm tra quyền đã được xây dựng |
 | Chức năng cuộc họp cốt lõi | Luồng tạo, xem, cập nhật và hủy đã được triển khai ngày 06/08/2026; kiểm tra trạng thái hoạt động đạt yêu cầu, một số tình huống phân quyền vẫn cần dữ liệu kiểm thử phù hợp |
 | Agenda, biên bản và task | Đã có giao diện, API, kiểm soát phiên bản và kiểm thử liên quan |
-| Upload tài liệu | Presigned upload, kiểm tra metadata/checksum và tạo AIJob đã có; audio completion còn chờ worker Amazon Transcribe |
-| Google Calendar/Meet | OAuth, side panel và runtime đồng bộ đã local verified; xác minh AWS và trình duyệt đầy đủ vẫn pending |
+| Upload tài liệu | Presigned upload, kiểm tra metadata/checksum và tạo AIJob đã có; audio completion còn chờ hoàn thiện worker Amazon Transcribe |
+| Google Calendar/Meet | OAuth, worker đồng bộ và cơ chế theo dõi lỗi đã được triển khai; smoke test trình duyệt ghi nhận tài khoản thử nghiệm chưa nằm trong OAuth Test users nên chưa sinh Meet URL |
 | Transcript | Đọc, phân trang và chỉnh sửa segment đã có; approval/live transcription chưa phải luồng cloud hoàn chỉnh |
-| AI | Chat/draft/proposal và xác nhận task đã có theo từng vertical slice; snapshot tiến độ local verified nhưng chưa deploy đầy đủ |
-| Production readiness | Chưa đạt; cần hoàn tất smoke test, browser test, alarm, retention, security/cost review và cleanup rehearsal |
+| AI | Step Functions, AI Worker, Bedrock Knowledge Base, S3 Vectors và cấu hình Bedrock Mantle đã tồn tại trên AWS; luồng truy xuất, citation và xác nhận kết quả vẫn cần kiểm thử đầu-cuối |
+| Giám sát | Bốn CloudWatch alarm đang ở trạng thái `OK`; log Lambda có retention theo từng nhóm chức năng |
+| Production readiness | Chưa đạt; stack `campusmeet-dev-app` cần được phục hồi từ trạng thái `UPDATE_ROLLBACK_FAILED`, đồng thời cần hoàn tất smoke test, backup/retention, security/cost review và cleanup rehearsal |
 
-Bảng này phân biệt ba mức: có mã nguồn, đã kiểm thử cục bộ và đã triển khai/xác minh trên AWS. Template hoặc tài nguyên tồn tại không tự động chứng minh toàn bộ chức năng đã hoàn thành.
+Bảng này phân biệt ba mức: có mã nguồn, đã kiểm thử cục bộ và đã triển khai/xác minh trên AWS. Template hoặc tài nguyên tồn tại không tự động chứng minh toàn bộ chức năng đã hoàn thành. Tại thời điểm đối chiếu, ba stack `campusmeet-dev-data`, `campusmeet-dev-auth` và `campusmeet-dev-user-content` ở trạng thái `UPDATE_COMPLETE`; stack ứng dụng vẫn cần xử lý lỗi rollback dù một số tài nguyên con vẫn đang hoạt động.
 
 ### 4. Kiến trúc giải pháp
 
@@ -78,8 +79,9 @@ Bảng này phân biệt ba mức: có mã nguồn, đã kiểm thử cục bộ
 2. Client upload trực tiếp lên S3 private bằng presigned URL.
 3. Backend dùng `HeadObject` để xác minh object.
 4. Hệ thống tạo đúng một AIJob; Step Functions và worker xử lý tác vụ dài.
-5. Nguồn được phép được chuẩn hóa và ingest vào Bedrock Knowledge Base/S3 Vectors.
-6. Câu trả lời hoặc bản nháp phải có citation và đi qua bước xem trước/xác nhận.
+5. Nguồn được phép được chuẩn hóa và ingest vào Bedrock Knowledge Base/S3 Vectors tại Singapore.
+6. Sau khi kiểm tra quyền và phạm vi nguồn, AI Worker gọi Bedrock Mantle tại N. Virginia để tạo câu trả lời hoặc bản nháp.
+7. Kết quả phải có citation và đi qua bước xem trước/xác nhận trước khi thay đổi dữ liệu nghiệp vụ.
 
 #### Mô hình năm bảng
 

@@ -1,89 +1,85 @@
 ---
-title: "High-level Architecture"
+title: "IAM, CloudFormation, and AWS Configuration"
 date: 2026-08-08
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-## CampusMeet architecture
+## Three access layers
 
-![CampusMeet high-level architecture diagram](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
+CampusMeet uses three control layers with different purposes. Separating them prevents identity, application authorization, and AWS service permissions from being treated as the same decision.
 
-The diagram moves from user experience, identity, business processing, and storage to supporting services and operational visibility. Each layer has a distinct responsibility while contributing to the meeting and follow-up journey.
-
-## Services and responsibilities
-
-| Component | Responsibility in CampusMeet |
+| Layer | Responsibility |
 | --- | --- |
-| React, TypeScript, and Vite | Build the web interface and manage the user journey |
-| Amazon Cognito | Registration, account confirmation, sign-in, and JWT issuance |
-| API Gateway HTTP API | Validate tokens before forwarding requests to the backend |
-| AWS Lambda | Execute use cases, enforce access, and coordinate repositories or integrations |
-| Amazon DynamoDB | Store business information across five physical tables |
-| Amazon S3 | Store the target frontend assets and private user content |
-| EventBridge Scheduler | Invoke one-time reminders at the appropriate time |
-| Step Functions and AI Worker | Coordinate longer jobs, retries, and processing states |
-| Amazon Transcribe and Bedrock | Support transcription, source processing, retrieval, and grounded generation |
-| CloudWatch, SNS, and SES | Observe operations, deliver alerts, and attempt email notifications |
+| Amazon Cognito | Verify user identity and issue a JWT for the signed-in session |
+| Application authorization | The backend checks membership, role, group, meeting, and permitted action |
+| AWS IAM | Define which Lambda or AWS service may call an API and access a resource |
 
-## A simple information flow
+A signed-in user does not receive IAM permission to access DynamoDB. The interface sends a JWT to the API, while Lambda uses its own execution role to read or write data after the backend completes the business authorization check.
 
-When a member opens a meeting, CampusMeet first confirms the account and access to the group. It then retrieves the appropriate information and displays it. When a user updates minutes or a task, the change is stored so other authorized members can follow it.
+## IAM for the authentication and API stack
 
-Documents are uploaded to private file storage rather than placed directly inside meeting records. CampusMeet links each file to the correct group and meeting.
+The `infra/auth-integration.yaml` template creates a dedicated execution role for the authentication/API Lambda. Its trust policy allows only the Lambda service to assume it. Attached policies are limited to the current needs:
 
-A business request follows this simplified path:
+- write events to the Lambda log group;
+- perform required DynamoDB reads and writes against `identity`, `collaboration`, `meeting-data`, and their indexes;
+- read the verified email from the specific Cognito User Pool through `AdminGetUser`.
 
-```text
-React
-  → Cognito provides a JWT
-  → API Gateway validates the token
-  → Lambda resolves the user and checks membership/role
-  → The application service applies the rule
-  → A repository reads or writes DynamoDB/S3
-  → The API returns the appropriate result to the interface
-```
+The role does not use `AdministratorAccess` and does not grant direct permissions to the browser. Workers and supporting orchestration use separate roles so S3, Scheduler, and AI permissions are not mixed into the core authentication Lambda.
 
-API Gateway confirms that the token is valid, but it does not decide which group the person may read. The backend still authorizes `groupId`, `meetingId`, and related resources for each action.
+## Application authorization
 
-## Extended content processing
+After API Gateway validates the JWT, the backend still considers four questions for each action:
 
-Reviewed or approved documents and transcripts can become knowledge sources while retaining their group, meeting, and source-version context. AI answers and drafts remain limited by user access, include citations, and require confirmation before becoming official minutes or tasks.
+1. Is the account signed in and valid?
+2. Is the person an active member of the group?
+3. Does the current role permit the specific action?
+4. Does the action target the correct group, meeting, and version?
+
+Successful sign-in does not permit reading another group's data, and permission to view a meeting does not automatically permit editing or approval. Documents, transcripts, minutes, tasks, and AI sources inherit the access boundary of their original group and meeting.
 
 ## Infrastructure boundaries
 
 CampusMeet separates infrastructure templates by responsibility:
 
-- `infra/data-foundation.yaml` manages exactly five DynamoDB tables and stays outside the application lifecycle to reduce data risk.
-- `infra/auth-integration.yaml` is the Cognito, HTTP API, and core integration stack used in the development environment; it does not represent the entire target architecture.
+- `infra/data-foundation.yaml` manages five DynamoDB tables outside the application lifecycle to reduce data risk.
+- `infra/auth-integration.yaml` creates Cognito, the HTTP API, IAM role, Lambda, and log group for the authentication/API scope used in development.
 - `infra/user-content-orchestration.yaml` owns the user-content bucket, orchestration, reminders, Scheduler role, and related email configuration.
-- `infra/template.yaml` is the application stack and receives table names and required outputs through parameters instead of recreating resources owned elsewhere.
+- `infra/template.yaml` is the application stack and receives table names and required outputs through parameters instead of recreating resources owned by another stack.
 
-Separating the stacks makes changes easier to review and prevents an interface or API update from unintentionally changing the data foundation. Table names, bucket references, and endpoints are passed through environment configuration; credentials are not hard-coded in templates or source.
+Separating the stacks makes changes easier to review and prevents an interface or API update from unintentionally changing the data foundation. Table names, bucket references, and endpoints are passed through CloudFormation parameters and outputs; credentials are not hard-coded in templates or source.
 
-## AWS environment setup sequence
+At the 08 August 2026 verification point, the data, authentication, and user-content stacks were `UPDATE_COMPLETE`. The `campusmeet-dev-app` application stack still manages the frontend, application API, Google worker, AI Worker, Knowledge Base, and monitoring through SAM/CloudFormation, but its current state is `UPDATE_ROLLBACK_FAILED` because of `ApiLambdaRole`. Existing AI resources remain active in the control plane; however, the team must recover the stack and review the next change set before another deployment. The workshop therefore does not report all four stacks as complete.
 
-1. Confirm the account, Region, and deployment permissions.
-2. Validate the data template, review the planned change, deploy it, and verify the five tables.
-3. Set up user-content/orchestration when the environment enables upload, reminders, transcripts, or AI.
-4. Deploy or update the auth/API/application stack with the correct table names and related outputs.
-5. Configure the frontend with the User Pool ID, User Pool Client ID, and API URL.
-6. Check `/health`, sign-in, protected routes, logs, and the workflows enabled in that environment.
+![CampusMeet CloudFormation stacks in completed state](images/5-Workshop/campusmeet-evidence/cloudformation-stacks.png)
 
-This is a deployment and verification order, not a claim that the complete target architecture is production-ready. The auth-integration stack supports the current development/core scope, while the full application stack still requires evidence from outputs, smoke tests, and actual logs.
+*The three stable CampusMeet stacks have been updated successfully in the development environment. The application stack is assessed separately because its rollback state still requires recovery.*
 
-## Why the architecture is organized this way
+## Authentication/API stack structure
 
-The architecture separates responsibilities so that supporting capabilities do not become mixed into the core meeting workflow. The interface focuses on the user experience; identity and central processing enforce access rules; business information and files are stored according to their different characteristics; and external integrations connect through clear boundaries. A change to calendar synchronization, transcription, or AI therefore does not change the meaning of groups, meetings, minutes, and tasks.
+The authentication/API stack accepts two main parameters: `AllowedOrigin` limits the frontend origin that may call the API, and `DataTablePrefix` selects the correct environment tables. CloudFormation then manages the related resources together:
 
-Large files and audio remain in private file storage, while CampusMeet manages only the references and context needed to connect them to the correct meeting. Longer work such as audio processing, document normalization, or content generation is tracked through visible states instead of forcing a user to wait on one screen. This approach requires careful state and failure handling, but it keeps the main journey responsive and allows a supporting operation to be retried after a temporary failure.
+| Resource group | Content |
+| --- | --- |
+| Identity | Cognito User Pool and User Pool Client for the web application |
+| API entry point | API Gateway HTTP API with JWT authorizer and CORS |
+| Processing | Node.js Lambda for the health endpoint and protected routes |
+| Permissions | IAM role limited to logs, required tables, and the User Pool |
+| Observability | CloudWatch Log Group with a defined retention period |
 
-## Main architecture principles
+After deployment, the stack exports `UserPoolId`, `UserPoolClientId`, `ApiUrl`, and the three table names used by this scope. The frontend receives the required public values, while Lambda receives table names and the User Pool ID through server-side environment variables.
 
-- Sign-in verifies identity, while authorization is still checked for each group and meeting resource.
-- Google Meet remains an external meeting service; CampusMeet manages the surrounding workflow and outcomes rather than building video conferencing.
-- Meeting information, files, and AI-assisted content retain links to the group and original source for traceability.
-- Only documents or transcripts approved through the appropriate flow become official knowledge sources.
-- AI output remains a cited draft; an authorized user confirms changes to minutes or tasks.
-- Errors, processing states, and cost require monitoring so advanced capabilities do not hide operational problems.
+![Resources in the authentication and API stack](images/5-Workshop/campusmeet-evidence/cloudformation-auth-resources.png)
+
+*The authentication/API stack manages Lambda, its IAM role, API Gateway, the Cognito User Pool and client, and the CloudWatch Log Group together. The resource list also provides a reliable way to identify the active resources instead of inferring them from display names.*
+
+## CloudFormation principles and change verification
+
+- Resources are declared in templates so environments can be recreated and reviewed through Git history.
+- Parameters describe environment differences, while outputs provide identifiers required by another stack or the frontend.
+- The data lifecycle remains separate from the application lifecycle and uses protection appropriate to each environment.
+- Template changes are validated, reviewed for scope, and then deployed to the intended account and Region.
+- After deployment, stack status, outputs, real resources, and CloudWatch Logs are checked rather than relying only on a completed deploy command.
+
+This organization shows that IAM and CloudFormation are not secondary configuration. They define security boundaries, connect components, and make the authentication/API and data-foundation deployments repeatable and verifiable.

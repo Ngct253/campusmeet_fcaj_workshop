@@ -1,5 +1,5 @@
 ---
-title: "Đánh giá và định hướng"
+title: "Kiểm chứng, vận hành và đánh giá"
 date: 2026-08-08
 weight: 6
 chapter: false
@@ -59,11 +59,33 @@ Trước khi dùng môi trường cho demo hoặc đánh giá, cần rà lại:
 - Số lần thử lại được giới hạn và có cơ chế xử lý lặp an toàn; AWS Budgets hỗ trợ cảnh báo sớm khi chi phí tăng ngoài dự kiến.
 - Chính sách lưu giữ, PITR hoặc deletion protection được bật theo môi trường sau khi xem xét chi phí và nhu cầu bảo vệ dữ liệu.
 
+![Số liệu vận hành Lambda của CampusMeet trên CloudWatch](images/5-Workshop/campusmeet-evidence/cloudwatch-lambda-metrics.png)
+
+*CloudWatch đã thu thập số lượt gọi, thời gian xử lý, lỗi và throttling của các Lambda CampusMeet trong khoảng thời gian được chọn. Số liệu vận hành cho biết tài nguyên đã phát sinh hoạt động, nhưng không tự chứng minh toàn bộ quy trình nghiệp vụ đã thành công.*
+
+## Bằng chứng hạ tầng AI hiện tại
+
+Kiểm tra read-only trên môi trường dev ghi nhận các thành phần sau:
+
+| Thành phần | Trạng thái hoặc cấu hình đã xác minh |
+| --- | --- |
+| Step Functions `campusmeet-dev-ai-jobs` | `Active`, loại `Standard` |
+| Lambda `campusmeet-dev-ai-worker` | `Active`, lần cập nhật gần nhất thành công, Node.js 22, 1024 MB, timeout 300 giây |
+| Bedrock Knowledge Base | `campusmeet-dev-knowledge-v2`, trạng thái `ACTIVE` |
+| Data source | `campusmeet-dev-sources`, trạng thái `AVAILABLE` |
+| Vector store | S3 Vectors tại `ap-southeast-1`, được khai báo trong application stack |
+| Generation | AI Worker được cấu hình gọi `https://bedrock-mantle.us-east-1.api.aws/v1` với `openai.gpt-oss-20b` |
+| Thông tin xác thực model | Tham chiếu Secrets Manager tồn tại; workshop không đọc hoặc hiển thị giá trị secret |
+
+Dashboard Mantle tại thời điểm kiểm tra có ghi nhận request và token của model `openai.gpt-oss-20b`. Dữ liệu sử dụng này cho thấy model endpoint đã được gọi trong tài khoản AWS, nhưng không đủ để quy mọi request cho CampusMeet hoặc xác nhận luồng retrieval–citation–authorization đã đạt đầu-cuối.
+
+Các tài nguyên AI Worker, Knowledge Base, S3 Vectors, IAM role và alarm có tag CloudFormation/SAM tương ứng với `campusmeet-dev-app`. Tuy nhiên, application stack hiện ở trạng thái `UPDATE_ROLLBACK_FAILED` do `ApiLambdaRole`. Nhóm cần phục hồi stack trước khi tiếp tục cập nhật hạ tầng; không nên dựa vào việc từng tài nguyên con đang `Active` để kết luận toàn bộ stack khỏe mạnh.
+
 ## Kết quả hiện tại
 
-Giao diện cho xác thực, nhóm, lời mời, thông báo và các thao tác tạo, xem, cập nhật, xóa cuộc họp đã kết nối API. Năm bảng DynamoDB đã được triển khai và xác minh trong `ap-southeast-1`. Phần xác thực/API và lõi cuộc họp đã có trên môi trường phát triển; địa chỉ kiểm tra tình trạng hoạt động và cấu hình chạy đã được xác minh, trong khi một số kiểm thử nhanh về thao tác dữ liệu và phân quyền trên môi trường dùng chung vẫn còn thiếu điều kiện phù hợp.
+Giao diện cho xác thực, nhóm, lời mời, thông báo và các thao tác tạo, xem, cập nhật, xóa cuộc họp đã kết nối API. Năm bảng DynamoDB đã được triển khai và xác minh trong `ap-southeast-1`. Các stack dữ liệu, xác thực và user-content đang `UPDATE_COMPLETE`; riêng application stack cần phục hồi trạng thái rollback. Phần xác thực/API và lõi cuộc họp đã có trên môi trường phát triển, trong khi một số kiểm thử nhanh về thao tác dữ liệu và phân quyền trên môi trường dùng chung vẫn còn thiếu điều kiện phù hợp.
 
-Tải tệp, bản phiên âm, kho tri thức và trợ lý AI đã có thêm mã nguồn, hợp đồng dữ liệu và kiểm thử cho nhiều phạm vi như đọc, chỉnh sửa, phê duyệt bản phiên âm, giữ nguồn bất biến, hỏi đáp kèm trích dẫn, tạo bản nháp và phân tích tiến độ. Tuy nhiên, sự tồn tại của bucket, quy trình điều phối hoặc kiểm thử cục bộ không đồng nghĩa toàn bộ chuỗi xử lý đã chạy xuyên suốt trên AWS. Bộ kết nối Google, xử lý âm thanh và kiểm chứng qua trình duyệt/AWS với tài khoản thực tế vẫn cần được hoàn thiện trước khi xem toàn hệ thống là sẵn sàng cho môi trường thực tế.
+Tải tệp, bản phiên âm, kho tri thức và trợ lý AI đã có thêm mã nguồn, hợp đồng dữ liệu, giao diện và tài nguyên AWS cho nhiều phạm vi như đọc, chỉnh sửa, phê duyệt bản phiên âm, giữ nguồn bất biến, hỏi đáp kèm trích dẫn, tạo bản nháp và phân tích tiến độ. Kiểm tra Google đã đi đến trạng thái cần kết nối lại nhưng chưa tạo được Meet URL; AI đã có model usage và pipeline control-plane nhưng chưa có bằng chứng đầy đủ cho retrieval, citation và xác nhận xuyên suốt. Vì vậy toàn hệ thống chưa được xem là sẵn sàng cho môi trường thực tế.
 
 ## Bài học rút ra
 
@@ -75,9 +97,11 @@ Tải tệp, bản phiên âm, kho tri thức và trợ lý AI đã có thêm m�
 
 - Tình huống quyền truy cập giữa nhiều nhóm và vai trò.
 - Luồng tải tài liệu trên môi trường sử dụng thực tế.
-- Đồng bộ Google Calendar và Google Meet trên trình duyệt với tài khoản thật.
+- Phục hồi `campusmeet-dev-app` khỏi `UPDATE_ROLLBACK_FAILED` và rà lại change set trước lần triển khai tiếp theo.
+- Đồng bộ Google Calendar và Google Meet sau khi tài khoản thử nghiệm được cấp đúng quyền OAuth.
 - Xử lý âm thanh và phiên âm xuyên suốt.
-- Chất lượng nguồn dẫn và bước xác nhận nội dung do AI gợi ý.
+- Luồng AI đầu-cuối từ nguồn đã duyệt đến retrieval, nguồn dẫn, phản hồi Mantle và bước xác nhận.
+- Tác động cross-Region của Mantle đối với dữ liệu được gửi đi, độ trễ, quota và chi phí.
 - Khả năng theo dõi lỗi, chi phí và dữ liệu cần lưu giữ khi số lượng người dùng tăng.
 
 ## Định hướng phát triển

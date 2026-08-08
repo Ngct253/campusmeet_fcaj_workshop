@@ -1,89 +1,85 @@
 ---
-title: "Kiến trúc tổng quan"
+title: "IAM, CloudFormation và cấu hình AWS"
 date: 2026-08-08
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-## Kiến trúc CampusMeet
+## Ba lớp quyền cần phân biệt
 
-![Sơ đồ kiến trúc tổng quan của CampusMeet](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
+CampusMeet sử dụng ba lớp kiểm soát có mục đích khác nhau. Việc trình bày tách biệt giúp không nhầm đăng nhập với quyền sử dụng dữ liệu hoặc quyền của dịch vụ AWS.
 
-Sơ đồ thể hiện các lớp từ giao diện người dùng, danh tính, xử lý nghiệp vụ và lưu trữ đến các dịch vụ hỗ trợ và theo dõi vận hành. Mỗi lớp có trách nhiệm riêng nhưng cùng phục vụ hành trình họp và theo dõi công việc.
-
-## Dịch vụ và trách nhiệm
-
-| Thành phần | Vai trò trong CampusMeet |
+| Lớp | Trách nhiệm |
 | --- | --- |
-| React, TypeScript và Vite | Xây dựng giao diện web và quản lý hành trình phía người dùng |
-| Amazon Cognito | Đăng ký, xác nhận tài khoản, đăng nhập và phát JWT |
-| API Gateway HTTP API | Kiểm tra token trước khi chuyển yêu cầu đến backend |
-| AWS Lambda | Thực thi tình huống nghiệp vụ, kiểm tra quyền và điều phối lớp truy cập dữ liệu hoặc dịch vụ tích hợp |
-| Amazon DynamoDB | Lưu dữ liệu nghiệp vụ trong năm bảng vật lý |
-| Amazon S3 | Lưu frontend theo kiến trúc mục tiêu và lưu tệp người dùng trong bucket riêng tư |
-| EventBridge Scheduler | Kích hoạt lịch nhắc một lần tại thời điểm phù hợp |
-| Step Functions và AI Worker | Điều phối các công việc dài, thử lại khi phù hợp và cập nhật trạng thái xử lý |
-| Amazon Transcribe và Bedrock | Hỗ trợ phiên âm, xử lý nguồn, truy xuất và tạo nội dung có căn cứ |
-| CloudWatch, SNS và SES | Theo dõi vận hành, gửi cảnh báo và thử gửi email thông báo |
+| Amazon Cognito | Xác nhận danh tính người dùng và phát JWT cho phiên đăng nhập |
+| Phân quyền ứng dụng | Backend kiểm tra tư cách thành viên, vai trò, nhóm, cuộc họp và thao tác được phép |
+| AWS IAM | Quy định Lambda hoặc dịch vụ AWS nào được gọi API và truy cập tài nguyên nào |
 
-## Luồng thông tin đơn giản
+Người dùng đăng nhập thành công không nhận quyền IAM để truy cập DynamoDB. Giao diện gửi JWT đến API; Lambda sử dụng vai trò thực thi của chính nó để đọc hoặc ghi dữ liệu sau khi backend đã kiểm tra quyền nghiệp vụ.
 
-Khi một thành viên xem cuộc họp, CampusMeet trước hết xác nhận tài khoản và quyền tham gia nhóm. Hệ thống sau đó lấy thông tin phù hợp và hiển thị trên giao diện. Khi người dùng cập nhật biên bản hoặc nhiệm vụ, thay đổi được lưu lại để các thành viên có quyền cùng theo dõi.
+## IAM cho ngăn xếp xác thực và API
 
-Đối với tài liệu, người dùng tải tệp lên khu vực lưu trữ riêng thay vì đưa trực tiếp vào phần dữ liệu cuộc họp. CampusMeet chỉ liên kết tệp đó với đúng nhóm và cuộc họp.
+Mẫu `infra/auth-integration.yaml` tạo một vai trò thực thi riêng cho Lambda xác thực/API. Chính sách tin cậy chỉ cho dịch vụ Lambda đảm nhận vai trò này. Chính sách gắn với vai trò giới hạn vào những nhu cầu hiện tại:
 
-Luồng của một yêu cầu nghiệp vụ có thể tóm tắt như sau:
+- ghi nhật ký vào nhóm nhật ký của Lambda;
+- đọc và ghi các thao tác DynamoDB cần thiết trên bảng `identity`, `collaboration`, `meeting-data` và các chỉ mục tương ứng;
+- đọc email đã xác minh từ đúng Cognito User Pool bằng `AdminGetUser`.
 
-```text
-React
-  → Cognito cung cấp JWT
-  → API Gateway xác minh token
-  → Lambda xác định người dùng và kiểm tra tư cách thành viên/vai trò
-  → Application service thực hiện quy tắc
-  → Lớp truy cập dữ liệu đọc hoặc ghi DynamoDB/S3
-  → API trả kết quả phù hợp về giao diện
-```
+Vai trò không dùng `AdministratorAccess` và không cấp quyền trực tiếp cho trình duyệt. Các tiến trình xử lý hoặc chức năng điều phối mở rộng sử dụng vai trò riêng để phạm vi S3, Scheduler hoặc dịch vụ AI không bị trộn vào Lambda của luồng xác thực cốt lõi.
 
-API Gateway xác nhận token hợp lệ nhưng không quyết định người dùng được đọc nhóm nào. Quyền trên `groupId`, `meetingId` và tài nguyên liên quan vẫn được backend kiểm tra ở từng thao tác.
+## Phân quyền trong ứng dụng
 
-## Xử lý nội dung mở rộng
+Sau khi API Gateway xác minh JWT, mỗi thao tác vẫn được backend xem xét theo bốn câu hỏi:
 
-Tài liệu và bản phiên âm đã được kiểm tra hoặc phê duyệt có thể trở thành nguồn cho kho tri thức, đồng thời giữ liên kết với nhóm, cuộc họp và phiên bản nguồn. Khi trợ lý AI trả lời hoặc tạo bản nháp, hệ thống giới hạn dữ liệu theo quyền người dùng, cung cấp trích dẫn và chờ xác nhận trước khi áp dụng vào biên bản hoặc nhiệm vụ chính thức.
+1. Tài khoản đã đăng nhập và còn hợp lệ hay chưa?
+2. Người đó có phải thành viên đang hoạt động của nhóm hay không?
+3. Vai trò hiện tại có cho phép hành động cụ thể hay không?
+4. Dữ liệu có đúng nhóm, cuộc họp và phiên bản cần thao tác hay không?
+
+Đăng nhập hợp lệ không cho phép đọc dữ liệu nhóm khác, còn quyền xem cuộc họp không mặc nhiên cho phép sửa hoặc phê duyệt nội dung. Tài liệu, bản phiên âm, biên bản, nhiệm vụ và nguồn dùng cho AI đều kế thừa ranh giới truy cập của nhóm và cuộc họp gốc.
 
 ## Ranh giới hạ tầng
 
-CampusMeet tách hạ tầng thành các template có trách nhiệm khác nhau:
+CampusMeet tách hạ tầng thành các mẫu có trách nhiệm khác nhau:
 
-- `infra/data-foundation.yaml` quản lý đúng năm bảng DynamoDB và được tách khỏi vòng đời application để giảm rủi ro ảnh hưởng dữ liệu.
-- `infra/auth-integration.yaml` là stack tích hợp Cognito, HTTP API và phạm vi core đang dùng trên môi trường phát triển; đây không phải toàn bộ kiến trúc mục tiêu.
-- `infra/user-content-orchestration.yaml` sở hữu bucket user-content, orchestration, reminder, Scheduler role và cấu hình email liên quan.
-- `infra/template.yaml` là ngăn xếp ứng dụng, nhận tên bảng và giá trị đầu ra cần thiết qua tham số thay vì tạo lại dữ liệu thuộc ngăn xếp khác.
+- `infra/data-foundation.yaml` quản lý năm bảng DynamoDB và được tách khỏi vòng đời ứng dụng để giảm rủi ro ảnh hưởng dữ liệu.
+- `infra/auth-integration.yaml` tạo Cognito, HTTP API, vai trò IAM, Lambda và nhóm nhật ký cho phạm vi xác thực/API đang dùng trên môi trường phát triển.
+- `infra/user-content-orchestration.yaml` sở hữu bucket user-content, điều phối, nhắc lịch, vai trò Scheduler và cấu hình email liên quan.
+- `infra/template.yaml` là ngăn xếp ứng dụng, nhận tên bảng và đầu ra cần thiết qua tham số thay vì tạo lại tài nguyên thuộc ngăn xếp khác.
 
-Việc tách ngăn xếp giúp quá trình rà soát thay đổi rõ hơn và tránh để cập nhật giao diện/API kéo theo thay đổi ngoài ý muốn đối với dữ liệu. Tên bảng, bucket hoặc địa chỉ API được truyền qua cấu hình môi trường; thông tin xác thực không được ghi trực tiếp trong template hoặc mã nguồn.
+Việc tách ngăn xếp giúp quá trình rà soát thay đổi rõ hơn và tránh để cập nhật giao diện/API kéo theo thay đổi ngoài ý muốn đối với dữ liệu. Tên bảng, bucket hoặc địa chỉ API được truyền qua tham số và đầu ra CloudFormation; thông tin xác thực không được ghi trực tiếp trong mẫu hoặc mã nguồn.
 
-## Trình tự thiết lập môi trường AWS
+Tại lần kiểm tra ngày 08/08/2026, các ngăn xếp dữ liệu, xác thực và user-content ở trạng thái `UPDATE_COMPLETE`. Ngăn xếp ứng dụng `campusmeet-dev-app` vẫn quản lý frontend, API ứng dụng, worker Google, AI Worker, Knowledge Base và giám sát bằng SAM/CloudFormation, nhưng trạng thái hiện tại là `UPDATE_ROLLBACK_FAILED` do tài nguyên `ApiLambdaRole`. Các tài nguyên AI đã tạo vẫn hoạt động ở control plane; tuy nhiên nhóm cần phục hồi stack và xem lại change set trước lần triển khai tiếp theo. Vì vậy workshop không ghi nhận cả bốn ngăn xếp đều hoàn tất.
 
-1. Xác nhận tài khoản, Region và quyền triển khai.
-2. Kiểm tra template dữ liệu, xem trước thay đổi rồi triển khai và xác minh năm bảng.
-3. Thiết lập user-content/orchestration nếu môi trường sử dụng upload, reminder, transcript hoặc AI.
-4. Triển khai hoặc cập nhật các ngăn xếp xác thực, API và ứng dụng với đúng tên bảng cùng các giá trị đầu ra liên quan.
-5. Đưa User Pool ID, User Pool Client ID và API URL vào cấu hình frontend.
-6. Kiểm tra `/health`, đăng nhập, tuyến điều hướng được bảo vệ, nhật ký và các luồng được bật trong môi trường đó.
+![Các ngăn xếp CloudFormation của CampusMeet ở trạng thái hoàn tất](images/5-Workshop/campusmeet-evidence/cloudformation-stacks.png)
 
-Đây là thứ tự triển khai và kiểm chứng, không phải khẳng định toàn bộ kiến trúc mục tiêu đã sẵn sàng cho môi trường thực tế. Ngăn xếp `auth-integration` phù hợp với phạm vi phát triển và chức năng lõi hiện tại; ngăn xếp ứng dụng đầy đủ vẫn cần được đánh giá bằng giá trị đầu ra, kiểm thử nhanh và nhật ký thực tế.
+*Ba ngăn xếp ổn định của CampusMeet đã được cập nhật thành công trên môi trường phát triển. Ngăn xếp ứng dụng được đánh giá riêng vì đang cần phục hồi trạng thái rollback.*
 
-## Lý do lựa chọn cách tổ chức kiến trúc
+## Cấu trúc ngăn xếp xác thực/API
 
-Kiến trúc được chia theo trách nhiệm để luồng họp cốt lõi không bị trộn với các khả năng hỗ trợ. Giao diện tập trung vào trải nghiệm người dùng; lớp danh tính và xử lý trung tâm giữ quy tắc truy cập; dữ liệu nghiệp vụ và tệp được lưu theo đặc tính riêng; các tích hợp bên ngoài được kết nối qua ranh giới rõ ràng. Nhờ đó, thay đổi ở lịch, phiên âm hoặc AI không làm thay đổi ý nghĩa của nhóm, cuộc họp, biên bản và nhiệm vụ.
+Ngăn xếp xác thực/API nhận hai tham số chính: `AllowedOrigin` giới hạn nguồn giao diện được phép gọi API và `DataTablePrefix` xác định đúng bộ bảng của môi trường. Từ đó CloudFormation quản lý các tài nguyên có liên hệ với nhau:
 
-Tệp và âm thanh có kích thước lớn được lưu trong khu vực riêng tư, còn hệ thống chỉ quản lý thông tin liên kết cần thiết. Những công việc cần nhiều thời gian như xử lý âm thanh, chuẩn hóa tài liệu hoặc tạo nội dung được theo dõi theo trạng thái thay vì buộc người dùng chờ tại một màn hình. Cách làm này cần quản lý trạng thái và lỗi cẩn thận hơn, nhưng giúp luồng chính phản hồi rõ ràng và cho phép thử lại khi một dịch vụ hỗ trợ gặp sự cố.
+| Nhóm tài nguyên | Nội dung |
+| --- | --- |
+| Danh tính | Cognito User Pool và User Pool Client cho ứng dụng web |
+| Điểm vào API | API Gateway HTTP API với JWT authorizer và CORS |
+| Xử lý | Lambda Node.js cho địa chỉ kiểm tra tình trạng và các tuyến được bảo vệ |
+| Quyền | Vai trò IAM giới hạn vào nhật ký, các bảng cần thiết và User Pool |
+| Quan sát | CloudWatch Log Group với thời gian lưu giữ xác định |
 
-## Các nguyên tắc kiến trúc chính
+Sau khi triển khai, ngăn xếp xuất `UserPoolId`, `UserPoolClientId`, `ApiUrl` và tên ba bảng được dùng trong phạm vi này. Giao diện nhận các giá trị công khai cần thiết, còn Lambda nhận tên bảng và User Pool ID qua biến môi trường phía máy chủ.
 
-- Đăng nhập xác nhận danh tính, còn quyền trên từng nhóm và cuộc họp vẫn được kiểm tra riêng.
-- Google Meet là dịch vụ họp bên ngoài; CampusMeet quản lý quy trình và kết quả, không tự xây công cụ gọi video.
-- Dữ liệu cuộc họp, tệp và nội dung AI giữ liên kết với nhóm và nguồn ban đầu để có thể truy vết.
-- Chỉ tài liệu hoặc bản phiên âm đã được phê duyệt theo luồng phù hợp mới được dùng làm nguồn tri thức chính thức.
-- Kết quả AI là bản nháp có nguồn dẫn; thay đổi biên bản hoặc nhiệm vụ cần người dùng có quyền xác nhận.
-- Lỗi, tình trạng xử lý và chi phí cần được theo dõi để chức năng nâng cao không che khuất vấn đề vận hành.
+![Tài nguyên của ngăn xếp xác thực và API](images/5-Workshop/campusmeet-evidence/cloudformation-auth-resources.png)
+
+*Ngăn xếp xác thực/API quản lý tập trung Lambda, vai trò IAM, API Gateway, Cognito User Pool, User Pool Client và CloudWatch Log Group. Danh sách này cũng giúp đối chiếu đúng tài nguyên đang được sử dụng thay vì suy luận từ tên hiển thị.*
+
+## Nguyên tắc CloudFormation và kiểm tra thay đổi
+
+- Tài nguyên được khai báo trong mẫu để môi trường có thể tái tạo và rà soát bằng lịch sử Git.
+- Tham số mô tả khác biệt giữa môi trường; đầu ra cung cấp định danh cần thiết cho ngăn xếp hoặc giao diện khác.
+- Vòng đời dữ liệu được tách khỏi vòng đời ứng dụng và sử dụng chính sách bảo vệ phù hợp với từng môi trường.
+- Thay đổi mẫu được kiểm tra trước, xem trước phạm vi cập nhật rồi mới triển khai vào đúng tài khoản và Region.
+- Sau triển khai cần đối chiếu trạng thái ngăn xếp, đầu ra, tài nguyên thật và CloudWatch Logs thay vì chỉ dựa vào việc lệnh triển khai kết thúc.
+
+Cách tổ chức này cho thấy IAM và CloudFormation không phải phần cấu hình phụ. Chúng tạo ranh giới bảo mật, kết nối các thành phần và giúp việc triển khai xác thực/API cùng nền tảng dữ liệu có thể kiểm chứng và lặp lại.
