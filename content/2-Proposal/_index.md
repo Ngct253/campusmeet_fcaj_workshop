@@ -49,7 +49,7 @@ Out of scope: a custom video/WebRTC service; recording without consent; AI mutat
 | Authentication and base API | Cognito, HTTP API, JWT Authorizer, and Lambda exist in source; the auth/API stack runs in AWS development |
 | Data | Five DynamoDB tables are deployed and verified in `ap-southeast-1` |
 | Groups and invitations | Frontend, API, repositories, and authorization checks are implemented |
-| M2 meetings | Core CRUD/lifecycle was deployed on 6 August 2026; health/runtime passed, while complete authorization smoke testing still needs suitable test data |
+| Core meeting workflow | The create, view, update, and cancel flow was deployed on 6 August 2026; service checks passed, while selected authorization scenarios still require suitable test data |
 | Agendas, minutes, and tasks | UI, APIs, version controls, and related tests are present |
 | Document upload | Presigned upload, metadata/checksum verification, and AIJob creation exist; audio completion still requires the Amazon Transcribe worker |
 | Google Calendar/Meet | OAuth, side panel, and synchronization runtime are locally verified; full AWS and browser verification remains pending |

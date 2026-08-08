@@ -10,13 +10,13 @@ pre: " <b> 5. </b> "
 
 CampusMeet là nền tảng hỗ trợ nhóm học tập và nhóm dự án quản lý thông tin trước, trong và sau cuộc họp tại một nơi. Thay vì tách lịch họp, tài liệu, biên bản và công việc sang nhiều công cụ, CampusMeet liên kết chúng theo từng nhóm và từng cuộc họp.
 
-Workshop trình bày CampusMeet theo góc nhìn sản phẩm, tập trung vào vấn đề cần giải quyết, người dùng, kiến trúc tổng quan, chức năng hiện tại và quy trình cuộc họp. Các chi tiết dành cho triển khai như mã nguồn, câu lệnh, cấu hình và đường dẫn API đã được lược bỏ.
+Workshop trình bày CampusMeet theo góc nhìn sản phẩm, tập trung vào vấn đề cần giải quyết, mục tiêu, kiến trúc tổng quan, chức năng hiện tại và quy trình cuộc họp. Các chi tiết dành cho triển khai như mã nguồn, câu lệnh, cấu hình và đường dẫn API đã được lược bỏ.
 
 ### Mục tiêu
 
 Sau khi đọc workshop, người xem có thể:
 
-- Hiểu CampusMeet giải quyết vấn đề gì và dành cho ai.
+- Hiểu vấn đề và mục tiêu mà CampusMeet hướng đến.
 - Nắm được quy trình từ khi tạo nhóm đến khi kết thúc cuộc họp và theo dõi công việc.
 - Hiểu vai trò của các thành phần AWS trong sơ đồ ở mức tổng quan.
 - Phân biệt phần đã có, phần cần kiểm chứng thêm và định hướng phát triển.
@@ -31,7 +31,7 @@ Sơ đồ mô tả một luồng đơn giản: người dùng truy cập CampusM
 ### Nội dung workshop
 
 1. [Tổng quan CampusMeet](5.1-Workshop-overview/)
-2. [Người dùng và mục tiêu](5.2-Prerequiste/)
+2. [Mục tiêu và quyền truy cập](5.2-Prerequiste/)
 3. [Kiến trúc tổng quan](5.3-Architecture/)
 4. [Phạm vi chức năng hiện tại](5.4-IAM/)
 5. [Quy trình cuộc họp](5.5-Authentication/)

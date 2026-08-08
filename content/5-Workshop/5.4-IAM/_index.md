@@ -6,22 +6,16 @@ chapter: false
 pre: " <b> 5.4. </b> "
 ---
 
-## Understanding status
+## Feature overview
 
-CampusMeet is developed in feature groups. The workshop distinguishes three levels so that progress is not overstated:
-
-- **Foundation available:** the main journey is present in the product.
-- **More verification required:** implementation exists, but broader testing is still needed.
-- **In development:** the feature is partial or depends on another unfinished area.
-
-## M1–M4 overview
-
-| Milestone | Scope | General status |
+| Feature group | Scope | General status |
 | --- | --- | --- |
-| M1 | Accounts, profiles, groups, members, invitations, and notifications | Main foundation available |
-| M2 | Create, view, update, and cancel meetings | The meeting core is recorded in the development environment; selected permission scenarios still require verification |
-| M3 | Preparation, documents, minutes, action items, and tasks | Several interface and workflow areas exist; end-to-end testing should continue |
-| M4 | Google synchronization, transcripts, AI, and progress summaries | Initial or experimental areas exist; the milestone is not presented as complete |
+| Accounts and profiles | Registration, sign-in, and personal information | Main foundation available |
+| Groups and collaboration | Groups, members, invitations, and notifications | Core workflows are available |
+| Meeting management | Create, view, update, cancel, and prepare meetings | The core workflow exists; selected authorization scenarios still require verification |
+| Post-meeting content and work | Documents, minutes, transcript editing and approval, action items, tasks, and progress tracking | Several interface and workflow areas exist; end-to-end testing should continue |
+| Integrations and automation | Google Calendar/Meet synchronization, content upload, reminders, and email | Initial flows exist; selected areas are only locally verified or still require verification in a realistic environment |
+| Knowledge and AI assistance | Ingesting approved sources, citation-grounded questions and answers, content summaries, minutes/task drafts, and group progress analysis | Selected flows and related tests exist; the scope is not presented as complete, and users must confirm all suggested content |
 
 ## Information managed by CampusMeet
 

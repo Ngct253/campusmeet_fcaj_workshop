@@ -8,7 +8,7 @@ pre: " <b> 5.6. </b> "
 
 ## Kết quả hiện tại
 
-CampusMeet đã hình thành một quy trình sản phẩm tương đối rõ: người dùng có tài khoản, tham gia nhóm, theo dõi cuộc họp và tiếp cận thông tin liên quan. Lõi cuộc họp M2 đã được ghi nhận trên môi trường phát triển. Một số phần về giao diện, tài liệu, biên bản, nhiệm vụ và thông báo cũng đã có trong mã nguồn hoặc được kiểm thử ở phạm vi tương ứng.
+CampusMeet đã hình thành một quy trình sản phẩm tương đối rõ: người dùng có tài khoản, tham gia nhóm, theo dõi cuộc họp và tiếp cận thông tin liên quan. Chức năng cuộc họp cốt lõi đã được ghi nhận trên môi trường phát triển. Một số phần về giao diện, tài liệu, biên bản, nhiệm vụ và thông báo cũng đã có trong mã nguồn hoặc được kiểm thử ở phạm vi tương ứng.
 
 ## Những điểm cần tiếp tục kiểm chứng
 

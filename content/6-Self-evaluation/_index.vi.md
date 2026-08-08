@@ -1,6 +1,6 @@
 ---
 title: "Tự đánh giá"
-date: 2026-08-15
+date: 2026-08-08
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
@@ -8,7 +8,7 @@ pre: " <b> 6. </b> "
 
 Trong thời gian thực tập tại **Công ty TNHH Amazon Web Services Việt Nam** từ ngày **15/06/2026** đến ngày **15/08/2026**, tôi được củng cố kiến thức về điện toán đám mây và áp dụng kiến thức đã học vào dự án CampusMeet.
 
-Phạm vi tôi trực tiếp thực hiện gồm cập nhật tài liệu và script xác minh trạng thái triển khai M2; điều chỉnh cấu hình hạ tầng cho bảng dữ liệu cuộc họp và quyền của reminder Lambda; cải thiện một số màn hình và luồng thuộc M1–M4; xây dựng, sửa biểu mẫu cuộc họp và luồng upload tài liệu bằng presigned S3 URL; làm rõ giao diện biên bản, action item và cập nhật trạng thái task; đồng thời bổ sung kiểm thử cho các phần liên quan. Qua những công việc này, tôi cải thiện kỹ năng React/TypeScript, AWS Lambda, Amazon S3, AWS SAM/CloudFormation, kiểm thử, xử lý lỗi và viết tài liệu kỹ thuật.
+Phạm vi tôi trực tiếp thực hiện gồm cập nhật tài liệu và script xác minh trạng thái triển khai chức năng cuộc họp cốt lõi; điều chỉnh cấu hình hạ tầng cho bảng dữ liệu cuộc họp và quyền của reminder Lambda; cải thiện một số màn hình và luồng liên quan đến nhóm, cuộc họp, công việc và cài đặt; xây dựng, sửa biểu mẫu cuộc họp và luồng upload tài liệu bằng presigned S3 URL; làm rõ giao diện biên bản, action item và cập nhật trạng thái task; đồng thời bổ sung kiểm thử cho các phần liên quan. Qua những công việc này, tôi cải thiện kỹ năng React/TypeScript, AWS Lambda, Amazon S3, AWS SAM/CloudFormation, kiểm thử, xử lý lỗi và viết tài liệu kỹ thuật.
 
 Tôi chủ động kiểm tra lỗi từ giao diện đến hạ tầng, sửa các vấn đề về metadata upload, quyền truy cập và bố cục, đồng thời cập nhật tài liệu để phản ánh đúng trạng thái đã triển khai. Tôi cũng nghiêm túc tiếp nhận phản hồi và điều chỉnh sản phẩm trước thời điểm tổng kết.
 

@@ -6,11 +6,11 @@ chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-## Cách đọc sơ đồ
+## Kiến trúc CampusMeet
 
 ![Sơ đồ kiến trúc tổng quan của CampusMeet](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
 
-Sơ đồ cho biết các phần lớn của CampusMeet và cách thông tin di chuyển giữa chúng. Người đọc không cần hiểu chi tiết kỹ thuật; có thể xem kiến trúc theo sáu lớp sau:
+Kiến trúc CampusMeet gồm sáu thành phần chính:
 
 1. **Giao diện người dùng:** nơi người dùng đăng nhập, quản lý nhóm, xem cuộc họp và cập nhật công việc.
 2. **Danh tính và bảo vệ truy cập:** xác nhận người dùng là ai trước khi cho phép sử dụng chức năng.

@@ -6,11 +6,11 @@ chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-## Reading the diagram
+## CampusMeet architecture
 
 ![CampusMeet high-level architecture diagram](images/5-Workshop/5.3-Architecture/architecture-diagram.png?v=2)
 
-The diagram shows the main parts of CampusMeet and how information moves between them. Readers do not need implementation knowledge; the architecture can be understood through six layers:
+The CampusMeet architecture contains six main parts:
 
 1. **User experience:** where users sign in, manage groups, view meetings, and update work.
 2. **Identity and access protection:** confirms who the user is before allowing an action.

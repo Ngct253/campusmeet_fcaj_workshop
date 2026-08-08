@@ -1,22 +1,10 @@
 ---
-title: "Người dùng và mục tiêu"
+title: "Mục tiêu và quyền truy cập"
 date: 2026-08-08
 weight: 2
 chapter: false
 pre: " <b> 5.2. </b> "
 ---
-
-## Đối tượng sử dụng
-
-CampusMeet phù hợp với nhóm sinh viên, câu lạc bộ và nhóm dự án nhỏ thường xuyên tổ chức họp nhưng chưa có một nơi thống nhất để quản lý thông tin. Người dùng không cần kiến thức kỹ thuật; họ chỉ cần có tài khoản và được tham gia đúng nhóm.
-
-| Đối tượng | Nhu cầu |
-| --- | --- |
-| Quản trị viên nhóm | Tạo nhóm, mời thành viên, lập lịch và theo dõi kết quả chung |
-| Thành viên | Xem lịch, chuẩn bị nội dung, tham gia thảo luận và cập nhật công việc |
-| Người phụ trách cuộc họp | Tổ chức nội dung, tổng hợp biên bản và phân công đầu việc |
-
-Một người có thể đảm nhiệm nhiều vai trò tùy theo từng nhóm và cuộc họp.
 
 ## Mục tiêu của CampusMeet
 

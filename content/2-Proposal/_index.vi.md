@@ -49,7 +49,7 @@ Ngoài phạm vi: xây dựng dịch vụ gọi video/WebRTC riêng; ghi âm khi
 | Xác thực và API nền tảng | Cognito, HTTP API, JWT Authorizer và Lambda đã có mã nguồn; stack auth/API đang hoạt động trên AWS dev |
 | Dữ liệu | Năm bảng DynamoDB đã deploy và verify tại `ap-southeast-1` |
 | Nhóm và lời mời | Frontend, API, repository và kiểm tra quyền đã được xây dựng |
-| Cuộc họp M2 | Lõi CRUD/vòng đời đã deploy ngày 06/08/2026; health/runtime pass, smoke test phân quyền đầy đủ còn cần dữ liệu kiểm thử phù hợp |
+| Chức năng cuộc họp cốt lõi | Luồng tạo, xem, cập nhật và hủy đã được triển khai ngày 06/08/2026; kiểm tra trạng thái hoạt động đạt yêu cầu, một số tình huống phân quyền vẫn cần dữ liệu kiểm thử phù hợp |
 | Agenda, biên bản và task | Đã có giao diện, API, kiểm soát phiên bản và kiểm thử liên quan |
 | Upload tài liệu | Presigned upload, kiểm tra metadata/checksum và tạo AIJob đã có; audio completion còn chờ worker Amazon Transcribe |
 | Google Calendar/Meet | OAuth, side panel và runtime đồng bộ đã local verified; xác minh AWS và trình duyệt đầy đủ vẫn pending |

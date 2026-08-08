@@ -8,7 +8,7 @@ pre: " <b> 5.6. </b> "
 
 ## Current result
 
-CampusMeet now has a reasonably clear product journey: users have accounts, join groups, follow meetings, and access related information. The M2 meeting core is recorded in the development environment. Selected areas for the interface, documents, minutes, tasks, and notifications also exist in the source or have been tested within their respective scope.
+CampusMeet now has a reasonably clear product journey: users have accounts, join groups, follow meetings, and access related information. The core meeting workflow is recorded in the development environment. Selected areas for the interface, documents, minutes, tasks, and notifications also exist in the source or have been tested within their respective scope.
 
 ## Areas requiring further verification
 

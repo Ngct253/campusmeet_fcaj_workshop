@@ -1,6 +1,6 @@
 ---
 title: "Self-evaluation"
-date: 2026-08-15
+date: 2026-08-08
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
@@ -8,7 +8,7 @@ pre: " <b> 6. </b> "
 
 During my internship at **Amazon Web Services Vietnam Company Limited** from **15 June 2026** to **15 August 2026**, I strengthened my cloud-computing knowledge and applied it to CampusMeet.
 
-My direct contributions included updating the M2 deployment documentation and verification script; correcting the meeting-table infrastructure configuration and reminder Lambda permissions; improving selected M1–M4 screens and workflows; building and repairing meeting forms and presigned S3 document uploads; clarifying minutes, action-item, and task-status workflows; and adding the related tests. This work improved my React/TypeScript, AWS Lambda, Amazon S3, AWS SAM/CloudFormation, testing, debugging, and technical-writing skills.
+My direct contributions included updating the core meeting workflow deployment documentation and verification script; correcting the meeting-table infrastructure configuration and reminder Lambda permissions; improving selected screens and workflows for groups, meetings, tasks, and settings; building and repairing meeting forms and presigned S3 document uploads; clarifying minutes, action-item, and task-status workflows; and adding the related tests. This work improved my React/TypeScript, AWS Lambda, Amazon S3, AWS SAM/CloudFormation, testing, debugging, and technical-writing skills.
 
 I proactively traced issues from the UI to infrastructure, corrected upload metadata, access permissions, and layout problems, and kept the documentation aligned with the verified deployment state. I also incorporated feedback before the project handover.
 

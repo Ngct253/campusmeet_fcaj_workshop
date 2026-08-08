@@ -6,22 +6,16 @@ chapter: false
 pre: " <b> 5.4. </b> "
 ---
 
-## Cách hiểu trạng thái
+## Tổng quan chức năng
 
-CampusMeet được phát triển theo từng nhóm chức năng. Workshop phân biệt ba mức để không trình bày cao hơn thực tế:
-
-- **Đã có nền tảng:** luồng chính đã xuất hiện trong sản phẩm.
-- **Cần kiểm chứng thêm:** đã có phần triển khai nhưng cần thử nghiệm đầy đủ hơn.
-- **Đang phát triển:** chức năng mới hoàn thành một phần hoặc còn phụ thuộc vào thành phần khác.
-
-## Tổng quan theo M1–M4
-
-| Mốc | Phạm vi | Trạng thái tổng quát |
+| Nhóm chức năng | Phạm vi | Trạng thái tổng quát |
 | --- | --- | --- |
-| M1 | Tài khoản, hồ sơ, nhóm, thành viên, lời mời và thông báo | Đã có nền tảng chính |
-| M2 | Tạo, xem, cập nhật và hủy cuộc họp | Lõi cuộc họp đã được ghi nhận trên môi trường phát triển; một số tình huống quyền vẫn cần kiểm chứng |
-| M3 | Nội dung chuẩn bị, tài liệu, biên bản, action item và nhiệm vụ | Đã có nhiều phần trong giao diện và luồng xử lý; cần tiếp tục kiểm thử xuyên suốt |
-| M4 | Đồng bộ Google, bản phiên âm, AI và tổng hợp tiến độ | Có các phần ban đầu hoặc thử nghiệm; chưa được xem là hoàn chỉnh |
+| Tài khoản và hồ sơ | Đăng ký, đăng nhập và quản lý thông tin cá nhân | Đã có nền tảng chính |
+| Nhóm và cộng tác | Nhóm, thành viên, lời mời và thông báo | Đã có các luồng chính |
+| Quản lý cuộc họp | Tạo, xem, cập nhật, hủy và chuẩn bị nội dung cuộc họp | Chức năng cốt lõi đã có; một số tình huống phân quyền vẫn cần kiểm chứng |
+| Nội dung và công việc sau họp | Tài liệu, biên bản, chỉnh sửa và phê duyệt bản phiên âm, action item, nhiệm vụ và theo dõi tiến độ | Đã có nhiều phần trong giao diện và luồng xử lý; cần tiếp tục kiểm thử xuyên suốt |
+| Tích hợp và tự động hóa | Đồng bộ Google Calendar/Meet, upload nội dung, nhắc lịch và email | Đã có các luồng ban đầu; một số phần mới được kiểm chứng cục bộ hoặc vẫn cần xác minh trên môi trường thực tế |
+| Kho tri thức và trợ lý AI | Tiếp nhận nguồn đã được phê duyệt, hỏi đáp có trích dẫn, tóm tắt nội dung, tạo bản nháp biên bản/nhiệm vụ và phân tích tiến độ nhóm | Đã có một số luồng và kiểm thử liên quan; chưa được xem là hoàn chỉnh và mọi nội dung đề xuất vẫn cần người dùng xác nhận |
 
 ## Thông tin được quản lý
 
