@@ -24,6 +24,14 @@ Biên bản được rà soát để bảo đảm nội dung chính xác. Action
 | Trong họp | Ghi chú, quyết định và đầu việc |
 | Sau họp | Biên bản, nhiệm vụ, người phụ trách, thời hạn và tiến độ |
 
+## Tình huống minh họa xuyên suốt
+
+Một nhóm đồ án tổ chức cuộc họp tiến độ hằng tuần. Sau khi quản trị viên tạo nhóm và thành viên chấp nhận lời mời, người phụ trách lập cuộc họp để rà soát phần việc và thống nhất công việc tiếp theo. Thành viên xem nội dung chuẩn bị, tải tài liệu lên đúng cuộc họp; lịch và liên kết Google Meet có thể được đồng bộ nếu tích hợp sẵn sàng.
+
+Trong cuộc họp, quyết định và đầu việc được ghi nhận theo nội dung thảo luận. Bản phiên âm, nếu được sử dụng với sự đồng ý phù hợp, chỉ là nguồn hỗ trợ. Sau cuộc họp, người có quyền rà soát biên bản hoặc bản phiên âm, sửa nội dung chưa chính xác và xác nhận phiên bản phù hợp.
+
+Đầu việc được chuyển thành nhiệm vụ có người phụ trách và thời hạn. Thành viên cập nhật trạng thái, còn nhóm có thể truy lại cuộc họp đã tạo ra nhiệm vụ. Nguồn được phê duyệt có thể hỗ trợ hỏi đáp hoặc tạo bản nháp có trích dẫn, nhưng người dùng vẫn quyết định kết quả chính thức.
+
 ## Tài liệu, phiên âm và AI
 
 Tài liệu được gắn với đúng cuộc họp và chỉ hiển thị cho người có quyền. Phiên âm có thể hỗ trợ tìm lại nội dung nhưng cần được kiểm tra độ chính xác. AI có thể gợi ý tóm tắt, câu trả lời hoặc đầu việc từ nguồn được phép, nhưng không thay người dùng đưa ra quyết định.

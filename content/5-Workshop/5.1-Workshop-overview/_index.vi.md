@@ -25,6 +25,10 @@ CampusMeet kết nối các thông tin đó theo một mạch thống nhất:
 5. Theo dõi tiến độ sau cuộc họp.
 6. Tra cứu lại thông tin khi cần.
 
+## Phương pháp xác định phạm vi
+
+Phạm vi CampusMeet được xác định từ hành trình của một cuộc họp thay vì danh sách công nghệ. Luồng cơ bản phải giúp nhóm tập hợp thành viên, tổ chức cuộc họp, ghi nhận kết quả và theo dõi đầu việc. Đồng bộ lịch, phiên âm và AI được bổ sung sau để giảm thao tác hoặc hỗ trợ tra cứu. Nếu một tích hợp chưa sẵn sàng, nhóm vẫn có thể dùng các chức năng nền tảng; nhờ đó quy trình chính không phụ thuộc hoàn toàn vào Google, xử lý âm thanh hoặc AI.
+
 ## Cách các phần liên kết với nhau
 
 Nhóm là không gian chung và ranh giới truy cập của CampusMeet. Mỗi cuộc họp liên kết với tài liệu, bản phiên âm, biên bản và nhiệm vụ. Nhờ đó, thành viên có thể lần theo một công việc hoặc quyết định về đúng cuộc họp đã tạo ra nó thay vì tìm kiếm trong nhiều công cụ rời rạc.

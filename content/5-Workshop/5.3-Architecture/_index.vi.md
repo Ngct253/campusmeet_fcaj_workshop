@@ -29,15 +29,17 @@ Khi một thành viên xem cuộc họp, CampusMeet trước hết xác nhận t
 
 Tài liệu và bản phiên âm đã được kiểm tra hoặc phê duyệt có thể trở thành nguồn cho kho tri thức, đồng thời giữ liên kết với nhóm, cuộc họp và phiên bản nguồn. Khi trợ lý AI trả lời hoặc tạo bản nháp, hệ thống giới hạn dữ liệu theo quyền người dùng, cung cấp trích dẫn và chờ xác nhận trước khi áp dụng vào biên bản hoặc nhiệm vụ chính thức.
 
-## Trạng thái triển khai hiện tại
+## Lý do lựa chọn cách tổ chức kiến trúc
 
-| Phạm vi | Trạng thái tại mốc workshop |
-| --- | --- |
-| Tài khoản, nhóm, lời mời, cuộc họp và thông báo | Đã có các chức năng nền tảng và luồng sử dụng chính |
-| Biểu mẫu cuộc họp, tài liệu, biên bản và nhiệm vụ | Đã có nhiều phần trong giao diện, luồng xử lý và kiểm thử liên quan; cần tiếp tục kiểm chứng xuyên suốt trên môi trường dùng chung |
-| Google Calendar và Google Meet | Đã có luồng kết nối, đồng bộ và kiểm chứng cục bộ; còn cần xác minh đầy đủ trên AWS và trình duyệt với tài khoản thực tế |
-| Bản phiên âm | Đã có các phần đọc, phân trang, chỉnh sửa, phê duyệt và chuyển nguồn đã duyệt sang bước xử lý tiếp theo; xử lý âm thanh và kiểm chứng cloud đầu-cuối vẫn cần hoàn thiện |
-| Kho tri thức và trợ lý AI | Đã có luồng tiếp nhận nguồn được phê duyệt, hỏi đáp có trích dẫn, tóm tắt nội dung, tạo bản nháp biên bản/nhiệm vụ và phân tích tiến độ nhóm, cùng các kiểm thử liên quan; còn cần kiểm chứng đầu-cuối trên cloud trước khi xem là sẵn sàng vận hành |
-| Giám sát và kiểm soát chi phí | Đã được đưa vào kiến trúc và hạ tầng; cần tiếp tục theo dõi khi phạm vi sử dụng tăng |
+Kiến trúc được chia theo trách nhiệm để luồng họp cốt lõi không bị trộn với các khả năng hỗ trợ. Giao diện tập trung vào trải nghiệm người dùng; lớp danh tính và xử lý trung tâm giữ quy tắc truy cập; dữ liệu nghiệp vụ và tệp được lưu theo đặc tính riêng; các tích hợp bên ngoài được kết nối qua ranh giới rõ ràng. Nhờ đó, thay đổi ở lịch, phiên âm hoặc AI không làm thay đổi ý nghĩa của nhóm, cuộc họp, biên bản và nhiệm vụ.
 
-Mũi tên trên sơ đồ thể hiện cách các thành phần phối hợp; bảng trên ghi rõ mức độ đã triển khai và phần còn cần kiểm chứng.
+Tệp và âm thanh có kích thước lớn được lưu trong khu vực riêng tư, còn hệ thống chỉ quản lý thông tin liên kết cần thiết. Những công việc cần nhiều thời gian như xử lý âm thanh, chuẩn hóa tài liệu hoặc tạo nội dung được theo dõi theo trạng thái thay vì buộc người dùng chờ tại một màn hình. Cách làm này cần quản lý trạng thái và lỗi cẩn thận hơn, nhưng giúp luồng chính phản hồi rõ ràng và cho phép thử lại khi một dịch vụ hỗ trợ gặp sự cố.
+
+## Các nguyên tắc kiến trúc chính
+
+- Đăng nhập xác nhận danh tính, còn quyền trên từng nhóm và cuộc họp vẫn được kiểm tra riêng.
+- Google Meet là dịch vụ họp bên ngoài; CampusMeet quản lý quy trình và kết quả, không tự xây công cụ gọi video.
+- Dữ liệu cuộc họp, tệp và nội dung AI giữ liên kết với nhóm và nguồn ban đầu để có thể truy vết.
+- Chỉ tài liệu hoặc bản phiên âm đã được phê duyệt theo luồng phù hợp mới được dùng làm nguồn tri thức chính thức.
+- Kết quả AI là bản nháp có nguồn dẫn; thay đổi biên bản hoặc nhiệm vụ cần người dùng có quyền xác nhận.
+- Lỗi, tình trạng xử lý và chi phí cần được theo dõi để chức năng nâng cao không che khuất vấn đề vận hành.

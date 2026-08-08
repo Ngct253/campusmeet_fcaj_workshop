@@ -29,15 +29,17 @@ Documents are uploaded to private file storage rather than placed directly insid
 
 Reviewed or approved documents and transcripts can become knowledge sources while retaining their group, meeting, and source-version context. AI answers and drafts remain limited by user access, include citations, and require confirmation before becoming official minutes or tasks.
 
-## Current implementation status
+## Why the architecture is organized this way
 
-| Scope | Status at the workshop milestone |
-| --- | --- |
-| Accounts, groups, invitations, meetings, and notifications | The product foundation and primary user journeys are available |
-| Meeting forms, documents, minutes, and tasks | Several interface, workflow, and related test areas exist; end-to-end verification should continue in the shared environment |
-| Google Calendar and Google Meet | Connection, synchronization, and local verification flows exist; complete AWS and browser verification with a real account is still required |
-| Transcripts | Reading, pagination, editing, approval, and handoff of approved sources are available in selected areas; complete audio processing and cloud end-to-end verification still require further work |
-| Knowledge and AI assistance | Approved-source ingestion, citation-grounded questions and answers, content summaries, minutes/task drafts, group progress analysis, and related tests exist; cloud end-to-end verification is still required before operational readiness |
-| Monitoring and cost awareness | Included in the architecture and infrastructure and should continue as usage expands |
+The architecture separates responsibilities so that supporting capabilities do not become mixed into the core meeting workflow. The interface focuses on the user experience; identity and central processing enforce access rules; business information and files are stored according to their different characteristics; and external integrations connect through clear boundaries. A change to calendar synchronization, transcription, or AI therefore does not change the meaning of groups, meetings, minutes, and tasks.
 
-Arrows in the diagram show how the components work together, while the table states what has been implemented and what still requires verification.
+Large files and audio remain in private file storage, while CampusMeet manages only the references and context needed to connect them to the correct meeting. Longer work such as audio processing, document normalization, or content generation is tracked through visible states instead of forcing a user to wait on one screen. This approach requires careful state and failure handling, but it keeps the main journey responsive and allows a supporting operation to be retried after a temporary failure.
+
+## Main architecture principles
+
+- Sign-in verifies identity, while authorization is still checked for each group and meeting resource.
+- Google Meet remains an external meeting service; CampusMeet manages the surrounding workflow and outcomes rather than building video conferencing.
+- Meeting information, files, and AI-assisted content retain links to the group and original source for traceability.
+- Only documents or transcripts approved through the appropriate flow become official knowledge sources.
+- AI output remains a cited draft; an authorized user confirms changes to minutes or tasks.
+- Errors, processing states, and cost require monitoring so advanced capabilities do not hide operational problems.

@@ -20,6 +20,17 @@ CampusMeet organizes access around groups. Having an account does not allow a pe
 
 Access is determined from stored membership information rather than a role claimed by the user. AI suggestions also remain drafts until an authorized user reviews them.
 
+## Access-decision approach
+
+Each action is considered through four questions:
+
+1. Is the account signed in and valid?
+2. Is the person an active member of the group?
+3. Does the current role permit the specific action?
+4. Does the action target the correct group, meeting, and version?
+
+This approach separates identity from resource access: signing in does not permit reading another group's data, and viewing a meeting does not automatically permit editing or approval. Members receive access only through valid membership, while organizers or administrators perform actions that need additional authority. Documents and transcripts used by AI retain their group, meeting, and source context so answers cannot use information outside the requester's access.
+
 ## Protecting content
 
 Access is checked for each group and meeting action, not only at sign-in. Documents, transcripts, minutes, tasks, and AI sources inherit the access boundary of their original content.

@@ -17,9 +17,9 @@ pre: " <b> 5.4. </b> "
 | Integrations and automation | Google Calendar/Meet synchronization, content upload, reminders, and email | Initial flows exist; selected areas are only locally verified or still require verification in a realistic environment |
 | Knowledge and AI assistance | Ingesting approved sources, citation-grounded questions and answers, content summaries, minutes/task drafts, and group progress analysis | Selected flows and related tests exist; the scope is not presented as complete, and users must confirm all suggested content |
 
-## Relationships between feature groups
+## End-to-end journey across feature groups
 
-An account identifies the actor, while membership determines access. Meetings connect documents, transcripts, minutes, and tasks. Approved sources support search and AI assistance, while notifications, reminders, and progress states return outcomes to the group's workflow.
+An account identifies the actor, membership places that person in the correct group, and a meeting provides context for preparation and documents. Minutes and action items continue into tasks with owners, due dates, and states. Only documents or transcripts approved through the appropriate flow move into the knowledge process, and AI results return to user confirmation. If calendar or AI support is unavailable, the team must still be able to open a meeting, record its outcome, and track the resulting tasks.
 
 ## Information managed by CampusMeet
 

@@ -6,11 +6,31 @@ chapter: false
 pre: " <b> 5.6. </b> "
 ---
 
+## Evaluation approach
+
+CampusMeet is evaluated through its user journey and observable evidence, not only by counting screens or source files. Each feature group is considered against the following criteria:
+
+| Criterion | How it is considered |
+| --- | --- |
+| Workflow continuity | Whether users can move from groups, meetings, and preparation to minutes, tasks, and progress |
+| Access control | Whether information keeps the correct group, role, and meeting boundary for every action |
+| Information reliability | Whether drafts, confirmed content, and source versions remain clearly distinguished |
+| Verification level | Whether a result exists only in source, has local tests, or has also been verified in a shared environment and realistic browser flow |
+| Operational readiness | Whether failures, processing states, retention needs, and cost can be observed as usage expands |
+
+A capability is complete only when its related parts work in a realistic context; a screen or cloud resource alone does not prove the whole flow is ready.
+
 ## Current result
 
 CampusMeet now has a reasonably clear product journey: users have accounts, join groups, follow meetings, and access related information. The core meeting workflow is recorded in the development environment. Selected areas for the interface, documents, minutes, tasks, and notifications also exist in the source or have been tested within their respective scope.
 
 Google integration, transcription, knowledge, and AI assistance now have source or tests for defined areas. Verification still varies between local, development, and realistic end-to-end scenarios.
+
+## Lessons learned
+
+- Starting with the user journey produces a clearer scope than starting with a service list.
+- Authentication and authorization remain separate, while external integrations must not interrupt the core journey.
+- Transcription and AI provide value only when sources are traceable, users confirm results, and each verification level is reported accurately.
 
 ## Areas requiring further verification
 
