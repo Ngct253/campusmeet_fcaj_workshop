@@ -29,6 +29,10 @@ CampusMeet connects this information through one continuous journey:
 
 CampusMeet is scoped from the meeting journey rather than a technology list. The essential flow must help a team bring members together, organize a meeting, preserve outcomes, and track follow-up work. Calendar synchronization, transcription, and AI are added later to reduce repeated work or support retrieval. If an integration is unavailable, the product foundation still supports the meeting workflow instead of depending entirely on Google services, audio processing, or AI.
 
+## Success criteria
+
+CampusMeet is not evaluated only by the number of screens. A journey is valuable when members receive enough information to prepare, post-meeting outcomes identify decisions, owners, and due dates, records remain traceable to the correct group and meeting, and unauthorized people cannot access the content. Advanced capabilities are successful when they reduce effort or improve retrieval without removing the user's responsibility to confirm results.
+
 ## How the parts connect
 
 A group is the shared workspace and access boundary. Meetings connect documents, transcripts, minutes, and tasks, allowing members to trace a task or decision back to its meeting.

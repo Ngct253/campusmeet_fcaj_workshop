@@ -32,6 +32,13 @@ Trong cuộc họp, quyết định và đầu việc được ghi nhận theo n
 
 Đầu việc được chuyển thành nhiệm vụ có người phụ trách và thời hạn. Thành viên cập nhật trạng thái, còn nhóm có thể truy lại cuộc họp đã tạo ra nhiệm vụ. Nguồn được phê duyệt có thể hỗ trợ hỏi đáp hoặc tạo bản nháp có trích dẫn, nhưng người dùng vẫn quyết định kết quả chính thức.
 
+## Các điểm kiểm soát trong quy trình
+
+- **Trước họp:** mục tiêu, thời gian, nhóm sở hữu và tài liệu chuẩn bị phải được xác định trước khi gửi thông tin cho thành viên.
+- **Trong họp:** ghi chú và bản phiên âm là dữ liệu hỗ trợ; việc thu nhận nội dung cần có sự đồng ý và không tự động trở thành biên bản chính thức.
+- **Sau họp:** nội dung phải được rà soát trước khi xác nhận; nhiệm vụ cần có người phụ trách, thời hạn và liên kết về cuộc họp nguồn.
+- **Khi dùng AI:** nguồn phải nằm trong phạm vi người dùng được phép xem, câu trả lời cần có căn cứ và mọi thay đổi nghiệp vụ vẫn chờ xác nhận.
+
 ## Tài liệu, phiên âm và AI
 
 Tài liệu được gắn với đúng cuộc họp và chỉ hiển thị cho người có quyền. Phiên âm có thể hỗ trợ tìm lại nội dung nhưng cần được kiểm tra độ chính xác. AI có thể gợi ý tóm tắt, câu trả lời hoặc đầu việc từ nguồn được phép, nhưng không thay người dùng đưa ra quyết định.

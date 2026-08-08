@@ -32,6 +32,13 @@ During the meeting, decisions and follow-up actions are recorded with the discus
 
 Agreed action items become tasks with owners and due dates. Members update progress, and the team can trace each task to its meeting. Approved sources may support citation-grounded questions or summary drafts, but users still decide what becomes an official outcome.
 
+## Workflow control points
+
+- **Before the meeting:** the purpose, time, owning group, and preparation material should be clear before members are notified.
+- **During the meeting:** notes and transcripts remain supporting information; collection requires appropriate consent and does not automatically create official minutes.
+- **After the meeting:** content is reviewed before confirmation, while each task has an owner, due date, and link to its source meeting.
+- **With AI assistance:** sources stay within the requester's access, answers remain grounded, and business changes still require confirmation.
+
 ## Documents, transcription, and AI
 
 Documents belong to the correct meeting and remain visible only to authorized users. Transcription may help retrieve spoken content but requires accuracy review. AI may suggest summaries, answers, or action items from permitted sources, but it must not make decisions on behalf of users.

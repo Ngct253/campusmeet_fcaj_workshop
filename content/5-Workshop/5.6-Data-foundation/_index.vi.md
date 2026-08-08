@@ -20,6 +20,17 @@ CampusMeet được đánh giá theo hành trình sử dụng và bằng chứng
 
 Một chức năng chỉ được xem là hoàn chỉnh khi các phần liên quan phối hợp đúng trong ngữ cảnh thực tế; có giao diện hoặc tài nguyên cloud chưa đủ để chứng minh toàn bộ luồng đã sẵn sàng.
 
+## Bằng chứng dùng để tổng kết
+
+Nhận định trong workshop được đối chiếu ở nhiều lớp thay vì chỉ dựa vào mô tả:
+
+1. Giao diện và hành trình cho biết người dùng có thể thực hiện những bước nào.
+2. Mã nguồn và kiểm thử cho biết quy tắc, quyền và tình huống lỗi đã được xử lý trong phạm vi nào.
+3. Kết quả trên môi trường dùng chung cho biết các thành phần thực sự kết nối và lưu dữ liệu ra sao.
+4. Kiểm tra trên trình duyệt với tài khoản, vai trò và dữ liệu phù hợp xác nhận trải nghiệm đầu-cuối.
+
+Nếu mới có bằng chứng ở một số lớp, workshop chỉ ghi nhận đúng phần đã quan sát và giữ phần còn lại trong danh sách cần kiểm chứng. Cách làm này giúp người đọc phân biệt giữa thiết kế, triển khai cục bộ và kết quả đã hoạt động trong điều kiện sử dụng thực tế.
+
 ## Kết quả hiện tại
 
 CampusMeet đã hình thành một quy trình sản phẩm tương đối rõ: người dùng có tài khoản, tham gia nhóm, theo dõi cuộc họp và tiếp cận thông tin liên quan. Chức năng cuộc họp cốt lõi đã được ghi nhận trên môi trường phát triển. Một số phần về giao diện, tài liệu, biên bản, nhiệm vụ và thông báo cũng đã có trong mã nguồn hoặc được kiểm thử ở phạm vi tương ứng.

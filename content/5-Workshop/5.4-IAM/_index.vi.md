@@ -17,6 +17,10 @@ pre: " <b> 5.4. </b> "
 | Tích hợp và tự động hóa | Đồng bộ Google Calendar/Meet, upload nội dung, nhắc lịch và email | Đã có các luồng ban đầu; một số phần mới được kiểm chứng cục bộ hoặc vẫn cần xác minh trên môi trường thực tế |
 | Kho tri thức và trợ lý AI | Tiếp nhận nguồn đã được phê duyệt, hỏi đáp có trích dẫn, tóm tắt nội dung, tạo bản nháp biên bản/nhiệm vụ và phân tích tiến độ nhóm | Đã có một số luồng và kiểm thử liên quan; chưa được xem là hoàn chỉnh và mọi nội dung đề xuất vẫn cần người dùng xác nhận |
 
+## Yêu cầu xuyên suốt
+
+Bất kể thuộc nhóm chức năng nào, một luồng cần xác định rõ người thao tác, dữ liệu đầu vào, kết quả tạo ra và bước tiếp theo. Quyền phải được kiểm tra trước khi hiển thị hoặc thay đổi nội dung. Trạng thái bản nháp, nội dung đã xác nhận và công việc đã hoàn thành cần được phân biệt để thành viên không hiểu nhầm. Khi một nguồn dữ liệu hoặc tích hợp gặp lỗi, giao diện cần cho biết điều gì chưa sẵn sàng và vẫn giữ được phần còn lại của hành trình nếu có thể.
+
 ## Hành trình xuyên suốt giữa các chức năng
 
 Tài khoản xác định người thao tác, tư cách thành viên đặt người đó vào đúng nhóm, còn cuộc họp tạo ngữ cảnh cho tài liệu và nội dung chuẩn bị. Biên bản và đầu việc sau họp tiếp tục thành nhiệm vụ có người phụ trách, thời hạn và trạng thái. Tài liệu hoặc bản phiên âm được phê duyệt theo luồng phù hợp mới đi tiếp vào kho tri thức; kết quả AI vẫn quay lại bước xác nhận của người dùng. Nếu lịch hoặc AI tạm thời chưa sử dụng được, nhóm vẫn phải xem được cuộc họp, ghi nhận kết quả và theo dõi nhiệm vụ.

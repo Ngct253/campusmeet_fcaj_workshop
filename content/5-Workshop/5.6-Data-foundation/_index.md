@@ -20,6 +20,17 @@ CampusMeet is evaluated through its user journey and observable evidence, not on
 
 A capability is complete only when its related parts work in a realistic context; a screen or cloud resource alone does not prove the whole flow is ready.
 
+## Evidence used for the summary
+
+Workshop conclusions are cross-checked at several levels instead of relying on description alone:
+
+1. The interface and user journey show which steps a person can perform.
+2. Source code and tests show where rules, permissions, and failure cases are covered.
+3. Results in the shared environment show how components connect and persist information.
+4. Browser checks with appropriate accounts, roles, and data confirm the end-to-end experience.
+
+When evidence exists at only some levels, the workshop reports only what was observed and keeps the remainder under further verification. This lets readers distinguish design, local implementation, and behavior demonstrated under realistic conditions.
+
 ## Current result
 
 CampusMeet now has a reasonably clear product journey: users have accounts, join groups, follow meetings, and access related information. The core meeting workflow is recorded in the development environment. Selected areas for the interface, documents, minutes, tasks, and notifications also exist in the source or have been tested within their respective scope.
