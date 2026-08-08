@@ -31,11 +31,39 @@ Nhận định trong workshop được đối chiếu ở nhiều lớp thay vì
 
 Nếu mới có bằng chứng ở một số lớp, workshop chỉ ghi nhận đúng phần đã quan sát và giữ phần còn lại trong danh sách cần kiểm chứng. Cách làm này giúp người đọc phân biệt giữa thiết kế, triển khai cục bộ và kết quả đã hoạt động trong điều kiện sử dụng thực tế.
 
+## Kiểm tra kỹ thuật trước khi bàn giao
+
+Các bước kiểm tra chất lượng của kho mã nguồn cần được chạy từ thư mục gốc:
+
+```powershell
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+npm run infra:validate
+```
+
+`lint` và `typecheck` phát hiện lỗi quy tắc hoặc kiểu dữ liệu; `test` kiểm tra thành phần giao diện, dịch vụ, bộ xử lý yêu cầu, lớp truy cập dữ liệu và các bộ kết nối trong phạm vi tương ứng; `build` xác nhận các dự án con có thể tạo bản dựng; `infra:validate` kiểm tra các ràng buộc hạ tầng do kho mã nguồn định nghĩa. Một lần chạy đạt không chứng minh hệ thống đã sẵn sàng cho môi trường thực tế, nhưng là điều kiện cần trước khi triển khai hoặc bàn giao.
+
+Trên môi trường AWS, việc kiểm tra tiếp tục với giá trị đầu ra CloudFormation, trạng thái ngăn xếp, cấu hình chạy, năm bảng dữ liệu và địa chỉ `/health`. Trên trình duyệt, cần xác nhận giao diện đang trỏ đúng User Pool và API, tuyến điều hướng được bảo vệ yêu cầu đăng nhập, lỗi có thông báo phù hợp và dữ liệu vẫn tồn tại sau khi tải lại trang. Chỉ kiểm tra các tích hợp được bật trong môi trường, không đánh dấu hoàn chỉnh dựa trên giao diện hoặc template chưa chạy.
+
+## Vận hành, bảo mật và chi phí
+
+Trước khi dùng môi trường cho demo hoặc đánh giá, cần rà lại:
+
+- Lambda và tiến trình xử lý sử dụng vai trò thực thi theo đúng tài nguyên, không dùng khóa truy cập dài hạn.
+- Bucket user-content luôn ở chế độ riêng tư; quyền tải lên và tải xuống đi qua URL có thời hạn sau khi kiểm tra quyền.
+- CORS chỉ cho phép nguồn giao diện đã cấu hình; thông tin bí mật và token chỉ nằm phía máy chủ.
+- Nhật ký không chứa JWT, OAuth token, URL ký sẵn, toàn bộ bản phiên âm hoặc nội dung tài liệu.
+- CloudWatch theo dõi lỗi API, workflow thất bại, job bị kẹt, upload không hoàn tất và lỗi dịch vụ ngoài.
+- Số lần thử lại được giới hạn và có cơ chế xử lý lặp an toàn; AWS Budgets hỗ trợ cảnh báo sớm khi chi phí tăng ngoài dự kiến.
+- Chính sách lưu giữ, PITR hoặc deletion protection được bật theo môi trường sau khi xem xét chi phí và nhu cầu bảo vệ dữ liệu.
+
 ## Kết quả hiện tại
 
-CampusMeet đã hình thành một quy trình sản phẩm tương đối rõ: người dùng có tài khoản, tham gia nhóm, theo dõi cuộc họp và tiếp cận thông tin liên quan. Chức năng cuộc họp cốt lõi đã được ghi nhận trên môi trường phát triển. Một số phần về giao diện, tài liệu, biên bản, nhiệm vụ và thông báo cũng đã có trong mã nguồn hoặc được kiểm thử ở phạm vi tương ứng.
+Giao diện cho xác thực, nhóm, lời mời, thông báo và các thao tác tạo, xem, cập nhật, xóa cuộc họp đã kết nối API. Năm bảng DynamoDB đã được triển khai và xác minh trong `ap-southeast-1`. Phần xác thực/API và lõi cuộc họp đã có trên môi trường phát triển; địa chỉ kiểm tra tình trạng hoạt động và cấu hình chạy đã được xác minh, trong khi một số kiểm thử nhanh về thao tác dữ liệu và phân quyền trên môi trường dùng chung vẫn còn thiếu điều kiện phù hợp.
 
-Google, phiên âm, kho tri thức và trợ lý AI đã có mã nguồn hoặc kiểm thử trong từng phạm vi. Mức độ xác minh vẫn khác nhau giữa môi trường cục bộ, môi trường phát triển và kịch bản đầu-cuối với dữ liệu, tài khoản và quyền thực tế.
+Tải tệp, bản phiên âm, kho tri thức và trợ lý AI đã có thêm mã nguồn, hợp đồng dữ liệu và kiểm thử cho nhiều phạm vi như đọc, chỉnh sửa, phê duyệt bản phiên âm, giữ nguồn bất biến, hỏi đáp kèm trích dẫn, tạo bản nháp và phân tích tiến độ. Tuy nhiên, sự tồn tại của bucket, quy trình điều phối hoặc kiểm thử cục bộ không đồng nghĩa toàn bộ chuỗi xử lý đã chạy xuyên suốt trên AWS. Bộ kết nối Google, xử lý âm thanh và kiểm chứng qua trình duyệt/AWS với tài khoản thực tế vẫn cần được hoàn thiện trước khi xem toàn hệ thống là sẵn sàng cho môi trường thực tế.
 
 ## Bài học rút ra
 

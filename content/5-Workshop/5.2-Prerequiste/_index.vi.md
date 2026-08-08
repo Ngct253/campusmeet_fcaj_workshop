@@ -1,5 +1,5 @@
 ---
-title: "Mục tiêu và quyền truy cập"
+title: "Mục tiêu, chuẩn bị và quyền truy cập"
 date: 2026-08-08
 weight: 2
 chapter: false
@@ -14,9 +14,60 @@ pre: " <b> 5.2. </b> "
 - Chuyển đầu việc sau họp thành nhiệm vụ có thể theo dõi.
 - Hỗ trợ tìm lại thông tin mà vẫn tôn trọng quyền truy cập.
 
+## Chuẩn bị môi trường kỹ thuật
+
+Kho mã nguồn hiện tại sử dụng Node.js 22 và npm. AWS CLI và AWS SAM CLI chỉ cần khi xác thực hoặc triển khai tài nguyên AWS; PowerShell được dùng cho một số tập lệnh kiểm tra. Có thể kiểm tra công cụ và cài mã nguồn bằng các lệnh sau:
+
+```powershell
+node --version
+npm --version
+git --version
+aws --version
+sam --version
+
+git clone https://github.com/Ngct253/CampusMeet.git
+cd CampusMeet
+npm ci
+```
+
+Cấu trúc kho mã nguồn được tách theo trách nhiệm:
+
+| Khu vực | Vai trò |
+| --- | --- |
+| `apps/web` | Giao diện React, tuyến điều hướng và các chức năng phía người dùng |
+| `services/api` | API, xử lý nghiệp vụ, phân quyền và lớp truy cập dữ liệu |
+| `services/ai-worker` | Chuẩn hóa nguồn, xử lý công việc AI và kết nối dịch vụ liên quan |
+| `packages/shared` | Kiểu dữ liệu, enum và hợp đồng dùng chung |
+| `infra` | Các template AWS SAM/CloudFormation |
+| `scripts` | Kiểm tra cấu hình, hạ tầng và luồng xử lý |
+| `docs` | Đặc tả, kiến trúc, mô hình dữ liệu và runbook |
+
+Trước khi kết nối với môi trường dùng chung, thay đổi cần vượt qua các bước kiểm tra mã nguồn, kiểu dữ liệu, kiểm thử, tạo bản dựng và cấu hình hạ tầng được trình bày tại phần bàn giao. Các bước này không thay thế kiểm thử trên AWS nhưng giúp loại bỏ lỗi sớm trước khi triển khai.
+
+## Kết nối môi trường AWS
+
+Môi trường phát triển của CampusMeet sử dụng Region `ap-southeast-1`. Trước khi cập nhật stack, người triển khai cần xác nhận đúng tài khoản và Region để tránh tạo tài nguyên nhầm môi trường:
+
+```powershell
+aws sts get-caller-identity
+aws configure get region
+```
+
+Sau khi ngăn xếp xác thực/API được triển khai, giao diện sử dụng ba giá trị đầu ra công khai:
+
+```dotenv
+VITE_COGNITO_USER_POOL_ID=...
+VITE_COGNITO_USER_POOL_CLIENT_ID=...
+VITE_API_BASE_URL=...
+```
+
+Các giá trị trên giúp giao diện kết nối đúng Cognito và API; chúng không phải thông tin bí mật. Khóa truy cập AWS, khóa bí mật Google, OAuth token hoặc thông tin phía máy chủ không được đưa vào biến `VITE_*`, mã nguồn hay Git.
+
 ## Quyền truy cập
 
 CampusMeet tổ chức quyền theo nhóm. Có tài khoản không có nghĩa là được xem mọi nội dung. Quản trị viên có thể điều phối nhóm và thành viên; thành viên chỉ sử dụng các chức năng phù hợp với vai trò của mình. Người ngoài nhóm không được xem cuộc họp, tài liệu hoặc công việc nội bộ.
+
+Ở cấp hạ tầng cũng cần phân biệt quyền của người triển khai với vai trò thực thi của dịch vụ. Người triển khai chỉ cần quyền cập nhật các ngăn xếp thuộc phạm vi công việc. Lambda hoặc tiến trình xử lý sử dụng vai trò riêng để truy cập đúng bảng, bucket và dịch vụ cần thiết. Việc ứng dụng cần nhiều dịch vụ AWS không có nghĩa mọi thành viên hoặc mọi Lambda đều cần `AdministratorAccess`.
 
 Quyền được xác định từ thông tin thành viên trong hệ thống, không dựa vào vai trò do người dùng tự khai báo. Nội dung do AI gợi ý cũng không tự động trở thành quyết định chính thức mà cần được người có quyền xem lại.
 

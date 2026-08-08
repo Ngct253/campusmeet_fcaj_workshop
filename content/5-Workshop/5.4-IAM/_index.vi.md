@@ -27,9 +27,45 @@ Tài khoản xác định người thao tác, tư cách thành viên đặt ngư
 
 ## Thông tin được quản lý
 
-CampusMeet kết nối hồ sơ người dùng, nhóm, thành viên, cuộc họp, tài liệu, biên bản và nhiệm vụ. Mỗi cuộc họp thuộc một nhóm; tài liệu và biên bản gắn với cuộc họp; đầu việc có người phụ trách, thời hạn và trạng thái.
+CampusMeet sử dụng năm bảng DynamoDB vật lý, được thiết kế theo nhóm truy vấn và ranh giới dữ liệu thay vì tạo một bảng riêng cho từng entity:
 
-Tài liệu được đặt trong khu vực lưu trữ riêng và chỉ hiển thị cho người có quyền. Với biên bản, phiên âm và nội dung do AI hỗ trợ, hệ thống cần phân biệt bản nháp với nội dung đã được người dùng xác nhận.
+| Bảng | Dữ liệu chính |
+| --- | --- |
+| `identity` | Hồ sơ, tùy chọn người dùng, tham chiếu tích hợp và thông báo |
+| `collaboration` | Nhóm, thành viên, lời mời và sự kiện kiểm toán |
+| `meeting-data` | Cuộc họp, người tham dự, agenda, biên bản, reminder, metadata tệp và transcript |
+| `task-data` | Nhiệm vụ, lịch sử, dữ liệu theo người phụ trách và cuộc họp |
+| `ai-work` | AI job, nguồn tri thức, hội thoại, citation, proposal và idempotency |
+
+Tệp nhị phân và âm thanh không được lưu trong DynamoDB. Tệp thật nằm trong bucket S3 riêng tư; DynamoDB chỉ giữ siêu dữ liệu và liên kết cần thiết để xác định nhóm, cuộc họp, nguồn và trạng thái.
+
+## Luồng xử lý dữ liệu
+
+```text
+Giao diện
+  → API client gắn JWT
+  → Handler tiếp nhận request
+  → Application service kiểm tra quy tắc và quyền
+  → Lớp truy cập dữ liệu thực hiện mẫu truy cập
+  → DynamoDB hoặc S3
+```
+
+Giao diện không truy cập trực tiếp DynamoDB. Bộ xử lý yêu cầu cũng không tự ghép truy vấn dữ liệu cho từng trường hợp mà gọi qua dịch vụ và lớp truy cập dữ liệu; nhờ đó, quy tắc quyền, giao dịch và cách ánh xạ dữ liệu có thể được kiểm thử độc lập.
+
+## Cộng tác và tính nhất quán
+
+Khi tạo nhóm, người tạo trở thành `GROUP_ADMIN`; thành viên khác chỉ được thêm sau một luồng hợp lệ. Lời mời có trạng thái và thời hạn, còn thao tác chấp nhận phải liên kết đúng tài khoản nhận lời mời. Backend luôn kiểm tra tư cách thành viên đang hoạt động trước khi đọc hoặc thay đổi dữ liệu thuộc phạm vi nhóm.
+
+Một số nguyên tắc dữ liệu được áp dụng xuyên suốt:
+
+- request có khả năng gửi lại sử dụng idempotency để tránh tạo kết quả trùng;
+- cập nhật cạnh tranh sử dụng version hoặc conditional write;
+- thay đổi nhiều item cần tính nguyên tử sử dụng transaction;
+- timestamp được lưu theo UTC và hiển thị theo timezone người dùng;
+- TTL dành cho dữ liệu tạm, không thay thế quy tắc lưu giữ nội dung chính;
+- request nghiệp vụ thông thường sử dụng access pattern/index thay vì quét toàn bộ bảng.
+
+Các nguyên tắc này giải thích phương pháp triển khai mà không cần đưa toàn bộ PK, SK, GSI hoặc transaction expression vào workshop.
 
 ## Nguyên tắc tổng kết
 

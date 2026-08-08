@@ -29,6 +29,19 @@ CampusMeet kết nối các thông tin đó theo một mạch thống nhất:
 
 Phạm vi CampusMeet được xác định từ hành trình của một cuộc họp thay vì danh sách công nghệ. Luồng cơ bản phải giúp nhóm tập hợp thành viên, tổ chức cuộc họp, ghi nhận kết quả và theo dõi đầu việc. Đồng bộ lịch, phiên âm và AI được bổ sung sau để giảm thao tác hoặc hỗ trợ tra cứu. Nếu một tích hợp chưa sẵn sàng, nhóm vẫn có thể dùng các chức năng nền tảng; nhờ đó quy trình chính không phụ thuộc hoàn toàn vào Google, xử lý âm thanh hoặc AI.
 
+## Phương hướng triển khai
+
+CampusMeet được phát triển theo các luồng chức năng hoàn chỉnh thay vì xây toàn bộ giao diện trước rồi mới bổ sung backend. Với mỗi phạm vi, nhóm xác định hành trình người dùng, hợp đồng dữ liệu, quy tắc quyền, phần xử lý, cách lưu trữ và kiểm thử liên quan. Cách làm này giúp một chức năng được đánh giá theo toàn bộ đường đi của dữ liệu chứ không chỉ theo màn hình đã xuất hiện.
+
+Trình tự chung gồm bốn lớp:
+
+1. Chuẩn hóa kho mã nguồn, kiểu dữ liệu dùng chung và quy trình kiểm tra chất lượng.
+2. Thiết lập danh tính, API và nền tảng dữ liệu để các chức năng có cùng ranh giới truy cập.
+3. Hoàn thiện hành trình cốt lõi từ nhóm, cuộc họp và biên bản đến nhiệm vụ.
+4. Bổ sung upload, đồng bộ Google, phiên âm và AI như các nhánh mở rộng có trạng thái và khả năng phục hồi riêng.
+
+Nhờ trình tự này, các chức năng nâng cao có thể tiếp tục hoàn thiện mà không làm thay đổi ý nghĩa của dữ liệu cuộc họp đã được lưu trong CampusMeet.
+
 ## Tiêu chí thành công
 
 CampusMeet không được đánh giá chỉ bằng số lượng màn hình. Một hành trình có giá trị khi thông tin trước họp đủ để thành viên chuẩn bị; kết quả sau họp xác định được quyết định, người phụ trách và thời hạn; dữ liệu có thể truy lại đúng nhóm và cuộc họp; người không có quyền không tiếp cận được nội dung. Các khả năng nâng cao được xem là hiệu quả khi chúng giảm thao tác hoặc giúp tìm lại thông tin mà không làm thay đổi trách nhiệm xác nhận của người dùng.

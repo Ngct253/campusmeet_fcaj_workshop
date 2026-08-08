@@ -39,11 +39,40 @@ Trong cuộc họp, quyết định và đầu việc được ghi nhận theo n
 - **Sau họp:** nội dung phải được rà soát trước khi xác nhận; nhiệm vụ cần có người phụ trách, thời hạn và liên kết về cuộc họp nguồn.
 - **Khi dùng AI:** nguồn phải nằm trong phạm vi người dùng được phép xem, câu trả lời cần có căn cứ và mọi thay đổi nghiệp vụ vẫn chờ xác nhận.
 
-## Tài liệu, phiên âm và AI
+## Cách xử lý kỹ thuật
 
-Tài liệu được gắn với đúng cuộc họp và chỉ hiển thị cho người có quyền. Phiên âm có thể hỗ trợ tìm lại nội dung nhưng cần được kiểm tra độ chính xác. AI có thể gợi ý tóm tắt, câu trả lời hoặc đầu việc từ nguồn được phép, nhưng không thay người dùng đưa ra quyết định.
+### Upload tài liệu
 
-Tại mốc workshop, các phần về tài liệu, biên bản và nhiệm vụ đã có nhiều luồng cùng kiểm thử liên quan. Bản phiên âm đã có các khả năng đọc, phân trang, chỉnh sửa, phê duyệt và chuyển nguồn đã duyệt sang bước xử lý tiếp theo. Phần trợ lý AI đã có tiếp nhận nguồn, hỏi đáp có trích dẫn, tóm tắt, bản nháp biên bản/nhiệm vụ và phân tích tiến độ nhóm. Xử lý âm thanh cùng kiểm chứng đầu-cuối trên cloud vẫn cần tiếp tục hoàn thiện.
+Tệp không đi xuyên qua payload API hoặc được lưu trực tiếp trong DynamoDB. Luồng upload được tách thành các bước:
+
+```text
+Frontend yêu cầu upload
+  → Backend kiểm tra tư cách thành viên, loại tệp, kích thước và mã kiểm tra
+  → Tạo object key thuộc đúng group/meeting
+  → Cấp presigned URL ngắn hạn
+  → Trình duyệt tải trực tiếp tệp lên bucket S3 riêng tư
+  → Backend đối chiếu object rồi lưu metadata
+```
+
+Biết khóa đối tượng không đồng nghĩa có quyền tải tệp. Khi người dùng cần đọc lại, backend tiếp tục kiểm tra quyền trước khi cấp URL có thời hạn. Nếu tệp cần xử lý tiếp, bước hoàn tất tải lên tạo một công việc có cơ chế xử lý lặp an toàn để những lần thử lại không sinh nhiều công việc cho cùng một nguồn.
+
+### Google và reminder
+
+Meeting bên trong CampusMeet là dữ liệu chính. Theo thiết kế, Calendar API đồng bộ sự kiện và liên kết Google Meet sau khi dữ liệu nội bộ đã được lưu; Meet REST API chỉ lấy participant, recording hoặc transcript khi artifact và OAuth scope thực tế cho phép. Nếu Google gặp lỗi, trạng thái đồng bộ được ghi nhận để thử lại nhưng Meeting không bị xóa hoặc rollback.
+
+Thông báo trong ứng dụng cũng được xem là dữ liệu chính của luồng nhắc lịch. Reminder có thể thử gửi email qua SES, nhưng lỗi email không làm mất notification đã tạo. Adapter Google và kiểm chứng bằng tài khoản thật vẫn là phần cần tiếp tục hoàn thiện trên môi trường dùng chung.
+
+### Vòng đời bản phiên âm
+
+Mỗi cuộc họp có một bản phiên âm chính trong phạm vi chỉnh sửa và phê duyệt hiện tại. Partial segment chỉ phục vụ hiển thị tạm; final segment mới được lưu theo thứ tự ổn định. Sau phiên live, trạng thái chuyển qua bước hoàn tất để trở thành `READY` hoặc ghi nhận `FAILED` nếu xử lý không thành công.
+
+Thành viên đang hoạt động có thể đọc nội dung phù hợp. Người tổ chức cuộc họp hoặc quản trị viên nhóm có quyền mới được sửa và phê duyệt. Mỗi lần sửa tăng phiên bản; thao tác phê duyệt gắn với đúng phiên bản mà người dùng đã xem. Nội dung được phê duyệt cần được đóng băng thành nguồn bất biến trước khi chuyển sang xử lý tri thức, tránh trường hợp AI đọc bản mới hơn nhưng gắn nhãn của phiên bản cũ.
+
+### Kho tri thức và AI
+
+Tài liệu, biên bản hoặc bản phiên âm chỉ trở thành nguồn tri thức sau bước phê duyệt phù hợp. Nguồn giữ metadata về nhóm, cuộc họp, loại nội dung, phiên bản và trạng thái. Khi truy xuất, hệ thống lọc quyền và phạm vi nguồn trước khi đưa đoạn nội dung cho mô hình.
+
+AI có thể hỗ trợ hỏi đáp kèm trích dẫn, tóm tắt, tạo bản nháp biên bản hoặc đề xuất nhiệm vụ. Kết quả vẫn là bản nháp. Một đề xuất chỉ trở thành nhiệm vụ sau bước xem trước và xác nhận của người có quyền; cơ chế xử lý lặp an toàn và giao dịch giúp lần thử lại không tạo nhiệm vụ trùng. Các luồng này đã có mã nguồn và kiểm thử ở những phạm vi nhất định, nhưng xử lý âm thanh và kiểm chứng đầu cuối trên AWS vẫn cần tiếp tục hoàn thiện.
 
 ## Kết quả mong đợi
 

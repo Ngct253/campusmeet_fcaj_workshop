@@ -27,9 +27,45 @@ An account identifies the actor, membership places that person in the correct gr
 
 ## Information managed by CampusMeet
 
-CampusMeet connects user profiles, groups, members, meetings, documents, minutes, and tasks. Each meeting belongs to a group; documents and minutes belong to a meeting; follow-up work has an owner, due date, and status.
+CampusMeet uses five physical DynamoDB tables organized around access patterns and data boundaries instead of creating one table per entity:
 
-Documents remain in private storage and are visible only to authorized users. For minutes, transcripts, and AI-assisted content, the system must distinguish drafts from user-confirmed information.
+| Table | Main information |
+| --- | --- |
+| `identity` | Profiles, preferences, integration references, and notifications |
+| `collaboration` | Groups, memberships, invitations, and audit events |
+| `meeting-data` | Meetings, attendees, agenda, minutes, reminders, file metadata, and transcripts |
+| `task-data` | Tasks, history, and views by assignee or meeting |
+| `ai-work` | AI jobs, knowledge sources, conversations, citations, proposals, and idempotency |
+
+Binary files and audio are not stored in DynamoDB. The objects remain in private S3 storage, while DynamoDB stores only the metadata and references required to identify the group, meeting, source, and state.
+
+## Data-processing path
+
+```text
+Interface
+  → API client attaches JWT
+  → Handler receives the request
+  → Application service enforces rules and access
+  → Repository executes the access pattern
+  → DynamoDB or S3
+```
+
+The frontend never accesses DynamoDB directly. Handlers also avoid assembling data queries independently for every case; services and repositories keep authorization rules, transactions, and mapping behavior testable in isolation.
+
+## Collaboration and consistency
+
+The group creator becomes a `GROUP_ADMIN`, while other members join only through a valid flow. Invitations carry states and expiry, and acceptance must match the intended account. The backend verifies active membership before reading or changing group-scoped information.
+
+Several data principles apply throughout the product:
+
+- retryable requests use idempotency to avoid duplicate results;
+- concurrent updates use versions or conditional writes;
+- multi-item changes that require atomicity use transactions;
+- timestamps are stored in UTC and displayed in the user's timezone;
+- TTL is reserved for temporary data and does not replace retention rules for primary content;
+- normal business requests use defined access patterns or indexes rather than scanning an entire table.
+
+These principles explain the implementation approach without reproducing every PK, SK, GSI, or transaction expression in the workshop.
 
 ## Reporting principle
 

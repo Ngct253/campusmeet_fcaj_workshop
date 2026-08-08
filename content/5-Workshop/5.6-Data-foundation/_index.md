@@ -31,11 +31,39 @@ Workshop conclusions are cross-checked at several levels instead of relying on d
 
 When evidence exists at only some levels, the workshop reports only what was observed and keeps the remainder under further verification. This lets readers distinguish design, local implementation, and behavior demonstrated under realistic conditions.
 
+## Technical checks before handover
+
+The repository quality gates should run from the workspace root:
+
+```powershell
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+npm run infra:validate
+```
+
+`lint` and `typecheck` catch rule and type issues; `test` covers components, services, handlers, repositories, and adapters within their respective scopes; `build` confirms that the workspaces can produce artifacts; and `infra:validate` checks repository-defined infrastructure constraints. A successful run does not prove production readiness, but it is a necessary condition before deployment or handover.
+
+In AWS, verification continues with CloudFormation outputs, stack state, runtime configuration, the five data tables, and the `/health` endpoint. In the browser, the frontend should point to the intended User Pool and API, protected routes should require sign-in, errors should provide appropriate feedback, and persisted information should remain after a reload. Only integrations enabled in that environment should be tested; a screen or an undeployed template is not enough to mark a flow complete.
+
+## Operations, security, and cost
+
+Before an environment is used for a demonstration or assessment, review the following:
+
+- Lambda functions and workers use resource-scoped execution roles rather than long-lived access keys.
+- User-content buckets remain private, with upload and download access issued through short-lived URLs after authorization.
+- CORS permits only the configured frontend origin, while secrets and tokens remain server-side.
+- Logs exclude JWTs, OAuth tokens, presigned URLs, complete transcripts, and document contents.
+- CloudWatch observes API failures, workflow failures, stuck jobs, incomplete uploads, and external-service errors.
+- Retries are bounded and idempotent, while AWS Budgets provides early warning for unexpected cost growth.
+- Retention, PITR, and deletion protection are enabled by environment after reviewing cost and data-protection needs.
+
 ## Current result
 
-CampusMeet now has a reasonably clear product journey: users have accounts, join groups, follow meetings, and access related information. The core meeting workflow is recorded in the development environment. Selected areas for the interface, documents, minutes, tasks, and notifications also exist in the source or have been tested within their respective scope.
+The authentication, group, invitation, notification, and meeting CRUD interfaces are connected to APIs. The five DynamoDB tables have been deployed and verified in `ap-southeast-1`. Auth/API and the meeting core exist in the development environment; health and runtime configuration have been verified, while selected CRUD and authorization smoke tests in shared data still lack the required test conditions.
 
-Google integration, transcription, knowledge, and AI assistance now have source or tests for defined areas. Verification still varies between local, development, and realistic end-to-end scenarios.
+Upload, transcripts, knowledge, and AI assistance now include more source, contracts, and tests for areas such as transcript read/edit/approval, immutable sources, citation-grounded answers, drafts, and progress analysis. However, the existence of a bucket, workflow, or local test does not prove that the complete pipeline has run through the cloud. The Google adapter, audio processing, and browser/cloud verification with realistic accounts still require further work before the whole system can be considered production-ready.
 
 ## Lessons learned
 

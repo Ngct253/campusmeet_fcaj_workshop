@@ -10,7 +10,7 @@ pre: " <b> 5. </b> "
 
 CampusMeet helps study groups and small project teams manage information before, during, and after meetings in one place. Instead of separating schedules, documents, minutes, and follow-up work across different tools, CampusMeet connects them to the relevant group and meeting.
 
-This workshop presents CampusMeet from a product perspective, focusing on the problem, objectives, high-level architecture, current features, and meeting journey. Source code, commands, configuration values, and API paths have been removed.
+This workshop presents CampusMeet from both product and implementation perspectives. It covers the problem, architecture, access, data, meeting workflow, and verification approach. Technical details are selected to explain how the system is built without replacing the complete API documentation or deployment runbook.
 
 ### Objectives
 
@@ -19,6 +19,7 @@ After reading the workshop, readers should be able to:
 - Explain the problem and objectives that CampusMeet addresses.
 - Follow the journey from creating a group to completing a meeting and tracking work.
 - Understand the purpose of the AWS components in the diagram at a high level.
+- Understand how to prepare the environment, connect the frontend to AWS, and run quality checks before deployment.
 - Distinguish existing functionality from items requiring further verification or development.
 - Recognize principles for access control, information protection, and human review of AI suggestions.
 
@@ -31,10 +32,10 @@ The diagram shows a simple flow: users access CampusMeet, sign in, perform actio
 ### Workshop contents
 
 1. [CampusMeet overview](5.1-Workshop-overview/)
-2. [Objectives and access](5.2-Prerequiste/)
+2. [Objectives, preparation, and access](5.2-Prerequiste/)
 3. [High-level architecture](5.3-Architecture/)
 4. [Current feature scope](5.4-IAM/)
 5. [Meeting workflow](5.5-Authentication/)
 6. [Evaluation and next steps](5.6-Data-foundation/)
 
-Together, these six sections provide a complete product story rather than a technical installation guide.
+Together, these six sections provide a complete CampusMeet story with the necessary technical steps, without repeating the full internal deployment documentation.
