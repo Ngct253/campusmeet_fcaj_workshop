@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 1. </b> "
 ---
 
-The internship worklog is organized by week as follows:
+This worklog records my eight-week internship from **15 June 2026** to **15 August 2026**. During this period, I learned and practiced cloud-computing concepts and contributed to selected areas of the CampusMeet project. The work completed each week is outlined below:
 
 **Week 1:** [AWS fundamentals, IAM, VPC, Budgets, and CloudWatch](1.1-week1/)
 

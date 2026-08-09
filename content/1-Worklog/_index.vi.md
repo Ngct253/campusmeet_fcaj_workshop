@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 1. </b> "
 ---
 
-Nội dung công việc trong quá trình thực tập được trình bày theo từng tuần như sau:
+Nhật ký công việc ghi lại quá trình thực tập của tôi trong 8 tuần, từ ngày **15/06/2026** đến ngày **15/08/2026**. Trong thời gian này, tôi được tìm hiểu, thực hành các kiến thức về điện toán đám mây và tham gia thực hiện một số phần việc trong dự án CampusMeet. Nội dung công việc cụ thể của từng tuần được trình bày như sau:
 
 **Tuần 1:** [AWS cơ bản, IAM, VPC, Budgets và CloudWatch](1.1-week1/)
 
